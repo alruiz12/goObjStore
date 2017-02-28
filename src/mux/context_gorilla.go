@@ -4,8 +4,7 @@ package mux
 
 import (
 	"net/http"
-
-	"github.com/gorilla/context"
+	"simpleBT/src/context"
 )
 
 func contextGet(r *http.Request, key interface{}) interface{} {

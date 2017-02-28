@@ -4,8 +4,9 @@ import (
 	"fmt"
 	"net/http"
 	"log"
-	"conf"
+	"simpleBT/src/conf"
 	//"mux"
+
 )
 
 
@@ -22,7 +23,7 @@ func main() {
 	//err := torrent.RunTorrents(nil, args)
 	/* if err != nil {log.Fatal("Could not run torrents", args, err)}*/
 
-	var router = conf.MyNewRouter()
+	router := conf.MyNewRouter()
 
 	log.Fatal(http.ListenAndServe(":8080", router))
 
