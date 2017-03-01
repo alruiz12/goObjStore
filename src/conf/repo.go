@@ -1,4 +1,10 @@
 package conf
+
+import (
+	"strings"
+	"errors"
+	"fmt"
+)
 //import "fmt"
 
 var currentId int
@@ -15,7 +21,26 @@ func addTorrentRepo(t Torrent) Torrent{
 	torrents = append(torrents, t)
 	return t
 }
-func addPeersRepo(p Peer, t Torrent)Peer{
+func addPeerRepo(p Peer, t *Torrent)Peer{
 	t.Peers= append(t.Peers, p)
+	/*fmt.Println("addPeerRepo")
+	fmt.Println(t)*/
 	return p
+}
+func GetTorrent(name string) (*Torrent, error) {
+	var ret Torrent
+	for _, torrent := range torrents{
+		if strings.Compare(torrent.Name,name) == 0{
+			fmt.Println("-Get Torrent ",torrent)
+			return &torrent, nil
+		}
+	}
+	return &ret, errors.New("name does not match any torrent")
+}
+func getIPsRepo(t *Torrent)[]string{
+	var ret []string
+	for _, peer:= range t.Peers{
+		ret = append(ret, peer.IP)
+	}
+	return ret
 }
