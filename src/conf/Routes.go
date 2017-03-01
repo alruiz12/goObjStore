@@ -32,27 +32,21 @@ func MyNewRouter() *mux.Router {
 
 var routes = Routes{
 	Route{
-		"Index",
-		"GET",
-		"/",
-		Index,
-	},
-	Route{
-		"TodoIndex",
-		"GET",
-		"/todos",
-		TodoIndex,
-	},
-	Route{
-		"TodoShow",
-		"GET",
-		"/todos/{todoId}",
-		TodoShow,
-	},
-	Route{
-		"TodoCreate",
+		"addTorrent",
 		"POST",
-		"/todos",
-		TodoCreate,
+		"/addTorrent",
+		addTorrent,
+	},
+	Route{
+		"showTorrents",
+		"GET",
+		"/addTorrent",
+		showTorrents,
+	},
+	Route{
+		"getIPs",
+		"GET",
+		"/getIPs",
+		getIPs,
 	},
 }

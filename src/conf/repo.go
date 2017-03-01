@@ -1,39 +1,21 @@
 package conf
-import "fmt"
+//import "fmt"
 
 var currentId int
 
-var todos Todos
+var torrents Torrents
 
-// Give us some seed data
-func init() {
-	RepoCreateTodo(Todo{Name: "Write presentation"})
-	RepoCreateTodo(Todo{Name: "Host meetup"})
+func getPeersRepo(t Torrent) Peers{
+	return t.Peers
 }
 
-func RepoFindTodo(id int) Todo {
-	for _, t := range todos {
-		if t.Id == id {
-			return t
-		}
-	}
-	// return empty Todo if not found
-	return Todo{}
-}
-
-func RepoCreateTodo(t Todo) Todo {
+func addTorrentRepo(t Torrent) Torrent{
 	currentId += 1
 	t.Id = currentId
-	todos = append(todos, t)
+	torrents = append(torrents, t)
 	return t
 }
-
-func RepoDestroyTodo(id int) error {
-	for i, t := range todos {
-		if t.Id == id {
-			todos = append(todos[:i], todos[i+1:]...)
-			return nil
-		}
-	}
-	return fmt.Errorf("Could not find Todo with id of %d to delete", id)
+func addPeersRepo(p Peer, t Torrent)Peer{
+	t.Peers= append(t.Peers, p)
+	return p
 }
