@@ -7,11 +7,15 @@ import (
 	"simpleBT/src/conf"
 	//"mux"
 
+	"os"
 )
 
 
 func main() {
 	fmt.Println("...My start...")
+	f, err:=os.Create("torrentsFile")
+	if err!=nil {panic (err)}
+	f.Close()
 	//list:= []string{"http:Torrentfile1"}
 	// Initialize new tracker
 	// Get Meta Info from file
