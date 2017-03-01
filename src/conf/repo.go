@@ -7,6 +7,8 @@ import (
 	//"os"
 	"encoding/json"
 	"os"
+	"io/ioutil"
+	"strings"
 )
 //import "fmt"
 
@@ -37,6 +39,21 @@ func addPeerRepo(p Peer, t *Torrent)Peer{
 	fmt.Println("***addPeerRepo ",t)
 	f, err:=os.OpenFile("torrentsFile",os.O_APPEND|os.O_WRONLY,0666)
 	if err!=nil {panic (err)}
+
+	aux,err:=ioutil.ReadFile("torrentsFile")
+	if err!=nil {panic (err)}
+
+	fmt.Println("read================",string(aux))
+	var taux Torrent
+	err = json.Unmarshal(aux, &taux);
+	if err!=nil {panic (err)}
+	fmt.Println(taux.Id)
+	fmt.Println(taux.Name)
+	fmt.Println(taux.Peers)
+	fmt.Println("fin")
+	if strings.Compare( taux.Name, t.Name) == 0 {
+
+	}
 
 	out,err:=json.Marshal(t)
 	writtenBytes, err := f.WriteString(string(out) )
