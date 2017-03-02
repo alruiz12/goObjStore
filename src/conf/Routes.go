@@ -13,6 +13,9 @@ type Route struct {
 
 type Routes []Route
 
+/*
+Router using gorilla/mux
+*/
 func MyNewRouter() *mux.Router {
 
 	router := mux.NewRouter().StrictSlash(true)

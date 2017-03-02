@@ -14,7 +14,9 @@ import (
 
 
 func main() {
-
+	/*
+	Initializing (and creating if non existing) files
+	*/
 	f, err:=os.Create("torrentsFile")
 	if err!=nil {panic (err)}
 	f.Close()

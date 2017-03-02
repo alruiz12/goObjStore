@@ -1,7 +1,10 @@
 package conf
 
 
-
+/*
+Type Holding data about torrent
+Todo: identifying data by unique ID
+ */
 type Torrent struct {
 	Id	int       `json:"id"`
 	Name	string    `json:"name"`

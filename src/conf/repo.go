@@ -18,8 +18,9 @@ var torrents Torrents
 addTorrentRepo is called from Handlers.addTorrent after unmarshalling parameter.
 Adds a new Torrent to the Tracker file of torrents.
 @param1 new torrent to be added
+@returns new torrent added
 Todo: save and update currentId to file
-Todo:
+Todo: identifying torrents by name or id would lead to ensure unique name or id
  */
 func addTorrentRepo(t Torrent) Torrent{
 	var err error
@@ -48,7 +49,14 @@ func addTorrentRepo(t Torrent) Torrent{
 
 	return t
 }
-
+/*
+addTPeerRepo is called from Handlers.addPeer after unmarshalling parameters.
+Adds a new peer to given torrent, saving it back to the Tracker file of torrents.
+@param1 new peer to be added
+@param2 pointer to the torrent to be added to
+return new peer added
+Todo: check parameters
+*/
 func addPeerRepo(p Peer, t *Torrent)Peer{
 	t.Peers= append(t.Peers, p)
 	f, err:=os.OpenFile("torrentsFile",os.O_APPEND|os.O_WRONLY,0666)
@@ -62,6 +70,13 @@ func addPeerRepo(p Peer, t *Torrent)Peer{
 	return p
 }
 
+/*
+GetTorrent is called from Handlers after unmarshalling parameters.
+Searches for a torrent with given name and returns it if found
+@param1 name of the torrent
+return pointer to the torrent found or error if not found
+Todo: search by other field (namely ID)
+*/
 func GetTorrent(name string) (*Torrent, error) {
 	var taux Torrent
 	f, err :=os.Open("torrentsFile")
@@ -85,6 +100,12 @@ func GetTorrent(name string) (*Torrent, error) {
 	return &emptyTorrent, errors.New("name does not match any torrent")
 }
 
+/*
+getIPsRepo is called from Handlers.getIP after unmarshalling parameters.
+Returns a slice of IP addresses, from which the given torrent can be downloaded
+@param1 pointer to torrent
+return slice of IP addresses
+*/
 func getIPsRepo(t *Torrent)[]string{
 	var ret []string
 	for _, peer:= range t.Peers{
