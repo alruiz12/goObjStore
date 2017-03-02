@@ -7,10 +7,6 @@ import (
 	"io"
 )
 
-func getPeers(t Torrent){
-	//peers:=getPeersRepo(t)
-}
-
 /*
 addTorrent is called when a POST requests 8080/addTorrent.
 Adds a new Torrent to the Tracker file of torrents.
@@ -134,4 +130,8 @@ func getIPs(w http.ResponseWriter, r *http.Request){
 	if err := json.NewEncoder(w).Encode(ret); err != nil {
 		panic(err)
 	}
+}
+
+func getPeers(t Torrent){
+	//peers:=getPeersRepo(t)
 }
