@@ -8,6 +8,9 @@ import (
 	//"mux"
 
 	"os"
+	"io/ioutil"
+	"strconv"
+//	"os/exec"
 )
 
 
@@ -15,6 +18,14 @@ func main() {
 	fmt.Println("...My start...")
 	f, err:=os.Create("torrentsFile")
 	if err!=nil {panic (err)}
+	f.Close()
+
+	f, err=os.Create("nTorrents")
+	if err!=nil {panic (err)}
+	nTorrents:=0
+	if err = ioutil.WriteFile("nTorrents", []byte(strconv.Itoa( nTorrents)), 0666); err != nil{
+		panic(err)
+	}
 	f.Close()
 	//list:= []string{"http:Torrentfile1"}
 	// Initialize new tracker
@@ -28,8 +39,10 @@ func main() {
 	/* if err != nil {log.Fatal("Could not run torrents", args, err)}*/
 
 	router := conf.MyNewRouter()
+	fmt.Println("...My END...")
 
 	log.Fatal(http.ListenAndServe(":8080", router))
 
-	fmt.Println("...My END...")
+
+
 }

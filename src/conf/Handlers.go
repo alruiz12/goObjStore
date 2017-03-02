@@ -3,14 +3,12 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
-	//"simpleBT/src/mux"
 	"io/ioutil"
 	"io"
 )
 
 func getPeers(t Torrent){
 	//peers:=getPeersRepo(t)
-	//fmt.Fprintln(peers)
 }
 func addTorrent(w http.ResponseWriter, r *http.Request){
 	fmt.Println("... addTorrent STARTS ...")
@@ -29,10 +27,9 @@ func addTorrent(w http.ResponseWriter, r *http.Request){
 			panic(err)
 		}
 	}
-	fmt.Println(t)
 	ret:=addTorrentRepo(t)
 	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
-	w.WriteHeader(http.StatusCreated)//Todo v maybe torrents???????
+	w.WriteHeader(http.StatusCreated)
 	if err := json.NewEncoder(w).Encode(ret); err != nil {
 		panic(err)
 	}
@@ -69,18 +66,16 @@ func addPeer(w http.ResponseWriter, r *http.Request){
 			panic(err)
 		}
 	}
-//	p=pt.peer
-//	t=pt.torrent
-	//fmt.Println(pt.TorrentName)
+
 	t,err=GetTorrent(pt.TorrentName)
 	if err!=nil {panic(err)}
+
 	auxPeer:= Peer{pt.PeerIP}
 	ret:=addPeerRepo(auxPeer,t)
-	fmt.Println("-after addPeerRepo returns ", t)
-	fmt.Println(auxPeer)
+
 	//Todo if torrent doesn't exist ret:=addTorrentRepo(t)?
 	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
-	w.WriteHeader(http.StatusCreated)//Todo v maybe torrents???????
+	w.WriteHeader(http.StatusCreated)
 	if err := json.NewEncoder(w).Encode(ret); err != nil {
 		panic(err)
 	}
@@ -92,7 +87,7 @@ func addPeer(w http.ResponseWriter, r *http.Request){
 func getIPs(w http.ResponseWriter, r *http.Request){
 	var torrentName Torrent
 	var auxTorrent *Torrent
-	//var auxTorrent Torrent
+
 	body, err := ioutil.ReadAll(io.LimitReader(r.Body, 1048576))
 	if err != nil {
 		panic(err)
@@ -107,7 +102,6 @@ func getIPs(w http.ResponseWriter, r *http.Request){
 			panic(err)
 		}
 	}
-	//fmt.Println(torrentName)
 	auxTorrent,err=GetTorrent(torrentName.Name)
 	fmt.Println(auxTorrent)
 	if err!=nil {panic(err)}

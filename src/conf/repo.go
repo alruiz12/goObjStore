@@ -1,16 +1,15 @@
 package conf
 
 import (
-	//"strings"
-	"errors"
 	"fmt"
-	//"os"
 	"encoding/json"
 	"os"
 	"io/ioutil"
+	"bytes"
+	"strconv"
+	"bufio"
 	"strings"
 )
-//import "fmt"
 
 var currentId int
 
@@ -25,24 +24,39 @@ func addTorrentRepo(t Torrent) Torrent{
 	currentId += 1
 	t.Id = currentId
 	torrents = append(torrents, t)
+
 	f, err:=os.OpenFile("torrentsFile",os.O_APPEND|os.O_WRONLY,0666)
 	if err!=nil {panic (err)}
-
 	out,err:=json.Marshal(t)
-	writtenBytes, err := f.WriteString(string(out) )
-	fmt.Println("wrote %d bytes",writtenBytes)
+	var buffer bytes.Buffer
+	buffer.WriteString(string(out))
+	buffer.WriteString(";")
+
+	_, err = f.Write(buffer.Bytes())
+
+	aux,err:=ioutil.ReadFile("nTorrents")
+	if err!=nil {panic (err)}
+	nTorrents,err:=strconv.Atoi(string(aux))
+	nTorrents++
+	if err!=nil {panic (err)}
+	output:=bytes.Replace(aux, aux, []byte(  string(nTorrents)), -1)
+	if err = ioutil.WriteFile("nTorrents", output, 0666); err != nil{
+		panic(err)
+	}
+
+
 	f.Close()
+	fmt.Println("		nTorrents= ",nTorrents)
 	return t
 }
 func addPeerRepo(p Peer, t *Torrent)Peer{
 	t.Peers= append(t.Peers, p)
-	fmt.Println("***addPeerRepo ",t)
+	fmt.Println("\n		***addPeerRepo ",t)
 	f, err:=os.OpenFile("torrentsFile",os.O_APPEND|os.O_WRONLY,0666)
 	if err!=nil {panic (err)}
-
+/*
 	aux,err:=ioutil.ReadFile("torrentsFile")
 	if err!=nil {panic (err)}
-
 	fmt.Println("read================",string(aux))
 	var taux Torrent
 	err = json.Unmarshal(aux, &taux);
@@ -54,29 +68,74 @@ func addPeerRepo(p Peer, t *Torrent)Peer{
 	if strings.Compare( taux.Name, t.Name) == 0 {
 
 	}
-
+*/
 	out,err:=json.Marshal(t)
-	writtenBytes, err := f.WriteString(string(out) )
-	fmt.Println("APR wrote %d bytes",writtenBytes)
+	var buffer bytes.Buffer
+	buffer.WriteString(string(out))
+	buffer.WriteString(";")
+
+	writtenBytes, err := f.Write(buffer.Bytes())
+	fmt.Println("		wrote %d bytes",writtenBytes)
 	f.Close()
 	/*fmt.Println("addPeerRepo")
 	fmt.Println(t)*/
 	return p
 }
 func GetTorrent(name string) (*Torrent, error) {
-	var t Torrent
-	torrentF, err := os.Open("torrentsFile")
-	if err != nil {
-		errors.New("error opening torrentsFile")
+	var taux Torrent
+	fmt.Println("		GT====")
+	f, err :=os.Open("torrentsFile")
+	r:=bufio.NewReader(f)
+	line, err:= r.ReadString(';')
+	fmt.Println(err)
+	//fmt.Println("line0: ",line)
+	for line!="" {
+		fmt.Println("line: ",line)
+		cleanLine:=line
+		cleanLine=cleanLine[:len(cleanLine)-1]
+		err = json.Unmarshal([]byte(cleanLine), &taux);
+		if strings.Compare(taux.Name,name)==0{
+			output:=bytes.Replace([]byte(line), []byte(line), []byte(  ""), -1)
+			if err = ioutil.WriteFile("torrentsFile", output, 0666); err != nil{
+				panic(err)
+			}
+			return &taux, nil
+		}
+		if err!=nil {panic (err)}
+		line, err= r.ReadString('\n')
+	}
+	/*
+	aux,err:=ReadLine()  ioutil.ReadFile("torrentsFile")
+	if err!=nil {panic (err)}
+	fmt.Println("		GT:read==",string(aux))
+
+
+	n,err:=ioutil.ReadFile("nTorrents")
+	if err!=nil {panic (err)}
+	nTorrents,err:=strconv.Atoi(string(n))
+	if nTorrents<1{
+
+	}
+	fmt.Println("		GT:ntorrents ",nTorrents)
+
+
+
+
+	var taux Torrent
+	err = json.Unmarshal(aux, &taux);
+	if err!=nil {panic (err)}
+	fmt.Println("		GT:in vars",taux.Id," ",taux.Name," ",taux.Peers)
+	fmt.Println("		name= ",name)
+	if strings.Compare(taux.Name, name) == 0 {
+		output:=bytes.Replace(aux, aux, []byte(""), -1)
+		if err = ioutil.WriteFile("torrentsFile", output, 0666); err != nil{
+			panic(err)
+		}
+		return &taux, nil
 	}
 
-	jsonParser := json.NewDecoder(torrentF)
-	if err = jsonParser.Decode(&t); err != nil {
-		errors.New("parsing config file")
-	}
-	fmt.Println("--GetTorrent: %v %d %v", t.Name, t.Id, t.Peers)
 
-	torrentF.Close()
+
 	var ret Torrent
 	/*for _, torrent := range torrents{
 		if strings.Compare(torrent.Name,name) == 0{
@@ -85,7 +144,8 @@ func GetTorrent(name string) (*Torrent, error) {
 		}
 	}*/
 	//return &ret, errors.New("name does not match any torrent")
-	return &ret, nil
+	var emptyTorrent Torrent
+	return &emptyTorrent, nil
 }
 func getIPsRepo(t *Torrent)[]string{
 	var ret []string
