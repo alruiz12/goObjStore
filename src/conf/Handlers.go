@@ -103,7 +103,6 @@ func getIPs(w http.ResponseWriter, r *http.Request){
 		}
 	}
 	auxTorrent,err=GetTorrent(torrentName.Name)
-	fmt.Println(auxTorrent)
 	if err!=nil {panic(err)}
 	ret:=getIPsRepo(auxTorrent)
 
