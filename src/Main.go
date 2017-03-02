@@ -4,12 +4,9 @@ import (
 	"net/http"
 	"log"
 	"simpleBT/src/conf"
-	//"mux"
-
 	"os"
 	"io/ioutil"
 	"strconv"
-//	"os/exec"
 )
 
 
