@@ -12,13 +12,15 @@ import (
 )
 
 var currentId int
-
 var torrents Torrents
 
-func getPeersRepo(t Torrent) Peers{
-	return t.Peers
-}
-
+/*
+addTorrentRepo is called from Handlers.addTorrent after unmarshalling parameter.
+Adds a new Torrent to the Tracker file of torrents.
+@param1 new torrent to be added
+Todo: save and update currentId to file
+Todo:
+ */
 func addTorrentRepo(t Torrent) Torrent{
 	var err error
 	currentId += 1
@@ -46,6 +48,7 @@ func addTorrentRepo(t Torrent) Torrent{
 
 	return t
 }
+
 func addPeerRepo(p Peer, t *Torrent)Peer{
 	t.Peers= append(t.Peers, p)
 	f, err:=os.OpenFile("torrentsFile",os.O_APPEND|os.O_WRONLY,0666)
@@ -58,6 +61,7 @@ func addPeerRepo(p Peer, t *Torrent)Peer{
 	f.Close()
 	return p
 }
+
 func GetTorrent(name string) (*Torrent, error) {
 	var taux Torrent
 	f, err :=os.Open("torrentsFile")
@@ -80,6 +84,7 @@ func GetTorrent(name string) (*Torrent, error) {
 	var emptyTorrent Torrent
 	return &emptyTorrent, errors.New("name does not match any torrent")
 }
+
 func getIPsRepo(t *Torrent)[]string{
 	var ret []string
 	for _, peer:= range t.Peers{
@@ -87,3 +92,9 @@ func getIPsRepo(t *Torrent)[]string{
 	}
 	return ret
 }
+
+
+func getPeersRepo(t Torrent) Peers{
+	return t.Peers
+}
+

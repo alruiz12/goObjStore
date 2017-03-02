@@ -10,6 +10,13 @@ import (
 func getPeers(t Torrent){
 	//peers:=getPeersRepo(t)
 }
+
+/*
+addTorrent is called when a POST requests 8080/addTorrent.
+Adds a new Torrent to the Tracker file of torrents.
+@param1 used by an HTTP handler to construct an HTTP response.
+@param2 represents HTTP request.
+ */
 func addTorrent(w http.ResponseWriter, r *http.Request){
 	fmt.Println("... addTorrent STARTS ...")
 	var t Torrent
@@ -36,6 +43,12 @@ func addTorrent(w http.ResponseWriter, r *http.Request){
 	fmt.Println("... addTorrent FINISHES ...")
 }
 
+/*
+showTorrents is called when a GET requests 8080/addTorrent.
+Sends new json encoded torrent back to the sender
+@param1 used by an HTTP handler to construct an HTTP response.
+@param2 represents HTTP request
+ */
 func showTorrents(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
 	w.WriteHeader(http.StatusOK)
@@ -44,6 +57,12 @@ func showTorrents(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+/*
+addPeer is called when a POST requests 8080/addPeer.
+Adds new peer to given torrent
+@param1 used by an HTTP handler to construct an HTTP response.
+@param2 represents HTTP request
+ */
 func addPeer(w http.ResponseWriter, r *http.Request){
 	fmt.Println("... addPeer STARTS ...")
 	var t *Torrent
@@ -80,10 +99,14 @@ func addPeer(w http.ResponseWriter, r *http.Request){
 		panic(err)
 	}
 	fmt.Println("... addPeer FINISHES ...")
-
-
 }
 
+/*
+getIPs is called when a POST requests 8080/getIPs.
+Returns the peer's IP addresses, from which the given torrent can be downloaded
+@param1 used by an HTTP handler to construct an HTTP response.
+@param2 represents HTTP request
+ */
 func getIPs(w http.ResponseWriter, r *http.Request){
 	var torrentName Torrent
 	var auxTorrent *Torrent
