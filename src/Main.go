@@ -11,5 +11,4 @@ import (
 func main() {
 	router := conf.MyNewRouter()
 	log.Fatal(http.ListenAndServe(":8080", router))
-
 }
