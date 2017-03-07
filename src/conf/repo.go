@@ -1,15 +1,10 @@
 package conf
 
 import (
-	"io/ioutil"
-	"bytes"
-	"strconv"
 	"errors"
 	"simpleBT/src/vars"
 )
 
-var currentId int
-var torrents vars.Torrents
 
 /*
 addTorrentRepo is called from Handlers.addTorrent after unmarshalling parameter.
@@ -20,23 +15,9 @@ Todo: save and update currentId to file
 Todo: identifying torrents by name or id would lead to ensure unique name or id
  */
 func addTorrentRepo(t vars.Torrent) vars.Torrent{
-	var err error
-	//-----------------------------------
-	currentId += 1
-	t.Id = currentId
-	//-----------------------------------
+	t.Id=vars.CurrentId
+	vars.CurrentId++
 	vars.TorrentMap[t.Name]=t
-
-	aux,err:=ioutil.ReadFile("nTorrents")
-	if err!=nil {panic (err)}
-	nTorrents,err:=strconv.Atoi(string(aux))
-	nTorrents++
-	if err!=nil {panic (err)}
-	output:=bytes.Replace(aux, aux, []byte(  string(nTorrents)), -1)
-	if err = ioutil.WriteFile("nTorrents", output, 0666); err != nil{
-		panic(err)
-	}
-
 	return t
 }
 
@@ -49,9 +30,7 @@ return new peer added
 Todo: check parameters
 */
 func addPeerRepo(p vars.Peer, t *vars.Torrent) (vars.Peer,error){
-
 	t.Peers= append(t.Peers, p)
-
 	_, exists:= vars.TorrentMap[t.Name]
 	if !exists {
 		return p, errors.New("name does not match any torrent")
@@ -75,10 +54,6 @@ func GetTorrent(name string) (*vars.Torrent, error) {
 		return &emptyTorrent, errors.New("name does not match any torrent")
 	}
 	return &taux, nil
-
-
-
-
 }
 
 /*
@@ -93,10 +68,5 @@ func getIPsRepo(t *vars.Torrent)[]string{
 		ret = append(ret, peer.IP)
 	}
 	return ret
-}
-
-
-func getPeersRepo(t vars.Torrent) vars.Peers{
-	return t.Peers
 }
 

@@ -13,4 +13,3 @@ type Torrent struct {
 	Peers 	Peers	 `json:"peers"`
 }
 
-type Torrents []Torrent

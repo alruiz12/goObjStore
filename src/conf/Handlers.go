@@ -49,7 +49,7 @@ Sends new json encoded torrent back to the sender
 func showTorrents(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
 	w.WriteHeader(http.StatusOK)
-	if err := json.NewEncoder(w).Encode(torrents); err != nil {
+	if err := json.NewEncoder(w).Encode(vars.TorrentMap); err != nil {
 		panic(err)
 	}
 }
@@ -132,8 +132,4 @@ func getIPs(w http.ResponseWriter, r *http.Request){
 	if err := json.NewEncoder(w).Encode(ret); err != nil {
 		panic(err)
 	}
-}
-
-func getPeers(t vars.Torrent){
-	//peers:=getPeersRepo(t)
 }
