@@ -46,7 +46,8 @@ Sends new json encoded torrent back to the sender
 @param1 used by an HTTP handler to construct an HTTP response.
 @param2 represents HTTP request
  */
-func showTorrents(w http.ResponseWriter, r *http.Request) {
+func showTorrents(w http.ResponseWriter,
+r *http.Request) {
 	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
 	w.WriteHeader(http.StatusOK)
 	if err := json.NewEncoder(w).Encode(vars.TorrentMap); err != nil {
