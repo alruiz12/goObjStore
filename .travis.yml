@@ -1,5 +1,5 @@
 language: go
 go:
-  -1.6.x
+  - 1.6.x
 script:
-  test.sh
+  ./test.sh
