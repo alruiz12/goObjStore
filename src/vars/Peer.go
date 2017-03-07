@@ -1,4 +1,4 @@
-package conf
+package vars
 
 /*
 Type holding data about a peer

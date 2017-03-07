@@ -1,18 +1,15 @@
 package conf
 
 import (
-	"encoding/json"
-	"os"
 	"io/ioutil"
 	"bytes"
 	"strconv"
-	"bufio"
-	"strings"
 	"errors"
+	"simpleBT/src/vars"
 )
 
 var currentId int
-var torrents Torrents
+var torrents vars.Torrents
 
 /*
 addTorrentRepo is called from Handlers.addTorrent after unmarshalling parameter.
@@ -22,20 +19,13 @@ Adds a new Torrent to the Tracker file of torrents.
 Todo: save and update currentId to file
 Todo: identifying torrents by name or id would lead to ensure unique name or id
  */
-func addTorrentRepo(t Torrent) Torrent{
+func addTorrentRepo(t vars.Torrent) vars.Torrent{
 	var err error
+	//-----------------------------------
 	currentId += 1
 	t.Id = currentId
-	torrents = append(torrents, t)
-
-	f, err:=os.OpenFile("torrentsFile",os.O_APPEND|os.O_WRONLY,0666)
-	if err!=nil {panic (err)}
-	out,err:=json.Marshal(t)
-	var buffer bytes.Buffer
-	buffer.WriteString(string(out))
-	buffer.WriteString(";")
-	_, err = f.Write(buffer.Bytes())
-	f.Close()
+	//-----------------------------------
+	vars.TorrentMap[t.Name]=t
 
 	aux,err:=ioutil.ReadFile("nTorrents")
 	if err!=nil {panic (err)}
@@ -58,47 +48,37 @@ Adds a new peer to given torrent, saving it back to the Tracker file of torrents
 return new peer added
 Todo: check parameters
 */
-func addPeerRepo(p Peer, t *Torrent)Peer{
+func addPeerRepo(p vars.Peer, t *vars.Torrent) (vars.Peer,error){
+
 	t.Peers= append(t.Peers, p)
-	f, err:=os.OpenFile("torrentsFile",os.O_APPEND|os.O_WRONLY,0666)
-	if err!=nil {panic (err)}
-	out,err:=json.Marshal(t)
-	var buffer bytes.Buffer
-	buffer.WriteString(string(out))
-	buffer.WriteString(";")
-	_, err = f.Write(buffer.Bytes())
-	f.Close()
-	return p
+
+	_, exists:= vars.TorrentMap[t.Name]
+	if !exists {
+		return p, errors.New("name does not match any torrent")
+	}
+	vars.TorrentMap[t.Name]=*t
+	return p,nil
 }
 
 /*
 GetTorrent is called from Handlers after unmarshalling parameters.
 Searches for a torrent with given name and returns it if found
 @param1 name of the torrent
-return pointer to the torrent found or error if not found
+return pointer to the torrent found or error if not found and error
 Todo: search by other field (namely ID)
 */
-func GetTorrent(name string) (*Torrent, error) {
-	var taux Torrent
-	f, err :=os.Open("torrentsFile")
-	r:=bufio.NewReader(f)
-	line, err:= r.ReadString(';')
-	for line!="" {
-		cleanLine:=line
-		cleanLine=cleanLine[:len(cleanLine)-1]
-		err = json.Unmarshal([]byte(cleanLine), &taux);
-		if strings.Compare(taux.Name,name)==0{
-			output:=bytes.Replace([]byte(line), []byte(line), []byte(  ""), -1)
-			if err = ioutil.WriteFile("torrentsFile", output, 0666); err != nil{
-				panic(err)
-			}
-			return &taux, nil
-		}
-		if err!=nil {panic (err)}
-		line, err= r.ReadString('\n')
+func GetTorrent(name string) (*vars.Torrent, error) {
+	var taux vars.Torrent
+	var emptyTorrent vars.Torrent
+	taux, exists:= vars.TorrentMap[name]
+	if !exists {
+		return &emptyTorrent, errors.New("name does not match any torrent")
 	}
-	var emptyTorrent Torrent
-	return &emptyTorrent, errors.New("name does not match any torrent")
+	return &taux, nil
+
+
+
+
 }
 
 /*
@@ -107,7 +87,7 @@ Returns a slice of IP addresses, from which the given torrent can be downloaded
 @param1 pointer to torrent
 return slice of IP addresses
 */
-func getIPsRepo(t *Torrent)[]string{
+func getIPsRepo(t *vars.Torrent)[]string{
 	var ret []string
 	for _, peer:= range t.Peers{
 		ret = append(ret, peer.IP)
@@ -116,7 +96,7 @@ func getIPsRepo(t *Torrent)[]string{
 }
 
 
-func getPeersRepo(t Torrent) Peers{
+func getPeersRepo(t vars.Torrent) vars.Peers{
 	return t.Peers
 }
 

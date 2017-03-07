@@ -5,6 +5,7 @@ import (
 	"net/http"
 	"io/ioutil"
 	"io"
+	"simpleBT/src/vars"
 )
 
 /*
@@ -15,7 +16,7 @@ Adds a new Torrent to the Tracker file of torrents.
  */
 func addTorrent(w http.ResponseWriter, r *http.Request){
 	fmt.Println("... addTorrent STARTS ...")
-	var t Torrent
+	var t vars.Torrent
 	body, err := ioutil.ReadAll(io.LimitReader(r.Body, 1048576))
 	if err != nil {
 		panic(err)
@@ -61,7 +62,7 @@ Adds new peer to given torrent
  */
 func addPeer(w http.ResponseWriter, r *http.Request){
 	fmt.Println("... addPeer STARTS ...")
-	var t *Torrent
+	var t *vars.Torrent
 	type PeerAndTorrent struct {
 		PeerIP string		`json:"peerIP"`
 		TorrentName string	`json:"torrentName"`
@@ -85,8 +86,9 @@ func addPeer(w http.ResponseWriter, r *http.Request){
 	t,err=GetTorrent(pt.TorrentName)
 	if err!=nil {panic(err)}
 
-	auxPeer:= Peer{pt.PeerIP}
-	ret:=addPeerRepo(auxPeer,t)
+	auxPeer:= vars.Peer{pt.PeerIP}
+	ret,err:=addPeerRepo(auxPeer,t)
+	if err!=nil {panic(err)}
 
 	//Todo if torrent doesn't exist ret:=addTorrentRepo(t)?
 	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
@@ -104,8 +106,8 @@ Returns the peer's IP addresses, from which the given torrent can be downloaded
 @param2 represents HTTP request
  */
 func getIPs(w http.ResponseWriter, r *http.Request){
-	var torrentName Torrent
-	var auxTorrent *Torrent
+	var torrentName vars.Torrent
+	var auxTorrent *vars.Torrent
 
 	body, err := ioutil.ReadAll(io.LimitReader(r.Body, 1048576))
 	if err != nil {
@@ -132,6 +134,6 @@ func getIPs(w http.ResponseWriter, r *http.Request){
 	}
 }
 
-func getPeers(t Torrent){
+func getPeers(t vars.Torrent){
 	//peers:=getPeersRepo(t)
 }
