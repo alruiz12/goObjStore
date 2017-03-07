@@ -3,4 +3,4 @@ go:
   - 1.6.x
 
 script:
-  - ./test.sh
+  - go test -v ./...;
