@@ -2,4 +2,4 @@ language: go
 go:
   - 1.6.x
 script:
-  - go test -v ./...;
+  - go test -v ./...
