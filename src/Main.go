@@ -3,8 +3,8 @@ package main
 import (
 	"net/http"
 	"log"
-	"simpleBT/src/conf"
 
+	"github.com/alruiz12/simpleBT/src/conf"
 )
 
 

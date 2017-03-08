@@ -1,7 +1,7 @@
 package conf
 import (
 	"net/http"
-	"simpleBT/src/mux"
+	"github.com/alruiz12/simpleBT/src/mux"
 )
 
 type Route struct {

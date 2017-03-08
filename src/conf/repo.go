@@ -2,7 +2,7 @@ package conf
 
 import (
 	"errors"
-	"simpleBT/src/vars"
+	"github.com/alruiz12/simpleBT/src/vars"
 )
 
 

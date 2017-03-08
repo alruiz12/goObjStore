@@ -5,7 +5,7 @@ import (
 	"net/http"
 	"io/ioutil"
 	"io"
-	"simpleBT/src/vars"
+	"github.com/alruiz12/simpleBT/src/vars"
 )
 
 /*
