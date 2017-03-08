@@ -1,18 +1,14 @@
 <component name="libraryTable">
   <library name="GOPATH &lt;simpleBT&gt;">
     <CLASSES>
-      <root url="file://$PROJECT_DIR$/../../../simpleBT" />
       <root url="file://$PROJECT_DIR$/../../../test" />
       <root url="file://$PROJECT_DIR$/../../../.idea" />
-      <root url="file://$PROJECT_DIR$/../../../simpleBT2" />
       <root url="file://$PROJECT_DIR$/../.." />
     </CLASSES>
     <JAVADOC />
     <SOURCES>
-      <root url="file://$PROJECT_DIR$/../../../simpleBT" />
       <root url="file://$PROJECT_DIR$/../../../test" />
       <root url="file://$PROJECT_DIR$/../../../.idea" />
-      <root url="file://$PROJECT_DIR$/../../../simpleBT2" />
       <root url="file://$PROJECT_DIR$/../.." />
     </SOURCES>
     <excluded>
