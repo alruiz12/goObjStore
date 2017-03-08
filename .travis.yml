@@ -1,9 +1,6 @@
 language: go
 go:
   - 1.6.x
-go_import_path: simpleBT/src/vars
-go_import_path: simpleBT/src/conf
-go_import_path: simpleBT/src/mux
-go_import_path: simpleBT/src/context
+go_import_path: simpleBT/src/*
 script:
   - go test -v ./...
