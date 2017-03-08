@@ -1,10 +1,5 @@
 language: go
 go:
   - 1.6.x
-go_import_path:
-  - simpleBT/src/conf
-  - simpleBT/src/mux
-install:
-- go get ./...
 script:
   - go test -v ./...
