@@ -10,7 +10,6 @@ type Route struct {
 	Pattern     string
 	HandlerFunc http.HandlerFunc
 }
-
 type Routes []Route
 
 /*
