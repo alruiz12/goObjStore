@@ -32,10 +32,6 @@ Todo: check parameters
 */
 func addPeerRepo(p vars.Peer, t *vars.Torrent) (vars.Peer,error){
 	t.Peers= append(t.Peers, p)
-	_, exists:= vars.TorrentMap[t.Name]
-	if !exists {
-		return p, errors.New("name does not match any torrent")
-	}
 	vars.TorrentMap[t.Name]=*t
 	return p,nil
 }

@@ -96,13 +96,6 @@ func addPeer(w http.ResponseWriter, r *http.Request){
 
 	auxPeer:= vars.Peer{pt.PeerIP}
 	ret,err:=addPeerRepo(auxPeer,t)
-	if err!=nil {
-		w.Header().Set("Content-Type", "application/json; charset=UTF-8")
-		w.WriteHeader(http.StatusNotFound)
-		if err := json.NewEncoder(w).Encode(ret); err != nil {
-			panic(err)
-		}
-	}
 
 	//Todo if torrent doesn't exist ret:=addTorrentRepo(t)?
 	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
