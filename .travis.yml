@@ -7,3 +7,5 @@ install:
   - go get github.com/gorilla/context
 script:
   - go test -v ./...
+after_success:
+  - bash <(curl -s https://codecov.io/bash)
