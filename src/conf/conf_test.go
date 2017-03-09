@@ -22,10 +22,7 @@ func init(){
 
 	incomingURL=fmt.Sprintf("%s/addTorrent", tracker.URL)
 	fmt.Println(incomingURL)
-	fmt.Println("yeseeeeeeeee")/*
-	incomingURL=fmt.Sprintf("%s/addPeer", tracker.URL)
-	fmt.Println(incomingURL)
-	fmt.Println("yeseeeeeeeee")*/
+
 }
 
 func TestAddTorrent(t *testing.T){
