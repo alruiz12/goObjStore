@@ -6,7 +6,7 @@ install:
   - go get github.com/gorilla/mux
   - go get github.com/gorilla/context
 script:
-  - go test test.sh
+  - go test -v ./...
 
 after_success:
   - bash <(curl -s https://codecov.io/bash)
