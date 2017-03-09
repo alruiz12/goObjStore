@@ -53,6 +53,7 @@ func GetTorrent(name string) (*vars.Torrent, error) {
 	taux, exists:= vars.TorrentMap[name]
 	if !exists {
 		fmt.Println("NAME= ",name)
+		fmt.Println(vars.TorrentMap)
 		return &emptyTorrent, errors.New("name does not match any torrent")
 	}
 	return &taux, nil
