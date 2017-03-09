@@ -15,6 +15,7 @@ var (
 	reader io.Reader
 	incomingURL string
 )
+
 func init(){
 	router := MyNewRouter()
 	tracker=httptest.NewServer(router)
