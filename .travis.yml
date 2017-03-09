@@ -6,7 +6,7 @@ install:
   - go get github.com/gorilla/mux
   - go get github.com/gorilla/context
 script:
-  - go test -v ./... -coverprofile=coverage.txt
+  - go test -v ./...
 
 after_success:
   - bash <(curl -s https://codecov.io/bash) -f a904257c-d9ea-4130-b3b0-10695d8ee023
