@@ -9,4 +9,4 @@ script:
   - src/test.sh
 
 after_success:
-  - bash <(curl -s https://codecov.io/bash) -f a904257c-d9ea-4130-b3b0-10695d8ee023
+  - bash <(curl -s https://codecov.io/bash)
