@@ -3,6 +3,7 @@ package conf
 import (
 	"errors"
 	"github.com/alruiz12/simpleBT/src/vars"
+	"fmt"
 )
 
 
@@ -51,6 +52,7 @@ func GetTorrent(name string) (*vars.Torrent, error) {
 	var emptyTorrent vars.Torrent
 	taux, exists:= vars.TorrentMap[name]
 	if !exists {
+		fmt.Println("NAME= ",name)
 		return &emptyTorrent, errors.New("name does not match any torrent")
 	}
 	return &taux, nil

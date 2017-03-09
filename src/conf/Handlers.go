@@ -83,7 +83,7 @@ func addPeer(w http.ResponseWriter, r *http.Request){
 			panic(err)
 		}
 	}
-
+	fmt.Println("TEST: ",pt)
 	t,err=GetTorrent(pt.TorrentName)
 	if err!=nil {panic(err)}
 
