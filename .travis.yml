@@ -5,9 +5,8 @@ go:
 install:
   - go get github.com/gorilla/mux
   - go get github.com/gorilla/context
-  - go get install coverage
 script:
-  - coverage run src/main_test.go
+  - go test -v ./...
 
 after_success:
-  - bash <(curl -s https://codecov.io/bash)
+  - bash <(curl -s https://codecov.io/bash) -f a904257c-d9ea-4130-b3b0-10695d8ee023
