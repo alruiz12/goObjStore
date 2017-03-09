@@ -39,7 +39,8 @@ func TestAddTorrent_AddPeer(t *testing.T) {
 		t.Error("Success expected: %d", res.StatusCode)
 	}
 
-
+	incomingURL2=fmt.Sprintf("%s/addPeer", tracker2.URL)
+	fmt.Println(incomingURL2)
 	peerJson := `{"peerIP":"192.168.1.3","torrentName":"torrent1"}`
 	reader2 = strings.NewReader(peerJson)
 	request, err = http.NewRequest("POST", incomingURL2, reader2)
@@ -64,7 +65,7 @@ func TestAddTorrent_AddPeer(t *testing.T) {
 	if err != nil {
 		t.Error(err)
 	}
-	if res.StatusCode != 201 {
+	if res.StatusCode != 200{
 		t.Error("Success expected: %d", res.StatusCode)
 	}
 

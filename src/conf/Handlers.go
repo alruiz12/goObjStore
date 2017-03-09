@@ -109,7 +109,7 @@ Returns the peer's IP addresses, from which the given torrent can be downloaded
 func getIPs(w http.ResponseWriter, r *http.Request){
 	var torrentName vars.Torrent
 	var auxTorrent *vars.Torrent
-
+	fmt.Println("...getIP starts ...")
 	body, err := ioutil.ReadAll(io.LimitReader(r.Body, 1048576))
 	if err != nil {
 		panic(err)
@@ -133,4 +133,5 @@ func getIPs(w http.ResponseWriter, r *http.Request){
 	if err := json.NewEncoder(w).Encode(ret); err != nil {
 		panic(err)
 	}
+	fmt.Println("...getIP finishes ...")
 }
