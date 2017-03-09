@@ -85,11 +85,24 @@ func addPeer(w http.ResponseWriter, r *http.Request){
 	}
 	fmt.Println("TEST: ",pt)
 	t,err=GetTorrent(pt.TorrentName)
-	if err!=nil {panic(err)}
+	if err!=nil {
+		w.Header().Set("Content-Type", "application/json; charset=UTF-8")
+		w.WriteHeader(http.StatusNotFound)
+		if err := json.NewEncoder(w).Encode(t); err != nil {
+			panic(err)
+		}
+		return
+	}
 
 	auxPeer:= vars.Peer{pt.PeerIP}
 	ret,err:=addPeerRepo(auxPeer,t)
-	if err!=nil {panic(err)}
+	if err!=nil {
+		w.Header().Set("Content-Type", "application/json; charset=UTF-8")
+		w.WriteHeader(http.StatusNotFound)
+		if err := json.NewEncoder(w).Encode(ret); err != nil {
+			panic(err)
+		}
+	}
 
 	//Todo if torrent doesn't exist ret:=addTorrentRepo(t)?
 	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
@@ -125,7 +138,14 @@ func getIPs(w http.ResponseWriter, r *http.Request){
 		}
 	}
 	auxTorrent,err=GetTorrent(torrentName.Name)
-	if err!=nil {panic(err)}
+	if err!=nil {
+		w.Header().Set("Content-Type", "application/json; charset=UTF-8")
+		w.WriteHeader(http.StatusNotFound)
+		if err := json.NewEncoder(w).Encode(auxTorrent); err != nil {
+			panic(err)
+		}
+		return
+	}
 	ret:=getIPsRepo(auxTorrent)
 
 	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
