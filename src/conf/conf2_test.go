@@ -96,4 +96,17 @@ func TestRepo(t *testing.T) {
 		t.Error("Failure expected: %d", res.StatusCode)
 	}
 
+
+	incomingURL2=fmt.Sprintf("%s/addTorrent", tracker2.URL)
+	fmt.Println(incomingURL2)
+	reader2 = nil
+	request, err = http.NewRequest("GET", incomingURL2, reader2)
+	res, err = http.DefaultClient.Do(request)
+	if err != nil {
+		t.Error(err)
+	}
+	if res.StatusCode != 200{
+		t.Error("Success expected: %d", res.StatusCode)
+	}
+
 }
