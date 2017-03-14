@@ -12,15 +12,20 @@ addTorrentRepo is called from Handlers.addTorrent after unmarshalling parameter.
 Adds a new Torrent to the Tracker file of torrents.
 @param1 new torrent to be added
 @returns new torrent added
-Todo: save and update currentId to file
 Todo: identifying torrents by name or id would lead to ensure unique name or id
  */
-func addTorrentRepo(t vars.Torrent) vars.Torrent{
+func addTorrentRepo(t vars.Torrent) (vars.Torrent, error){
+	torrent:=vars.Torrent{}
+	_, exists:= vars.TorrentMap[t.Name]
+	if exists {
+		return torrent, errors.New("torrent already exists")
+	}
 	t.Id=vars.CurrentId
 	vars.CurrentId++
 	vars.TorrentMap[t.Name]=t
-	return t
+	return t, nil
 }
+
 
 /*
 addTPeerRepo is called from Handlers.addPeer after unmarshalling parameters.

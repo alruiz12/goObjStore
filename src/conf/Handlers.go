@@ -6,6 +6,7 @@ import (
 	"io/ioutil"
 	"io"
 	"github.com/alruiz12/simpleBT/src/vars"
+
 )
 
 /*
@@ -31,7 +32,15 @@ func addTorrent(w http.ResponseWriter, r *http.Request){
 			panic(err)
 		}
 	}
-	ret:=addTorrentRepo(t)
+	ret,err:=addTorrentRepo(t)
+	if err!=nil {
+		w.Header().Set("Content-Type", "application/json; charset=UTF-8")
+		w.WriteHeader(208) //Already reported
+		if err := json.NewEncoder(w).Encode(ret); err != nil {
+			panic(err)
+		}
+		return
+	}
 	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
 	w.WriteHeader(http.StatusCreated)
 	if err := json.NewEncoder(w).Encode(ret); err != nil {
@@ -147,4 +156,35 @@ func getIPs(w http.ResponseWriter, r *http.Request){
 		panic(err)
 	}
 	fmt.Println("...getIP finishes ...")
+}
+
+
+
+/*
+getTorrentsList is called when a GET requests 8080/getTorrentsList.
+Returns a list of ALL the torrents tacked by the Tracker
+@param1 used by an HTTP handler to construct an HTTP response.
+@param2 represents HTTP request
+ */
+func getTorrentsList(w http.ResponseWriter, r *http.Request){
+	var t vars.Torrent
+	var ret []vars.Torrent
+	fmt.Println("...getTorrentsList starts ...")
+	if err := r.Body.Close(); err != nil {
+		panic(err)
+	}
+	if len(vars.TorrentMap)==0 {
+		w.Header().Set("Content-Type", "application/json; charset=UTF-8")
+		w.WriteHeader(http.StatusNotFound)
+		return
+	}
+	for _, t = range vars.TorrentMap{
+		ret=append(ret,t)
+	}
+	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
+	w.WriteHeader(http.StatusOK)
+	if err := json.NewEncoder(w).Encode(ret); err != nil {
+		panic(err)
+	}
+	fmt.Println("...getTorrentList finishes ...")
 }

@@ -49,6 +49,12 @@ var routes = Routes{
 		addPeer,
 	},
 	Route{
+		"getTorrentsList",
+		"GET",
+		"/getTorrentsList",
+		getTorrentsList,
+	},
+	Route{
 		"getIPs",
 		"POST",
 		"/getIPs",

@@ -26,12 +26,27 @@ func TestRepo(t *testing.T) {
 	router := MyNewRouter()
 	tracker2=httptest.NewServer(router)
 
-	incomingURL2=fmt.Sprintf("%s/addTorrent", tracker2.URL)
+
+	incomingURL2=fmt.Sprintf("%s/getTorrentsList", tracker2.URL)
 	fmt.Println(incomingURL2)
 	torrentJson := `{"name":"torrent1"}`
 	reader2 = strings.NewReader(torrentJson)
-	request, err := http.NewRequest("POST", incomingURL2, reader2)
+	request, err := http.NewRequest("GET", incomingURL2, reader2)
 	res, err := http.DefaultClient.Do(request)
+	if err != nil {
+		t.Error(err)
+	}
+	if res.StatusCode != 404 {
+		t.Error("Failure expected: %d", res.StatusCode)
+	}
+
+
+	incomingURL2=fmt.Sprintf("%s/addTorrent", tracker2.URL)
+	fmt.Println(incomingURL2)
+	torrentJson = `{"name":"torrent1"}`
+	reader2 = strings.NewReader(torrentJson)
+	request, err = http.NewRequest("POST", incomingURL2, reader2)
+	res, err = http.DefaultClient.Do(request)
 	if err != nil {
 		t.Error(err)
 	}
@@ -118,7 +133,21 @@ func TestRepo(t *testing.T) {
 	if err != nil {
 		t.Error(err)
 	}
-	if res.StatusCode != 201 {
+	if res.StatusCode != 208 {
+		t.Error("Failure expected: %d", res.StatusCode)
+	}
+
+
+	incomingURL2=fmt.Sprintf("%s/getTorrentsList", tracker2.URL)
+	fmt.Println(incomingURL2)
+	torrentJson = `{"name":"torrent1"}`
+	reader2 = strings.NewReader(torrentJson)
+	request, err = http.NewRequest("GET", incomingURL2, reader2)
+	res, err = http.DefaultClient.Do(request)
+	if err != nil {
+		t.Error(err)
+	}
+	if res.StatusCode != 200 {
 		t.Error("Success expected: %d", res.StatusCode)
 	}
 
