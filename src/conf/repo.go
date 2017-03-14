@@ -3,7 +3,7 @@ package conf
 import (
 	"errors"
 	"github.com/alruiz12/simpleBT/src/vars"
-	"fmt"
+
 )
 
 
@@ -11,7 +11,7 @@ import (
 addTorrentRepo is called from Handlers.addTorrent after unmarshalling parameter.
 Adds a new Torrent to the Tracker file of torrents.
 @param1 new torrent to be added
-@returns new torrent added
+@returns new torrent added, error if any
 Todo: identifying torrents by name or id would lead to ensure unique name or id
  */
 func addTorrentRepo(t vars.Torrent) (vars.Torrent, error){
@@ -53,8 +53,6 @@ func GetTorrent(name string) (*vars.Torrent, error) {
 	var emptyTorrent vars.Torrent
 	taux, exists:= vars.TorrentMap[name]
 	if !exists {
-		fmt.Println("NAME= ",name)
-		fmt.Println(vars.TorrentMap)
 		return &emptyTorrent, errors.New("name does not match any torrent")
 	}
 	return &taux, nil
