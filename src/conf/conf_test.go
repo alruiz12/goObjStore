@@ -162,7 +162,7 @@ func TestRepo(t *testing.T) {
 
 
 
-	file, err := os.Open("Routes.go")
+	file, err := os.Open("uploadedFile")
 	if err != nil {
 		fmt.Println("Opening file")
 		t.Error(err)
@@ -172,7 +172,7 @@ func TestRepo(t *testing.T) {
 	fmt.Println(incomingURL2)
 	body := &bytes.Buffer{}
 	writer := multipart.NewWriter(body)
-	part, err := writer.CreateFormFile("file", "Routes.go")
+	part, err := writer.CreateFormFile("file", "uploadedFile")
 	if err != nil {
 		fmt.Println("creating Form file")
 		t.Error(err)
