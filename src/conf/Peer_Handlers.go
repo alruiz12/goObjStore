@@ -30,7 +30,7 @@ func upLoadFile(w http.ResponseWriter, r *http.Request) {
 		fileName:=header.Filename
 		destination, err := os.Create("../uploadedFiles/"+fileName)
 		if err != nil {
-			http.Error(w,err.Error(), 500) //internal server error
+			http.Error(w,err.Error(), 501) //internal server error
 			return
 		}
 		defer destination.Close()
