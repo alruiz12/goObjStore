@@ -8,6 +8,11 @@ import (
 	"strings"
 	"io"
 	"net/http"
+	"mime/multipart"
+	"bytes"
+
+	"os"
+	"path/filepath"
 )
 
 var (
@@ -143,6 +148,46 @@ func TestRepo(t *testing.T) {
 	torrentJson = `{"name":"torrent1"}`
 	reader2 = strings.NewReader(torrentJson)
 	request, err = http.NewRequest("GET", incomingURL2, reader2)
+	res, err = http.DefaultClient.Do(request)
+	if err != nil {
+		t.Error(err)
+	}
+	if res.StatusCode != 200 {
+		t.Error("Success expected: %d", res.StatusCode)
+	}
+
+
+
+
+
+
+
+
+
+
+
+	file, err := os.Open("/home/alvaro/Desktop/simpleBT.sh")
+	if err != nil {
+		fmt.Println("Opening file")
+		t.Error(err)
+	}
+	defer file.Close()
+	incomingURL2=fmt.Sprintf("%s/upLoadFile", tracker2.URL)
+	fmt.Println(incomingURL2)
+	body := &bytes.Buffer{}
+	writer := multipart.NewWriter(body)
+	part, err := writer.CreateFormFile("file", filepath.Base("/home/alvaro/Desktop/simpleBT.sh"))
+	if err != nil {
+		fmt.Println("creating Form file")
+		t.Error(err)
+	}
+	_, err = io.Copy(part, file)
+	err=writer.Close()
+	if err != nil {
+		t.Error(err)
+	}
+	request, err = http.NewRequest("POST", incomingURL2, body)
+	request.Header.Set("Content-Type", writer.FormDataContentType())
 	res, err = http.DefaultClient.Do(request)
 	if err != nil {
 		t.Error(err)

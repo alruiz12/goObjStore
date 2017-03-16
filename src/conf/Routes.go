@@ -17,7 +17,13 @@ Router using gorilla/mux
 */
 func MyNewRouter() *mux.Router {
 
+	/*
+	go func() {
+		http.ListenAndServe(":8080", nil)
+	}()*/
+
 	router := mux.NewRouter().StrictSlash(true)
+	router.HandleFunc("/upLoadFile", upLoadFile)
 	for _, route := range routes {
 		router.
 			Methods(route.Method).
@@ -60,5 +66,11 @@ var routes = Routes{
 		"/getIPs",
 		getIPs,
 	},
+	/*Route{
+		"upLoadFile",
+		"POST",
+		"/upLoadFile",
+		upLoadFile,
+	},*/
 
 }
