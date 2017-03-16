@@ -12,7 +12,7 @@ import (
 	"bytes"
 
 	"os"
-	"path/filepath"
+
 )
 
 var (
@@ -162,11 +162,7 @@ func TestRepo(t *testing.T) {
 
 
 
-
-
-
-
-	file, err := os.Open("/home/alvaro/Desktop/simpleBT.sh")
+	file, err := os.Open("Routes.go")
 	if err != nil {
 		fmt.Println("Opening file")
 		t.Error(err)
@@ -176,7 +172,7 @@ func TestRepo(t *testing.T) {
 	fmt.Println(incomingURL2)
 	body := &bytes.Buffer{}
 	writer := multipart.NewWriter(body)
-	part, err := writer.CreateFormFile("file", filepath.Base("/home/alvaro/Desktop/simpleBT.sh"))
+	part, err := writer.CreateFormFile("file", "Routes.go")
 	if err != nil {
 		fmt.Println("creating Form file")
 		t.Error(err)
