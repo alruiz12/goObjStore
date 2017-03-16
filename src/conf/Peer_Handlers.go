@@ -25,7 +25,7 @@ func upLoadFile(w http.ResponseWriter, r *http.Request) {
 			http.Error(w, "Error uploading file", 404)
 			return
 		}
-		//if (Exists("../uploadedFiles/"+header.Filename)){}
+		//if (Exists("../uploadedFiles/"+header.Filename)){ }
 		defer f.Close()
 		fileName:=header.Filename
 		destination, err := os.Create("../uploadedFiles/"+fileName)
