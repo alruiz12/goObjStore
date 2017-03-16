@@ -28,7 +28,7 @@ func upLoadFile(w http.ResponseWriter, r *http.Request) {
 		//if (Exists("../uploadedFiles/"+header.Filename)){ }
 		defer f.Close()
 		fileName:=header.Filename
-		destination, err := os.Create("../uploadedFiles/"+fileName)
+		destination, err := os.Create(os.Getenv("GOPATH")+"/src/github.com/alruiz12/simpleBT/src/uploadedFiles/"+fileName)
 		if err != nil {
 			http.Error(w,err.Error(), 501) //internal server error
 			return
@@ -51,7 +51,7 @@ func upLoadFile(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprintln(w,`
 	<form action="/upLoadFile" method="post" enctype="multipart/form-data">
 	    upload a file<br>
-	    <input type="file" name="userFile"><br>
+	    <input type="file" name="file"><br>
 	    <input type="submit">
 	</form>
 	<br>
