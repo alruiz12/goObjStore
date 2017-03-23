@@ -7,8 +7,14 @@ import (
 	"io"
 	"log"
 	"os"
+
+	"github.com/alruiz12/simpleBT/src/vars"
+	"strings"
+	"errors"
+	"time"
 )
 
+var quit = make(chan struct{})
 /*
 upLoadFile is called when a POST requests 8080/upLoadFile.
 Allow peer to upload a file
@@ -61,25 +67,41 @@ func upLoadFile(w http.ResponseWriter, r *http.Request) {
 	fmt.Println("*** addFile FINISHES ***")
 }
 
-/* Next Commit:
-func Exists (name string) bool {
-	if _, err:= os.Stat(name); err!= nil {
-		if os.IsNotExist(err){
-			return false
+func StartAnnouncing(interval time.Duration, stopTime time.Duration){
+	ticker := time.NewTicker(interval * time.Second)
+
+	go func() {
+		for {
+			select {
+			case <-ticker.C:
+				announce()
+
+			case <-quit:
+				ticker.Stop()
+				return
+			}
 		}
-	}
-	return true
+	}()
+
+	time.AfterFunc(stopTime * time.Second, closeQuit )
+
+}
+
+func closeQuit(){
+	close(quit)
 }
 
 func announce(){
+	fmt.Println("announce")
 	var reader io.Reader
-	var outgoingURL string
-	jsonContent := `{"name":"torrent1"}`
+	trackerURL := "http://"+vars.TrackerIP+vars.TrackerPort+"/listenAnnounce"
+	peerURL := trackerURL	//Variable replication just for the sake of clarity
+	jsonContent := `{"file":"torrent1","IP":"`+peerURL+`"}`
 	reader = strings.NewReader(jsonContent)
-	request, err := http.NewRequest("POST", outgoingURL, reader)
-	_, err = http.DefaultClient.Do(request)
+	request, err := http.NewRequest("POST", trackerURL, reader)
+	req, err := http.DefaultClient.Do(request)
+	fmt.Println("announce answer:"+ req.Status)
 	if err != nil {
 		errors.New("invalid request")
 	}
 }
-*/

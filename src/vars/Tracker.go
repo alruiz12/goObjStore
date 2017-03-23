@@ -1,18 +1,37 @@
 package vars
 
+import (
+	"time"
+	"sync"
+)
 
-var Foo int
 var CurrentId int
 var TorrentMap map[string]Torrent
+var TrackerPort = ":8080"
+var TrackerIP = "127.0.0.1"
+
+
+
+type IPCounter struct {
+	IPAddr string
+	Time   time.Time
+	Count  int
+	TorrentName string
+}
+
+type IPCounterMap map[string]IPCounter
+
+type TrackedTorrents struct {
+	IPs map[string]IPCounterMap
+	Mutex    sync.RWMutex
+}
+
+var TrackedTorrentsMap = TrackedTorrents{IPs: make(map[string]IPCounterMap)}
 
 func init() {
-	Foo = 5
 	CurrentId=0
 	TorrentMap=make(map[string]Torrent)
 
-}
 
-func Upd(){
-	Foo=Foo+1
 }
 

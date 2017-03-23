@@ -4,6 +4,8 @@ import (
 	"errors"
 	"github.com/alruiz12/simpleBT/src/vars"
 
+	"fmt"
+	"time"
 )
 
 
@@ -72,3 +74,90 @@ func getIPsRepo(t *vars.Torrent)[]string{
 	return ret
 }
 
+
+/*
+TrackPeers is called from Handlers.listenAnnounce after unmarshalling parameters.
+@param1 peer IP
+@param2 torrent name
+*/
+func TrackPeers(IP string, torrent string){
+	fmt.Println("	...TrackPeers starts...")
+
+	Incr(IP,torrent)
+
+	fmt.Println("	...TrackPeers finishes...")
+}
+
+
+// Increment IP address counter and update time
+func Incr(ipAddr string, torrent string) {
+	now := time.Now().UTC()
+	vars.TrackedTorrentsMap.Mutex.Lock()
+	defer 	vars.TrackedTorrentsMap.Mutex.Unlock()
+
+	IPmap, torrentFound := vars.TrackedTorrentsMap.IPs[torrent]
+	if !torrentFound { //empty value: inner map
+		NewCounter := new(vars.IPCounter)
+		NewCounter.IPAddr=ipAddr
+		NewCounter.Time=now
+		NewCounter.TorrentName=torrent
+		IPmap=make(map[string]vars.IPCounter)
+		IPmap[ipAddr]=*NewCounter
+
+
+	} else{ //already a map for given torrent, search given IP and update
+		counter, IPexists:= IPmap[ipAddr]
+		counter.Time=now
+		counter.Count++
+		if !IPexists{ //IP not registered
+			counter.IPAddr=ipAddr
+			counter.TorrentName=torrent
+
+		}
+		IPmap[ipAddr]=counter
+	}
+	vars.TrackedTorrentsMap.IPs[torrent]=IPmap
+}
+
+
+// Delete IP address counter
+func Delete(torrentName string,ipAddr string) {
+	fmt.Println("Deleting "+ipAddr)
+	vars.TrackedTorrentsMap.Mutex.Lock()
+	defer 	vars.TrackedTorrentsMap.Mutex.Unlock()
+
+	delete(vars.TrackedTorrentsMap.IPs[torrentName], ipAddr)
+}
+
+// Get old IP address counters old durations ago
+func OldIPCounters(old time.Duration){
+	oldTime := time.Now().UTC().Add(-old)
+	vars.TrackedTorrentsMap.Mutex.Lock()
+	defer 	vars.TrackedTorrentsMap.Mutex.Unlock()
+	for _, torrents := range vars.TrackedTorrentsMap.IPs {
+		for _, counter := range torrents{
+			if counter.Time.Before(oldTime){
+				Delete(counter.TorrentName,counter.IPAddr)
+			}
+		}
+
+	}
+}
+
+func CheckInactivePeers (interval time.Duration) {
+	fmt.Println("checking inactive Peers")
+	ticker := time.NewTicker(interval * time.Second)
+	quit := make(chan struct{})
+	go func() {
+		for {
+			select {
+			case <-ticker.C:
+				OldIPCounters(interval * time.Second)
+
+			case <-quit:
+				ticker.Stop()
+				return
+			}
+		}
+	}()
+}

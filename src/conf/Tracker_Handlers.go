@@ -187,3 +187,42 @@ func getTorrentsList(w http.ResponseWriter, r *http.Request){
 	}
 	fmt.Println("...getTorrentList finishes ...")
 }
+
+
+
+/*
+listenAnnounce is called when a POST requests 8080/listenAnnounce.
+Writes down the current peer announcing so it avoids deleting it
+@param1 used by an HTTP handler to construct an HTTP response.
+@param2 represents HTTP request
+ */
+func listenAnnounce(w http.ResponseWriter, r *http.Request){
+	var announcement vars.Announcement
+	//var torrentName vars.Torrent
+	//var auxTorrent *vars.Torrent
+	fmt.Println("...listenAnnounce starts ...")
+	body, err := ioutil.ReadAll(io.LimitReader(r.Body, 1048576))
+	if err != nil {
+		panic(err)
+	}
+	if err := r.Body.Close(); err != nil {
+		panic(err)
+	}
+	if err := json.Unmarshal(body, &announcement); err != nil {
+		w.Header().Set("Content-Type", "application/json; charset=UTF-8")
+		w.WriteHeader(422) // unprocessable entity
+		if err := json.NewEncoder(w).Encode(err); err != nil {
+			panic(err)
+		}
+	}
+
+	TrackPeers(announcement.IP, announcement.File)
+
+	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
+	w.WriteHeader(http.StatusOK)
+	if err := json.NewEncoder(w).Encode(announcement); err != nil {
+		panic(err)
+	}
+	fmt.Println(announcement.IP)
+	fmt.Println("...listenAnnounce finishes ...")
+}

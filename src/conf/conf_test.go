@@ -13,6 +13,8 @@ import (
 
 	"os"
 
+	"github.com/alruiz12/simpleBT/src/vars"
+	"errors"
 )
 
 var (
@@ -191,5 +193,38 @@ func TestRepo(t *testing.T) {
 	if res.StatusCode != 200 {
 		t.Error("Success expected: %d", res.StatusCode)
 	}
+
+
+
+
+
+
+
+
+	fmt.Println("announce")
+	var reader io.Reader
+	trackerURL := "http://"+vars.TrackerIP+vars.TrackerPort+"/listenAnnounce"
+	peerURL := trackerURL	//Variable replication just for the sake of correctness
+	jsonContent := `{"file":"torrent1","IP":`+peerURL+`}`
+	reader = strings.NewReader(jsonContent)
+	request, err = http.NewRequest("POST", trackerURL, reader)
+	res, err = http.DefaultClient.Do(request)
+	if err != nil {
+		errors.New("invalid request")
+	}
+	if res.StatusCode != 200 {
+		t.Error("Success expected: %d", res.StatusCode)
+	}
+
+
+
+
+
+
+
+
+
+
+
 
 }
