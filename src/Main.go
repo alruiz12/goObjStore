@@ -8,7 +8,9 @@ import (
 )
 
 func main() {
-	router := conf.MyNewRouter()
-	log.Fatal(http.ListenAndServe(vars.TrackerPort, router))
 
+	router := conf.MyNewRouter()
+	conf.StartAnnouncing(2,9)
+	conf.CheckInactivePeers(5)
+	log.Fatal(http.ListenAndServe(vars.TrackerPort, router))
 }
