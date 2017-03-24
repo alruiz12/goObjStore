@@ -6,6 +6,7 @@ import (
 
 	"fmt"
 	"time"
+	"strings"
 )
 
 
@@ -80,29 +81,23 @@ TrackPeers is called from Handlers.listenAnnounce after unmarshalling parameters
 @param1 peer IP
 @param2 torrent name
 */
-func TrackPeers(IP string, torrent string){
+func TrackPeers(ipAddr string, torrent string) []string{
 	fmt.Println("	...TrackPeers starts...")
-
-	Incr(IP,torrent)
-
-	fmt.Println("	...TrackPeers finishes...")
-}
-
-
-// Increment IP address counter and update time
-func Incr(ipAddr string, torrent string) {
+	var swarmSlice []string
 	now := time.Now().UTC()
 	vars.TrackedTorrentsMap.Mutex.Lock()
 	defer 	vars.TrackedTorrentsMap.Mutex.Unlock()
 
 	IPmap, torrentFound := vars.TrackedTorrentsMap.IPs[torrent]
-	if !torrentFound { //empty value: inner map
+	if !torrentFound { //empty value: inner map (Torrent not registered)
 		NewCounter := new(vars.IPCounter)
 		NewCounter.IPAddr=ipAddr
 		NewCounter.Time=now
 		NewCounter.TorrentName=torrent
 		IPmap=make(map[string]vars.IPCounter)
 		IPmap[ipAddr]=*NewCounter
+		vars.TrackedTorrentsMap.IPs[torrent]=IPmap
+		return nil
 
 
 	} else{ //already a map for given torrent, search given IP and update
@@ -115,17 +110,33 @@ func Incr(ipAddr string, torrent string) {
 
 		}
 		IPmap[ipAddr]=counter
+		vars.TrackedTorrentsMap.IPs[torrent]=IPmap
+		for _,counter=range IPmap{
+			if strings.Compare( counter.IPAddr, ipAddr)!=0{ //Do not include requesting peer's IP in response
+				swarmSlice=append(swarmSlice,counter.IPAddr)}
+		}
 	}
-	vars.TrackedTorrentsMap.IPs[torrent]=IPmap
+
+
+	fmt.Println("	...TrackPeers finishes...")
+	return swarmSlice
+
 }
+
+
+
+
+
+
+
+
+
+
 
 
 // Delete IP address counter
 func Delete(torrentName string,ipAddr string) {
-	fmt.Println("Deleting "+ipAddr)
-	vars.TrackedTorrentsMap.Mutex.Lock()
-	defer 	vars.TrackedTorrentsMap.Mutex.Unlock()
-
+	fmt.Println("					///// Deleting "+ipAddr)
 	delete(vars.TrackedTorrentsMap.IPs[torrentName], ipAddr)
 }
 

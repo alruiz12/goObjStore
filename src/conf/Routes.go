@@ -67,5 +67,11 @@ var routes = Routes{
 		"/listenAnnounce",
 		listenAnnounce,
 	},
+	Route{
+		"p2pRequest",
+		"GET",
+		"/p2pRequest",
+		p2pRequest,
+	},
 
 }

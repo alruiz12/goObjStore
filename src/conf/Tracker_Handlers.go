@@ -216,13 +216,13 @@ func listenAnnounce(w http.ResponseWriter, r *http.Request){
 		}
 	}
 
-	TrackPeers(announcement.IP, announcement.File)
+	swarmSlice:=TrackPeers(announcement.IP, announcement.File)
 
 	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
 	w.WriteHeader(http.StatusOK)
-	if err := json.NewEncoder(w).Encode(announcement); err != nil {
+	if err := json.NewEncoder(w).Encode(swarmSlice); err != nil {
 		panic(err)
 	}
-	fmt.Println(announcement.IP)
+	fmt.Println("... listen announce IP: ",announcement.IP)
 	fmt.Println("...listenAnnounce finishes ...")
 }

@@ -12,9 +12,9 @@ import (
 	"strings"
 	"errors"
 	"time"
+	"encoding/json"
 )
 
-var quit = make(chan struct{})
 /*
 upLoadFile is called when a POST requests 8080/upLoadFile.
 Allow peer to upload a file
@@ -67,41 +67,88 @@ func upLoadFile(w http.ResponseWriter, r *http.Request) {
 	fmt.Println("*** addFile FINISHES ***")
 }
 
-func StartAnnouncing(interval time.Duration, stopTime time.Duration){
+func StartAnnouncing(interval time.Duration, stopTime time.Duration,IP string,torrentName string, quit chan int){
 	ticker := time.NewTicker(interval * time.Second)
 
 	go func() {
 		for {
 			select {
 			case <-ticker.C:
-				announce()
+				announce(IP, torrentName)
 
 			case <-quit:
 				ticker.Stop()
+				fmt.Println("								EXITING "+IP)
 				return
 			}
 		}
 	}()
 
-	time.AfterFunc(stopTime * time.Second, closeQuit )
+
+	fmt.Println("							EXITING 22 "+IP)
 
 }
 
-func closeQuit(){
-	close(quit)
-}
 
-func announce(){
-	fmt.Println("announce")
+func announce(IP string,torrentName string){
+	fmt.Println("announce: ",IP)
 	var reader io.Reader
 	trackerURL := "http://"+vars.TrackerIP+vars.TrackerPort+"/listenAnnounce"
-	peerURL := trackerURL	//Variable replication just for the sake of clarity
-	jsonContent := `{"file":"torrent1","IP":"`+peerURL+`"}`
+	//peerURL := trackerURL	//Variable replication just for the sake of clarity
+	jsonContent := `{"file":"`+torrentName+`","IP":"`+IP+`"}`
 	reader = strings.NewReader(jsonContent)
 	request, err := http.NewRequest("POST", trackerURL, reader)
 	req, err := http.DefaultClient.Do(request)
 	fmt.Println("announce answer:"+ req.Status)
+
+	var swarmSlice []string
+
+	body, err := ioutil.ReadAll(io.LimitReader(req.Body, 1048576))
 	if err != nil {
-		errors.New("invalid request")
+		panic(err)
 	}
+	if err := req.Body.Close(); err != nil {
+		panic(err)
+	}
+	err = json.Unmarshal(body, &swarmSlice);
+	if err != nil {
+		errors.New("error decoding swarmSlice")
+	}
+	fmt.Println("									SLICE: ",swarmSlice)
+	var peerURL string
+	for _, peerIP:=range swarmSlice{
+		peerURL="http://"+peerIP+vars.TrackerPort+"/p2pRequest"
+		request, err=http.NewRequest("GET",peerURL,reader)
+		req, err = http.DefaultClient.Do(request)
+		fmt.Println("p2p	p2p	p2p	p2p	p2p	p2p	p2p:"+ req.Status)
+	}
+}
+
+
+func p2pRequest(w http.ResponseWriter, r *http.Request){
+	var announcement vars.Announcement
+	fmt.Println("...p2pRequest starts ...")
+	body, err := ioutil.ReadAll(io.LimitReader(r.Body, 1048576))
+	if err != nil {
+		panic(err)
+	}
+	if err := r.Body.Close(); err != nil {
+		panic(err)
+	}
+	if err := json.Unmarshal(body, &announcement); err != nil {
+		w.Header().Set("Content-Type", "application/json; charset=UTF-8")
+		w.WriteHeader(422) // unprocessable entity
+		if err := json.NewEncoder(w).Encode(err); err != nil {
+			panic(err)
+		}
+	}
+
+
+
+	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
+	w.WriteHeader(http.StatusOK)
+	if err := json.NewEncoder(w).Encode(announcement); err != nil {
+		panic(err)
+	}
+	fmt.Println("...p2pRequest finishes ...")
 }
