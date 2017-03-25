@@ -149,7 +149,7 @@ func p2pRequest(w http.ResponseWriter, r *http.Request){
 	}
 
 	fmt.Println("							"+vars.IP+" was asked by "+announcement.IP)
-	sendFile(announcement.File, announcement.IP)
+	if strings.Compare(vars.IP, "10.0.0.11" ){ sendFile(announcement.File, announcement.IP)}
 	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
 	w.WriteHeader(http.StatusOK)
 	if err := json.NewEncoder(w).Encode(announcement); err != nil {
@@ -161,14 +161,17 @@ func p2pRequest(w http.ResponseWriter, r *http.Request){
 
 func sendFile(fileName string, IP string){
 
-
-	file, err := os.Open("string")
+	fmt.Println(os.Getwd())
+	file, err := os.Open("src/conf/"+fileName)
 	if err != nil {
 		fmt.Println("Opening file")
 		log.Println(err)
 	}
 	defer file.Close()
-	destinationURL:=fmt.Sprintf("%s/upLoadFile", IP)
+
+	//destinationURL:=fmt.Sprintf("%s/upLoadFile", IP)
+	destinationURL:="http://"+IP+":8080/upLoadFile"
+	//destinationURL="http://"+destinationURL
 	fmt.Println(destinationURL)
 	body := &bytes.Buffer{}
 	writer := multipart.NewWriter(body)
