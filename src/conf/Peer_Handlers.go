@@ -7,12 +7,13 @@ import (
 	"io"
 	"log"
 	"os"
-
+	"bytes"
 	"github.com/alruiz12/simpleBT/src/vars"
 	"strings"
 	"errors"
 	"time"
 	"encoding/json"
+	"mime/multipart"
 )
 
 /*
@@ -148,11 +149,48 @@ func p2pRequest(w http.ResponseWriter, r *http.Request){
 	}
 
 	fmt.Println("							"+vars.IP+" was asked by "+announcement.IP)
-
+	sendFile(announcement.File, announcement.IP)
 	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
 	w.WriteHeader(http.StatusOK)
 	if err := json.NewEncoder(w).Encode(announcement); err != nil {
 		panic(err)
 	}
 	fmt.Println("...p2pRequest finishes ...")
+}
+
+
+func sendFile(fileName string, IP string){
+
+
+	file, err := os.Open("string")
+	if err != nil {
+		fmt.Println("Opening file")
+		log.Println(err)
+	}
+	defer file.Close()
+	destinationURL:=fmt.Sprintf("%s/upLoadFile", IP)
+	fmt.Println(destinationURL)
+	body := &bytes.Buffer{}
+	writer := multipart.NewWriter(body)
+	part, err := writer.CreateFormFile("file", fileName)
+	if err != nil {
+		fmt.Println("creating Form file")
+		log.Println(err)
+	}
+	_, err = io.Copy(part, file)
+	err=writer.Close()
+	if err != nil {
+		log.Println(err)
+	}
+	request, err := http.NewRequest("POST", destinationURL, body)
+	request.Header.Set("Content-Type", writer.FormDataContentType())
+	res, err := http.DefaultClient.Do(request)
+	if err != nil {
+		log.Println(err)
+	}
+	if res.StatusCode != 200 {
+		log.Println("Success expected: %d", res.StatusCode)
+	}
+
+
 }
