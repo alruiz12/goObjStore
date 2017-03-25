@@ -49,7 +49,7 @@ func main() {
 	if strings.Compare(vars.IP, "10.0.0.10") != 0 {
 		go func() {
 			var quit = make(chan int)
-			conf.StartAnnouncing(2, 9, vars.IP, "torrent1", quit)
+			conf.StartAnnouncing(2, 20, vars.IP, "torrent1", quit)
 			time.AfterFunc(9 * time.Second, func() {
 				close(quit)
 			})

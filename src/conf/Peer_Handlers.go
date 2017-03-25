@@ -76,6 +76,10 @@ func StartAnnouncing(interval time.Duration, stopTime time.Duration,IP string,to
 			select {
 			case <-ticker.C:
 				announce(IP, torrentName)
+				if _,err:= os.Stat(torrentName);err==nil{
+					fmt.Println("File exists, not interested")
+					ticker.Stop
+				}
 
 			case <-quit:
 				ticker.Stop()
@@ -149,7 +153,7 @@ func p2pRequest(w http.ResponseWriter, r *http.Request){
 	}
 
 	fmt.Println("							"+vars.IP+" was asked by "+announcement.IP)
-	if strings.Compare(vars.IP, "10.0.0.11" ){ sendFile(announcement.File, announcement.IP)}
+	if strings.Compare(vars.IP, "10.0.0.11" )==0{ sendFile(announcement.File, announcement.IP)}
 	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
 	w.WriteHeader(http.StatusOK)
 	if err := json.NewEncoder(w).Encode(announcement); err != nil {
