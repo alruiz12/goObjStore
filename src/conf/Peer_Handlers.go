@@ -161,7 +161,6 @@ func p2pRequest(w http.ResponseWriter, r *http.Request){
 
 func sendFile(fileName string, IP string){
 
-	fmt.Println(os.Getwd())
 	file, err := os.Open("src/conf/"+fileName)
 	if err != nil {
 		fmt.Println("Opening file")
