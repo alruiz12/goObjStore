@@ -78,7 +78,6 @@ func StartAnnouncing(interval time.Duration, stopTime time.Duration,IP string,to
 
 			case <-quit:
 				ticker.Stop()
-				fmt.Println("								EXITING "+IP)
 				return
 			}
 		}
@@ -99,7 +98,7 @@ func announce(IP string,torrentName string){
 	reader = strings.NewReader(jsonContent)
 	request, err := http.NewRequest("POST", trackerURL, reader)
 	req, err := http.DefaultClient.Do(request)
-	fmt.Println("announce answer:"+ req.Status)
+	//fmt.Println("announce answer:"+ req.Status)
 
 	var swarmSlice []string
 
@@ -123,7 +122,7 @@ func announce(IP string,torrentName string){
 			peerURL = "http://" + peerIP + vars.TrackerPort + "/p2pRequest"
 			request, err = http.NewRequest("GET", peerURL, reader)
 			req, err = http.DefaultClient.Do(request)
-			fmt.Println("p2p	p2p	p2p	p2p	p2p	p2p	p2p:" + req.Status + " by " + peerIP)
+			//fmt.Println("p2p	p2p	p2p	p2p	p2p	p2p	p2p:" + req.Status + " by " + peerIP)
 		}(peerURL,request,err,req)
 	}
 }
