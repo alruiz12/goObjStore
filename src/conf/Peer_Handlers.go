@@ -115,14 +115,16 @@ func announce(IP string,torrentName string){
 		errors.New("error decoding swarmSlice")
 	}
 	fmt.Println("									SLICE: ",swarmSlice)
-	var peerURL string
+	//var peerURL string
 	jsonContent = `{"file":"`+torrentName+`","IP":"`+IP+`"}`
 	reader = strings.NewReader(jsonContent)
 	for _, peerIP:=range swarmSlice{
-		peerURL="http://"+peerIP+vars.TrackerPort+"/p2pRequest"
-		request, err=http.NewRequest("GET",peerURL,reader)
-		req, err = http.DefaultClient.Do(request)
-		fmt.Println("p2p	p2p	p2p	p2p	p2p	p2p	p2p:"+ req.Status+ " by "+peerIP)
+		go func(peerURL string, request *http.Request, err error, req http.Response) {
+			peerURL = "http://" + peerIP + vars.TrackerPort + "/p2pRequest"
+			request, err = http.NewRequest("GET", peerURL, reader)
+			req, err = http.DefaultClient.Do(request)
+			fmt.Println("p2p	p2p	p2p	p2p	p2p	p2p	p2p:" + req.Status + " by " + peerIP)
+		}()
 	}
 }
 
@@ -140,6 +142,7 @@ func p2pRequest(w http.ResponseWriter, r *http.Request){
 	if err := json.Unmarshal(body, &announcement); err != nil {
 		w.Header().Set("Content-Type", "application/json; charset=UTF-8")
 		w.WriteHeader(422) // unprocessable entity
+		log.Println(err)
 		if err := json.NewEncoder(w).Encode(err); err != nil {
 			panic(err)
 		}
