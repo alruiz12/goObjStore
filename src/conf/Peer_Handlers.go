@@ -122,7 +122,7 @@ func announce(IP string,torrentName string){
 		peerURL="http://"+peerIP+vars.TrackerPort+"/p2pRequest"
 		request, err=http.NewRequest("GET",peerURL,reader)
 		req, err = http.DefaultClient.Do(request)
-		fmt.Println("p2p	p2p	p2p	p2p	p2p	p2p	p2p:"+ req.Status)
+		fmt.Println("p2p	p2p	p2p	p2p	p2p	p2p	p2p:"+ req.Status+ " by "+vars.IP)
 	}
 }
 
