@@ -143,7 +143,7 @@ func p2pRequest(w http.ResponseWriter, r *http.Request){
 		}
 	}
 
-
+	fmt.Println("							"+vars.IP+" was asked by "+announcement.IP)
 
 	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
 	w.WriteHeader(http.StatusOK)
