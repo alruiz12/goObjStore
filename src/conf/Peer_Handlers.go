@@ -115,16 +115,16 @@ func announce(IP string,torrentName string){
 		errors.New("error decoding swarmSlice")
 	}
 	fmt.Println("									SLICE: ",swarmSlice)
-	//var peerURL string
+	var peerURL string
 	jsonContent = `{"file":"`+torrentName+`","IP":"`+IP+`"}`
 	reader = strings.NewReader(jsonContent)
 	for _, peerIP:=range swarmSlice{
-		go func(peerURL string, request *http.Request, err error, req http.Response) {
+		go func(peerURL string, request *http.Request, err error, req *http.Response) {
 			peerURL = "http://" + peerIP + vars.TrackerPort + "/p2pRequest"
 			request, err = http.NewRequest("GET", peerURL, reader)
 			req, err = http.DefaultClient.Do(request)
 			fmt.Println("p2p	p2p	p2p	p2p	p2p	p2p	p2p:" + req.Status + " by " + peerIP)
-		}()
+		}(peerURL,request,err,req)
 	}
 }
 
