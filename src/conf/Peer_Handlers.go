@@ -116,6 +116,8 @@ func announce(IP string,torrentName string){
 	}
 	fmt.Println("									SLICE: ",swarmSlice)
 	var peerURL string
+	jsonContent = `{"file":"`+torrentName+`","IP":"`+IP+`"}`
+	reader = strings.NewReader(jsonContent)
 	for _, peerIP:=range swarmSlice{
 		peerURL="http://"+peerIP+vars.TrackerPort+"/p2pRequest"
 		request, err=http.NewRequest("GET",peerURL,reader)
