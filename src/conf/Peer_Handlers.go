@@ -76,7 +76,7 @@ func StartAnnouncing(interval time.Duration, stopTime time.Duration,IP string,to
 			select {
 			case <-ticker.C:
 				announce(IP, torrentName)
-				if _,err:= os.Stat(torrentName);err==nil{
+				if _,err:= os.Stat("src/conf/uploadedFiles/"+torrentName);err==nil{
 					fmt.Println("File exists, not interested")
 					ticker.Stop()
 				}
