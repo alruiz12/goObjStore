@@ -153,7 +153,7 @@ func p2pRequest(w http.ResponseWriter, r *http.Request){
 	}
 
 	fmt.Println("							"+vars.IP+" was asked by "+announcement.IP)
-	if strings.Compare(vars.IP, "10.0.0.11" )==0{ sendFile(announcement.File, announcement.IP)}
+	if strings.Compare(vars.IP, "10.0.0.11" )==0{ sendFile(announcement.File, announcement.IP,"8080")}
 	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
 	w.WriteHeader(http.StatusOK)
 	if err := json.NewEncoder(w).Encode(announcement); err != nil {
@@ -163,9 +163,9 @@ func p2pRequest(w http.ResponseWriter, r *http.Request){
 }
 
 
-func sendFile(fileName string, IP string){
+func sendFile(fileName string, IP string, port string){
 
-	file, err := os.Open("src/conf/"+fileName)
+	file, err := os.Open(os.Getenv("GOPATH")+"/src/github.com/alruiz12/simpleBT/src/conf/"+fileName)
 	if err != nil {
 		fmt.Println("Opening file")
 		log.Println(err)
@@ -173,7 +173,7 @@ func sendFile(fileName string, IP string){
 	defer file.Close()
 
 	//destinationURL:=fmt.Sprintf("%s/upLoadFile", IP)
-	destinationURL:="http://"+IP+":8080/upLoadFile"
+	destinationURL:="http://"+IP+":"+port+"/upLoadFile"
 	//destinationURL="http://"+destinationURL
 	fmt.Println(destinationURL)
 	body := &bytes.Buffer{}

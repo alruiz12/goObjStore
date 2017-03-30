@@ -213,7 +213,8 @@ func TestRepo(t *testing.T) {
 		t.Error("Success expected: %d", res.StatusCode)
 	}
 
-
+	var port string =tracker2.URL[len(tracker2.URL)-5:]
+	sendFile("torrent1",tracker2.URL[7:len(tracker2.URL)-6],port)
 
 
 
