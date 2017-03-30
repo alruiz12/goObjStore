@@ -118,7 +118,7 @@ func announce(IP string,torrentName string){
 	fmt.Println("									SLICE: ",swarmSlice)
 	var peerURL string
 	var status int
-	if _,err:= os.Stat("src/conf/uploadedFiles/"+torrentName);err==nil{
+	if _,err:= os.Stat(os.Getenv("GOPATH")+"/src/github.com/alruiz12/simpleBT/src/conf/uploadedFiles/"+torrentName);err==nil{
 		status=4
 		fmt.Println("File exists, not interested")
 	}else{status=2}
