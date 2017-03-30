@@ -10,7 +10,7 @@ import (
 	"net/http"
 	"mime/multipart"
 	"bytes"
-
+	"strconv"
 	"os"
 
 )
@@ -202,7 +202,8 @@ func TestRepo(t *testing.T) {
 
 	incomingURL2=fmt.Sprintf("%s/p2pRequest", tracker2.URL)
 	fmt.Println(incomingURL2)
-	torrentJson = `{"file":"torrent1","IP":"`+tracker2.URL+`"}`
+	status:=2
+	torrentJson = `{"file":"torrent1","IP":"`+tracker2.URL+`","status":"`+strconv.Itoa(status)+`"}`
 	reader2 = strings.NewReader(torrentJson)
 	request, err = http.NewRequest("GET", incomingURL2, reader2)
 	res, err = http.DefaultClient.Do(request)

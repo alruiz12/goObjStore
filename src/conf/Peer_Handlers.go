@@ -14,6 +14,7 @@ import (
 	"time"
 	"encoding/json"
 	"mime/multipart"
+	"strconv"
 )
 
 /*
@@ -76,10 +77,6 @@ func StartAnnouncing(interval time.Duration, stopTime time.Duration,IP string,to
 			select {
 			case <-ticker.C:
 				announce(IP, torrentName)
-				if _,err:= os.Stat("src/conf/uploadedFiles/"+torrentName);err==nil{
-					fmt.Println("File exists, not interested")
-					ticker.Stop()
-				}
 
 			case <-quit:
 				ticker.Stop()
@@ -120,7 +117,12 @@ func announce(IP string,torrentName string){
 	}
 	fmt.Println("									SLICE: ",swarmSlice)
 	var peerURL string
-	jsonContent = `{"file":"`+torrentName+`","IP":"`+IP+`"}`
+	var status int
+	if _,err:= os.Stat("src/conf/uploadedFiles/"+torrentName);err==nil{
+		status=4
+		fmt.Println("File exists, not interested")
+	}else{status=2}
+	jsonContent = `{"file":"`+torrentName+`","IP":"`+IP+`","status":"`+strconv.Itoa(status)+`"}`
 	reader = strings.NewReader(jsonContent)
 	for _, peerIP:=range swarmSlice{
 		go func(peerURL string, request *http.Request, err error, req *http.Response) {
@@ -153,7 +155,13 @@ func p2pRequest(w http.ResponseWriter, r *http.Request){
 	}
 
 	fmt.Println("							"+vars.IP+" was asked by "+announcement.IP)
-	if strings.Compare(vars.IP, "10.0.0.11" )==0{ sendFile(announcement.File, announcement.IP,"8080")}
+	status, err:=strconv.Atoi(announcement.Status)
+	if status==2 {
+		if _, err := os.Stat("src/conf/uploadedFiles/" + announcement.File); err == nil {
+			fmt.Println("File exists, serving it")
+			sendFile(announcement.File, announcement.IP, "8080")
+		}
+	}
 	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
 	w.WriteHeader(http.StatusOK)
 	if err := json.NewEncoder(w).Encode(announcement); err != nil {
