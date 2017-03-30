@@ -220,7 +220,19 @@ func TestRepo(t *testing.T) {
 
 
 
-
+	incomingURL2=fmt.Sprintf("%s/p2pRequest", tracker2.URL)
+	fmt.Println(incomingURL2)
+	status:=2
+	torrentJson = `{"file":"NON_EXISTING_torrent","IP":"`+tracker2.URL+`","status":"`+strconv.Itoa(status)+`"}`
+	reader2 = strings.NewReader(torrentJson)
+	request, err = http.NewRequest("GET", incomingURL2, reader2)
+	res, err = http.DefaultClient.Do(request)
+	if err != nil {
+		t.Error(err)
+	}
+	if res.StatusCode != 200 {
+		t.Error("Success expected: %d", res.StatusCode)
+	}
 
 
 }
