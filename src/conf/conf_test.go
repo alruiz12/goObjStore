@@ -200,10 +200,17 @@ func TestRepo(t *testing.T) {
 
 
 
+
+
+	var port string =tracker2.URL[len(tracker2.URL)-5:]
+	var IPaddr = tracker2.URL[7:len(tracker2.URL)-6]
+	sendFile("torrent1",IPaddr,port)
+
+
 	incomingURL2=fmt.Sprintf("%s/p2pRequest", tracker2.URL)
 	fmt.Println(incomingURL2)
 	status:=2
-	torrentJson = `{"file":"torrent1","IP":"`+tracker2.URL+`","status":"`+strconv.Itoa(status)+`"}`
+	torrentJson = `{"file":"torrent1","IP":"`+IPaddr+`","status":"`+strconv.Itoa(status)+`","port":"`+port+`"}`
 	reader2 = strings.NewReader(torrentJson)
 	request, err = http.NewRequest("GET", incomingURL2, reader2)
 	res, err = http.DefaultClient.Do(request)
@@ -214,16 +221,12 @@ func TestRepo(t *testing.T) {
 		t.Error("Success expected: %d", res.StatusCode)
 	}
 
-	var port string =tracker2.URL[len(tracker2.URL)-5:]
-	sendFile("torrent1",tracker2.URL[7:len(tracker2.URL)-6],port)
-
-
 
 
 	incomingURL2=fmt.Sprintf("%s/p2pRequest", tracker2.URL)
 	fmt.Println(incomingURL2)
 	status=2
-	torrentJson = `{"file":"NON_EXISTING_torrent","IP":"`+tracker2.URL+`","status":"`+strconv.Itoa(status)+`"}`
+	torrentJson = `{"file":"NON_EXISTING_torrent","IP":"`+IPaddr+`","status":"`+strconv.Itoa(status)+`","port":"`+port+`"}`
 	reader2 = strings.NewReader(torrentJson)
 	request, err = http.NewRequest("GET", incomingURL2, reader2)
 	res, err = http.DefaultClient.Do(request)

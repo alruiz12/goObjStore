@@ -122,7 +122,8 @@ func announce(IP string,torrentName string){
 		status=4
 		fmt.Println("File exists, not interested")
 	}else{status=2}
-	jsonContent = `{"file":"`+torrentName+`","IP":"`+IP+`","status":"`+strconv.Itoa(status)+`"}`
+	port:="8080"
+	jsonContent = `{"file":"`+torrentName+`","IP":"`+IP+`","status":"`+strconv.Itoa(status)+`","port":+"`+port+`"}`
 	reader = strings.NewReader(jsonContent)
 	for _, peerIP:=range swarmSlice{
 		go func(peerURL string, request *http.Request, err error, req *http.Response) {
@@ -159,7 +160,7 @@ func p2pRequest(w http.ResponseWriter, r *http.Request){
 	if status==2 {
 		if _, err := os.Stat(os.Getenv("GOPATH")+"/src/github.com/alruiz12/simpleBT/src/uploadedFiles/" + announcement.File); err == nil {
 			fmt.Println("File exists, serving it")
-			sendFile(announcement.File, announcement.IP, "8080")
+			sendFile(announcement.File, announcement.IP, announcement.Port)
 		}
 	}
 	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
