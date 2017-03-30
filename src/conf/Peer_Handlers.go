@@ -157,7 +157,7 @@ func p2pRequest(w http.ResponseWriter, r *http.Request){
 	fmt.Println("							"+vars.IP+" was asked by "+announcement.IP)
 	status, err:=strconv.Atoi(announcement.Status)
 	if status==2 {
-		if _, err := os.Stat(os.Getenv("GOPATH")+"/src/github.com/alruiz12/simpleBT/src/conf/uploadedFiles/" + announcement.File); err == nil {
+		if _, err := os.Stat(os.Getenv("GOPATH")+"/src/github.com/alruiz12/simpleBT/src/uploadedFiles/" + announcement.File); err == nil {
 			fmt.Println("File exists, serving it")
 			sendFile(announcement.File, announcement.IP, "8080")
 		}
