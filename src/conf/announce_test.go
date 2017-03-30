@@ -23,7 +23,7 @@ func TestAnnounce(t *testing.T){
 	time.Sleep(3*time.Second)
 	go func() {
 		var quit = make(chan int)
-		StartAnnouncing(2, 20, vars.IP, "torrent1", quit)
+		StartAnnouncing(2, 11, vars.IP, "torrent1", quit)
 		time.AfterFunc(9 * time.Second, func() {
 			close(quit)
 		})
@@ -38,7 +38,7 @@ func TestAnnounce(t *testing.T){
 			panic(err)
 		}
 	})
-	time.Sleep(20*time.Second)
+	time.Sleep(18*time.Second)
 
 
 
