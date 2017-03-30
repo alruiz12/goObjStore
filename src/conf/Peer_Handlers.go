@@ -78,7 +78,7 @@ func StartAnnouncing(interval time.Duration, stopTime time.Duration,IP string,to
 				announce(IP, torrentName)
 				if _,err:= os.Stat(torrentName);err==nil{
 					fmt.Println("File exists, not interested")
-					ticker.Stop
+					ticker.Stop()
 				}
 
 			case <-quit:

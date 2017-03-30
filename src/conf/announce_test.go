@@ -21,10 +21,19 @@ func TestAnnounce(t *testing.T){
 		}
 	}()
 	time.Sleep(3*time.Second)
-	StartAnnouncing(2,9)
-	CheckInactivePeers(5)
+	go func() {
+		var quit = make(chan int)
+		StartAnnouncing(2, 20, vars.IP, "torrent1", quit)
+		time.AfterFunc(9 * time.Second, func() {
+			close(quit)
+		})
+	}()
+
+	go func() {
+		CheckInactivePeers(5)
+	}()
+
 	time.AfterFunc(15 * time.Second, func(){
-		fmt.Println("2 go func")
 		if err:= srv.Shutdown(nil); err!=nil{
 			panic(err)
 		}
