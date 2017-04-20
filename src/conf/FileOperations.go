@@ -127,6 +127,7 @@ func CheckPieces(fileName string) bool{
 
 	// Trying to fill out the new file using subfiles (in order)
 	var inOrderCount uint64=0
+	var maxTimes int=0
 	for inOrderCount<totalPartsNum {
 		for _, file := range files {
 			if strings.Compare(file.Name(), fileName + "_" + strconv.FormatUint(inOrderCount,10) + "_") == 0 {
@@ -149,6 +150,8 @@ func CheckPieces(fileName string) bool{
 
 			}
 		}
+		if inOrderCount==0{maxTimes++}
+		if maxTimes>1{return false}
 	}
 
 	// Compute and compare new hash
