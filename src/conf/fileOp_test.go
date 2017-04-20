@@ -3,8 +3,6 @@ import (
 	"testing"
 	"os"
 	"fmt"
-
-
 )
 func TestFileOp(t *testing.T){
 	SplitFile(os.Getenv("GOPATH")+"/src/github.com/alruiz12/simpleBT/src/bigFile")
