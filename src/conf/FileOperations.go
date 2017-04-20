@@ -16,6 +16,7 @@ var partSize int
 var partBuffer []byte
 var totalPartsNum uint64
 const fileChunk = 1*(1<<10) // 1 KB
+var mainFileHash string
 
 func SplitFile(filePath string){
 	file, err:=os.Open(filePath)
@@ -31,7 +32,7 @@ func SplitFile(filePath string){
 		fmt.Println(err)
 		return
 	}
-	mainFileHash:=hex.EncodeToString(hash.Sum(nil))
+	mainFileHash=hex.EncodeToString(hash.Sum(nil))
 	fmt.Println(mainFileHash)
 
 	fileInfo, _ := file.Stat()
@@ -88,7 +89,7 @@ func md5sum(filePath string) string{
 		return ""
 	}
 	mainFileHash:=hex.EncodeToString(hash.Sum(nil))
-	fmt.Println(mainFileHash)
+	//fmt.Println(mainFileHash)
 	return mainFileHash
 }
 
@@ -107,7 +108,7 @@ func CheckPieces(fileName string) bool{
 		fmt.Println(err)
 		return false
 	}
-	//defer newFile.Close()
+	defer newFile.Close()
 	var inOrderCount uint64=0
 	for inOrderCount<totalPartsNum {
 		for _, file := range files {
@@ -132,6 +133,9 @@ func CheckPieces(fileName string) bool{
 			}
 		}
 	}
-
+	newHash:=md5sum(path+"/z"+fileName)
+	fmt.Println(mainFileHash)
+	fmt.Println(newHash)
+	if strings.Compare(mainFileHash,newHash)!=0 {return false}
 	return true
 }

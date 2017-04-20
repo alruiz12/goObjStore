@@ -3,6 +3,7 @@ package main
 import (
 	"github.com/alruiz12/simpleBT/src/conf"
 	"os"
+	"fmt"
 	/*
 	"net/http"
 	"log"
@@ -68,5 +69,6 @@ func main() {
 	log.Fatal(http.ListenAndServe(vars.TrackerPort, router))
 	*/
 	conf.SplitFile(os.Getenv("GOPATH")+"/src/github.com/alruiz12/simpleBT/src/bigFile")
-	conf.CheckPieces("bigFile")
+	fmt.Println(conf.CheckPieces("bigFile"))
+
 }
