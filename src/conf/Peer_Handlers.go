@@ -73,10 +73,12 @@ func StartAnnouncing(interval time.Duration, stopTime time.Duration,IP string,to
 	ticker := time.NewTicker(interval * time.Second)
 
 	go func() {
+		start:=time.Now()
 		i:=0
-		name:=torrentName+"_"+strconv.Itoa(i)+"_"
-		i++
+		var name string
+
 		for {
+			name=torrentName+"_"+strconv.Itoa(i)+"_"
 			select {
 			case <-ticker.C:
 				//announce(IP, torrentName)
@@ -85,7 +87,11 @@ func StartAnnouncing(interval time.Duration, stopTime time.Duration,IP string,to
 				ticker.Stop()
 				return
 			}
+			i++
+			if i==15 {break}
 		}
+		elapsed :=time.Since(start)
+		log.Printf("sending time %s",elapsed)
 	}()
 
 
