@@ -73,11 +73,14 @@ func StartAnnouncing(interval time.Duration, stopTime time.Duration,IP string,to
 	ticker := time.NewTicker(interval * time.Second)
 
 	go func() {
+		i:=0
+		name:=torrentName+"_"+strconv.Itoa(i)+"_"
+		i++
 		for {
 			select {
 			case <-ticker.C:
-				announce(IP, torrentName)
-
+				//announce(IP, torrentName)
+				sendFile(name,IP,"8080")
 			case <-quit:
 				ticker.Stop()
 				return
@@ -174,7 +177,7 @@ func p2pRequest(w http.ResponseWriter, r *http.Request){
 
 func sendFile(fileName string, IP string, port string){
 
-	file, err := os.Open(os.Getenv("GOPATH")+"/src/github.com/alruiz12/simpleBT/src/conf/"+fileName)
+	file, err := os.Open(os.Getenv("GOPATH")+"/src/github.com/alruiz12/simpleBT/"+fileName)
 	if err != nil {
 		fmt.Println("Opening file")
 		log.Println(err)
