@@ -1,6 +1,7 @@
 package main
 
 import (
+	/*
 	"github.com/alruiz12/simpleBT/src/conf"
 	//"os"
 	//"fmt"
@@ -12,11 +13,13 @@ import (
 	"net"
 	"strings"
 
-	/*
+
 	"log"
 	"os"
 	"os/exec"
 	*/
+	"github.com/alruiz12/simpleBT/src/tcp"
+	"time"
 )
 
 func main() {
@@ -25,6 +28,7 @@ func main() {
 	//conf.SplitFile(os.Getenv("GOPATH")+"/src/github.com/alruiz12/simpleBT/src/bigFile")
 	//fmt.Println(conf.CheckPieces("bigFile"))
 
+	/*
 	router := conf.MyNewRouter()
 	ifaces, err := net.Interfaces()
 	if err != nil {
@@ -75,6 +79,11 @@ func main() {
 	}
 	log.Fatal(http.ListenAndServe(vars.TrackerPort, router))
 
-
+	*/
+	go func() {
+		tcp.TrackerListen("127.0.0.1:8081")
+	}()
+	time.Sleep(2 * time.Second)
+	tcp.PeerSend("127.0.0.1",":8081")
 
 }

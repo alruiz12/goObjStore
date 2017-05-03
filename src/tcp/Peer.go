@@ -5,17 +5,20 @@ import "net"
 import "fmt"
 import "bufio"
 import "strings"
+import "time"
+
 
 func PeerSend(IP string, port string) {
 
-	// connect to this socket
-	conn, err := net.Dial("tcp", IP+port) //ex:"127.0.0.1:8081"
-	if err != nil {
-		fmt.Println(err.Error())
-	}
 	go func() {
+		// connect to this socket
+		conn, err := net.Dial("tcp", IP+port) //ex:"127.0.0.1:8081"
+		if err != nil {
+			fmt.Println(err.Error())
+		}
+
 		for {
-			text:="hello"
+			text:="1000000"
 			// send to socket
 			fmt.Fprintf(conn, text + "\n")
 			// listen for reply
@@ -23,6 +26,7 @@ func PeerSend(IP string, port string) {
 			fmt.Print("Message from tracker: " + message)
 		}
 	}()
+	time.Sleep(1 * time.Minute)
 }
 
 func PeerListen(port string) {
