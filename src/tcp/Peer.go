@@ -6,29 +6,56 @@ import "fmt"
 import "bufio"
 import "strings"
 import "time"
+import (
+	"io/ioutil"
+)
 
 
-func PeerSend(IP string, port string) {
+func PeerSend(IP string, port string, filePath string) {
+	var status=0	// 0 = send new size
+			// 1 = resend message
+			// 2 = send content
 
+	var allBytes []byte
 	go func() {
 		// connect to this socket
 		conn, err := net.Dial("tcp", IP+port) //ex:"127.0.0.1:8081"
 		if err != nil {
 			fmt.Println(err.Error())
 		}
-
+		text:="1000000"	// size
 		for {
-			text:="1000000"
+			if status == 2 {	// send content
+				allBytes,err =ioutil.ReadFile(filePath)
+				if err != nil {
+					fmt.Println(err.Error())
+					return
+				}
+				text=string(allBytes)
+				fmt.Println("sending file data")
+			}
+
 			// send to socket
 			fmt.Fprintf(conn, text + "\n")
+			if status==2 {return }
 			// listen for reply
 			message, _ := bufio.NewReader(conn).ReadString('\n')
 			fmt.Print("Message from tracker: " + message)
+			if strings.Compare(message,"OK\n")==0 {
+				fmt.Println("Received OK")
+				status = 2
+			}else{
+				status = 1 // resend message
+			}
 		}
 	}()
 	time.Sleep(1 * time.Minute)
 }
+/*
+func getNextFilePart(file string) string{
 
+}
+*/
 func PeerListen(port string) {
 
 	fmt.Println("Peer listening...")

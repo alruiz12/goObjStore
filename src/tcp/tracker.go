@@ -51,10 +51,12 @@ func TrackerListen(port string) {
 
 			size, err = strconv.Atoi(message)
 			fmt.Println("size: ", size)
-			return
+
 			if err != nil {
 				fmt.Println(err.Error())
 			}
+			conn.Write([]byte("OK" + "\n"))
+			return
 			totalPartsNum= int(math.Ceil(float64(size)/float64(fileChunk)))
 			currentPart=0
 			partSize=int(math.Min(fileChunk, float64(size-(currentPart*fileChunk))))
@@ -67,10 +69,11 @@ func TrackerListen(port string) {
 				fmt.Println(err.Error())
 			}
 
+
 			//----------------------------------------------------------------------OPTIONAL--------
 			// create new file
 			newFileName:= "newFile"+"_"+strconv.Itoa(currentPart)+"_"
-			_, err =  os.Create(newFileName)
+			_, err =  os.Create(os.Getenv("GOPATH")+"/src/github.com/alruiz12/simpleBT/src/DoNotDelete/"+newFileName)
 			if err != nil {
 				fmt.Println(err)
 				return
