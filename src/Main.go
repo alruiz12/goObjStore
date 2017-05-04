@@ -21,10 +21,15 @@ import (
 	"github.com/alruiz12/simpleBT/src/tcp"
 	"time"
 	"os"
+
 )
 
 func main() {
+	var peer1 = ":8081"
+	var peer2 = ":8082"
+	var peer3 = ":8083"
 
+	peers :=[]string{peer1, peer2, peer3}
 	//vars.IP = ""
 	//conf.SplitFile(os.Getenv("GOPATH")+"/src/github.com/alruiz12/simpleBT/src/bigFile")
 	//fmt.Println(conf.CheckPieces("bigFile"))
@@ -81,10 +86,17 @@ func main() {
 	log.Fatal(http.ListenAndServe(vars.TrackerPort, router))
 
 	*/
+
 	go func() {
 		tcp.PeerListen("127.0.0.1:8081")
 	}()
+	go func() {
+		tcp.PeerListen("127.0.0.1:8082")
+	}()
+	go func() {
+		tcp.PeerListen("127.0.0.1:8083")
+	}()
 	time.Sleep(2 * time.Second)
-	tcp.TrackerFile("127.0.0.1",":8081", os.Getenv("GOPATH")+"/src/github.com/alruiz12/simpleBT/src/bigFile")
+	tcp.TrackerFile("127.0.0.1",peers, os.Getenv("GOPATH")+"/src/github.com/alruiz12/simpleBT/src/bigFile")
 
 }

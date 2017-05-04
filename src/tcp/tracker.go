@@ -14,7 +14,10 @@ import (
 	"strings"
 )
 const fileChunk = 1*(1<<10) // 1 KB
-
+type peer struct {
+	port	string
+	conn	net.Conn
+}
 
 func GetMD5Hash(text string) string {
 	hasher := md5.New()
@@ -23,12 +26,13 @@ func GetMD5Hash(text string) string {
 }
 
 
-func TrackerFile(IP string, port string, filePath string) {
+func TrackerFile(IP string, ports []string, filePath string) {
 	var status=0	// 0 = send new size
 	// 1 = resend message
 	// 2 = send content
 
 	var allBytes []byte
+	var n int
 	file, err:=os.Open(filePath)
 	if err != nil {
 		fmt.Println(err)
@@ -36,12 +40,21 @@ func TrackerFile(IP string, port string, filePath string) {
 	}
 	defer file.Close()
 	fileInfo, _ := file.Stat()
+
 	go func() {
-		// connect to this socket
-		conn, err := net.Dial("tcp", IP+port) //ex:"127.0.0.1:8081"
-		if err != nil {
-			fmt.Println(err.Error())
+		// create list of (port, connection)
+		peers := make([]peer,len(ports))
+		for index, port := range ports{
+			peers[index].port=port
+
+			// connect to this socket
+			peers[index].conn,err =net.Dial("tcp", IP+port)    //ex:"127.0.0.1:8081"
+			if err != nil {
+				fmt.Println(err.Error())
+			}
 		}
+
+
 		text:=strconv.FormatInt(fileInfo.Size(),10)	// size
 		for {
 			if status == 2 {	// send content
@@ -54,33 +67,44 @@ func TrackerFile(IP string, port string, filePath string) {
 				fmt.Println("sending file data")
 			}
 
-			// send to socket
+			// send to sockets
 
 			if status==2{
-				n, err:=fmt.Fprintf(conn, text)
-				if err != nil {
-					fmt.Println(err.Error())
+				for index, peer := range peers {
+					n, err = fmt.Fprintf(peer.conn, text)
+					if err != nil {
+						fmt.Println(err.Error())
+					}
+					fmt.Println("peer"+strconv.Itoa(index)+": bytes send: ", n)
 				}
-				fmt.Println("peer: bytes send: ",n)
 			}else{
-				n, err:=fmt.Fprintf(conn, text + "\n")
-				if err != nil {
-					fmt.Println(err.Error())
+				for index, peer := range peers {
+					n, err = fmt.Fprintf(peer.conn, text + string('\n'))
+					if err != nil {
+						fmt.Println(err.Error())
+					}
+					fmt.Println("peer"+strconv.Itoa(index)+": bytes send: ", n)
+
 				}
-				fmt.Println("peer: bytes send: ",n)
+				status=1
 			}
 
 
 			if status==2 {return }
-			// listen for reply
-			message, _ := bufio.NewReader(conn).ReadString('\n')
-			fmt.Print("Message from peer: " + message)
 
-			if strings.Compare(message,"OK\n")==0 {
-				fmt.Println("Received OK")
-				status = 2
-			}else{
-				status = 1 // resend message
+			// listen for reply
+			for index, peer := range peers {
+				go func() {
+					message, _ := bufio.NewReader(peer.conn).ReadString('\n')
+					fmt.Print("Message from peer" + strconv.Itoa(index) + ": " + message)
+
+					if strings.Compare(message, "OK\n") == 0 {
+						fmt.Println("Received OK")
+						status = 2
+					} else {
+						status = 1 // resend message
+					}
+				}()
 			}
 		}
 	}()

@@ -19,7 +19,8 @@ func getNextFilePart(file string) string{
 }
 */
 func PeerListen(port string) {
-
+	peerNum:=strconv.Itoa(int(port[len(port)-1]-'0'))
+	os.Mkdir(os.Getenv("GOPATH")+"/src/github.com/alruiz12/simpleBT/src/chunksToSend"+peerNum,07777)
 	fmt.Println("Peer listening...")
 
 	// listen on all interfaces
@@ -37,7 +38,7 @@ func PeerListen(port string) {
 	var currentPart int
 	var partSize int
 	var partBuffer []byte
-	var err error
+	//var err error
 
 	// accept connection on port
 	conn, err := ln.Accept()
@@ -103,7 +104,7 @@ func PeerListen(port string) {
 			currentPart++
 			// write / save buffer to file
 			//file.Write(partBuffer[:n])
-			ioutil.WriteFile(os.Getenv("GOPATH")+"/src/github.com/alruiz12/simpleBT/src/chunksToSend/"+newFileName, partBuffer, 0777)
+			ioutil.WriteFile(os.Getenv("GOPATH")+"/src/github.com/alruiz12/simpleBT/src/chunksToSend"+peerNum+"/"+newFileName, partBuffer, 0777)
 			if currentPart==totalPartsNum {
 				fmt.Println("Exiting")
 				return}
