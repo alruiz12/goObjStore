@@ -56,30 +56,53 @@ func TrackerListen(port string) {
 				fmt.Println(err.Error())
 			}
 			conn.Write([]byte("OK" + "\n"))
-			return
 			totalPartsNum= int(math.Ceil(float64(size)/float64(fileChunk)))
 			currentPart=0
-			partSize=int(math.Min(fileChunk, float64(size-(currentPart*fileChunk))))
-			partBuffer=make([]byte,partSize)
 			firstMssg=false
+			fmt.Println("total parts: ",totalPartsNum)
+
 
 		}else{ // not first message, read content
-			_, err := bufio.NewReader(conn).Read(partBuffer)
+			partSize=int(math.Min(fileChunk, float64(size-(currentPart*fileChunk))))
+			partBuffer=make([]byte,partSize)
+			/*
+			if currentPart==0 {
+				reader = bufio.NewReader(conn)
+			} */
+			fmt.Println("		not first message")
+			n,err:=conn.Read(partBuffer)
 			if err != nil {
 				fmt.Println(err.Error())
 			}
+			fmt.Println("n========================================================================== ",n)
+			fmt.Println(string(partBuffer))
 
 
 			//----------------------------------------------------------------------OPTIONAL--------
 			// create new file
 			newFileName:= "newFile"+"_"+strconv.Itoa(currentPart)+"_"
-			_, err =  os.Create(os.Getenv("GOPATH")+"/src/github.com/alruiz12/simpleBT/src/DoNotDelete/"+newFileName)
+			/*
+			_, err =  os.Create(os.Getenv("GOPATH")+"/src/github.com/alruiz12/simpleBT/src/chunksToSend/"+newFileName)
 			if err != nil {
 				fmt.Println(err)
 				return
 			}
+
+			file, err:=os.Open(os.Getenv("GOPATH")+"/src/github.com/alruiz12/simpleBT/src/chunksToSend/"+newFileName)
+			if err != nil {
+				fmt.Println(err)
+				return
+			}
+			defer file.Close()
+			*/
+
+			currentPart++
 			// write / save buffer to file
-			ioutil.WriteFile(newFileName, partBuffer, os.ModeAppend)
+			//file.Write(partBuffer[:n])
+			ioutil.WriteFile(os.Getenv("GOPATH")+"/src/github.com/alruiz12/simpleBT/src/chunksToSend/"+newFileName, partBuffer, 0777)
+			if currentPart==totalPartsNum {
+				fmt.Println("Exiting")
+				return}
 			//--------------------------------------------------------------------------------------
 
 		}
@@ -109,7 +132,7 @@ func TrackerListen(port string) {
 		*/
 	}
 	fmt.Println(totalPartsNum)
-	time.Sleep(1 * time.Minute)
+	time.Sleep(5 * time.Minute)
 }
 
 func GetMD5Hash(text string) string {
