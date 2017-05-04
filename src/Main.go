@@ -82,9 +82,9 @@ func main() {
 
 	*/
 	go func() {
-		tcp.TrackerListen("127.0.0.1:8081")
+		tcp.PeerListen("127.0.0.1:8081")
 	}()
 	time.Sleep(2 * time.Second)
-	tcp.PeerSend("127.0.0.1",":8081", os.Getenv("GOPATH")+"/src/github.com/alruiz12/simpleBT/src/bigFile")
+	tcp.TrackerFile("127.0.0.1",":8081", os.Getenv("GOPATH")+"/src/github.com/alruiz12/simpleBT/src/bigFile")
 
 }
