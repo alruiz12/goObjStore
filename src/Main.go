@@ -19,7 +19,6 @@ import (
 	"os/exec"
 	*/
 	"github.com/alruiz12/simpleBT/src/tcp"
-	"time"
 	"os"
 
 )
@@ -96,7 +95,7 @@ func main() {
 	go func() {
 		tcp.PeerListen("127.0.0.1:8083")
 	}()
-	time.Sleep(2 * time.Second)
+
 	tcp.TrackerFile("127.0.0.1",peers, os.Getenv("GOPATH")+"/src/github.com/alruiz12/simpleBT/src/bigFile")
 
 }

@@ -1,24 +1,19 @@
 package tcp
 
 
-import "net"
-import "fmt"
-import "bufio"
-import (
+import ("net"
+ 	"fmt"
+ 	"bufio"
 	"math"
 	"strconv"
 	"io/ioutil"
 	"os"
 	"time"
+
 )
 
-
-/*
-func getNextFilePart(file string) string{
-
-}
-*/
 func PeerListen(port string) {
+	// Get Peer number from port
 	peerNum:=strconv.Itoa(int(port[len(port)-1]-'0'))
 	os.Mkdir(os.Getenv("GOPATH")+"/src/github.com/alruiz12/simpleBT/src/chunksToSend"+peerNum,07777)
 	fmt.Println("Peer listening...")
@@ -28,7 +23,7 @@ func PeerListen(port string) {
 	if err!=nil{
 		fmt.Printf(err.Error())
 	}
-
+	defer ln.Close()
 	// It will first read the size of the data to be received,
 	// 	then it will change the limit to EOF,
 	//	when EOF is reached, the limit will change in order to read next size
@@ -38,10 +33,10 @@ func PeerListen(port string) {
 	var currentPart int
 	var partSize int
 	var partBuffer []byte
-	//var err error
 
 	// accept connection on port
 	conn, err := ln.Accept()
+	defer conn.Close()
 	if err != nil {
 		fmt.Println(err.Error())
 	}
@@ -56,55 +51,41 @@ func PeerListen(port string) {
 			message=message[:len(message)-1]
 
 			size, err = strconv.Atoi(message)
-			fmt.Println("size: ", size)
+			fmt.Println("Peer: "+peerNum+" = size: ", size)
 
 			if err != nil {
 				fmt.Println(err.Error())
 			}
-			conn.Write([]byte("OK" + "\n"))
 			totalPartsNum= int(math.Ceil(float64(size)/float64(fileChunk)))
 			currentPart=0
 			firstMssg=false
-			fmt.Println("total parts: ",totalPartsNum)
+			fmt.Println("Peer: "+peerNum+"|  total parts: ",totalPartsNum)
 
 
 		}else{ // not first message, read content
+
+			// sizing buffer to read from connection
 			partSize=int(math.Min(fileChunk, float64(size-(currentPart*fileChunk))))
 			partBuffer=make([]byte,partSize)
-			/*
-			if currentPart==0 {
-				reader = bufio.NewReader(conn)
-			} */
-			fmt.Println("		not first message")
+
+			// reading partial buffer from connection
 			_,err=conn.Read(partBuffer)
 			if err != nil {
-				fmt.Println(err.Error())
+				fmt.Println(err)
 			}
-
-
 
 			//----------------------------------------------------------------------OPTIONAL--------
 			// create new file
 			newFileName:= "newFile"+"_"+strconv.Itoa(currentPart)+"_"
-			/*
-			_, err =  os.Create(os.Getenv("GOPATH")+"/src/github.com/alruiz12/simpleBT/src/chunksToSend/"+newFileName)
-			if err != nil {
-				fmt.Println(err)
-				return
-			}
 
-			file, err:=os.Open(os.Getenv("GOPATH")+"/src/github.com/alruiz12/simpleBT/src/chunksToSend/"+newFileName)
-			if err != nil {
-				fmt.Println(err)
-				return
-			}
-			defer file.Close()
-			*/
+			currentPart++ //updating part number, to be used to create new file
 
-			currentPart++
 			// write / save buffer to file
-			//file.Write(partBuffer[:n])
-			ioutil.WriteFile(os.Getenv("GOPATH")+"/src/github.com/alruiz12/simpleBT/src/chunksToSend"+peerNum+"/"+newFileName, partBuffer, 0777)
+			err=ioutil.WriteFile(os.Getenv("GOPATH")+"/src/github.com/alruiz12/simpleBT/src/chunksToSend"+peerNum+"/"+newFileName, partBuffer, 0777)
+			if err != nil {
+				fmt.Println("Peer: error creating/writing file", err.Error())
+			}
+			fmt.Println("currentPart:			 ", currentPart)
 			if currentPart==totalPartsNum {
 				fmt.Println("Exiting")
 				return}
@@ -113,9 +94,6 @@ func PeerListen(port string) {
 		}
 
 		/*
-
-		// output message received
-		fmt.Print("Message Received: ", string(message))
 
 		// @Todo: check if different from previous = compute hash and compare to keys in map
 		newHash:=GetMD5Hash(message)
@@ -126,16 +104,10 @@ func PeerListen(port string) {
 
 		}
 
-
-			//@Todo: open peer connections send metadata to peers,
-			//@Todo: chunking algorithm, send chunks
-		// sample process for string received
-		newmessage := strings.ToUpper(message)
-		// send new string back to client
-		conn.Write([]byte(newmessage + "\n"))
+		//@Todo: open peer connections send metadata to peers,
+		//@Todo: chunking algorithm, send chunks
 
 		*/
 	}
-	fmt.Println(totalPartsNum)
 	time.Sleep(5 * time.Minute)
 }

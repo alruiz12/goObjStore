@@ -2,16 +2,12 @@ package tcp
 import (
 	"net"
 	"fmt"
-	"bufio"
-	//"strings" // only needed below for sample processing
 	"os"
-	//"github.com/alruiz12/simpleBT/src/vars"
 	"crypto/md5"
 	"encoding/hex"
 	"strconv"
 	"io/ioutil"
 	"time"
-	"strings"
 )
 const fileChunk = 1*(1<<10) // 1 KB
 type peer struct {
@@ -28,8 +24,8 @@ func GetMD5Hash(text string) string {
 
 func TrackerFile(IP string, ports []string, filePath string) {
 	var status=0	// 0 = send new size
-	// 1 = resend message
-	// 2 = send content
+			// 1 = resend message
+			// 2 = send content
 
 	var allBytes []byte
 	var n int
@@ -56,42 +52,51 @@ func TrackerFile(IP string, ports []string, filePath string) {
 
 
 		text:=strconv.FormatInt(fileInfo.Size(),10)	// size
+		size,_:=strconv.Atoi(text)
+		allBytes,err =ioutil.ReadFile(filePath)
+		if err != nil {
+			fmt.Println(err.Error())
+			return
+		}
+		content:=string(allBytes)
+		start:=0
+		end:=fileChunk
 		for {
 			if status == 2 {	// send content
-				allBytes,err =ioutil.ReadFile(filePath)
-				if err != nil {
-					fmt.Println(err.Error())
-					return
-				}
-				text=string(allBytes)
+
 				fmt.Println("sending file data")
-			}
 
-			// send to sockets
 
-			if status==2{
+				// send to sockets
 				for index, peer := range peers {
-					n, err = fmt.Fprintf(peer.conn, text)
+					n, err = fmt.Fprintf(peer.conn, content[start:end])
+					fmt.Println("to peer: ",index)
 					if err != nil {
 						fmt.Println(err.Error())
 					}
-					fmt.Println("peer"+strconv.Itoa(index)+": bytes send: ", n)
 				}
-			}else{
-				for index, peer := range peers {
+				start=start+fileChunk
+				end=end+fileChunk
+				if end>size{ end=size-1}
+				if start>=size{return}
+
+			}else{	// status == 0 -> send size (already stored in 'text')
+				// OR status ==1 -> re send same content (already stored in 'text')
+					// no need to update 'text'
+				for _, peer := range peers {
 					n, err = fmt.Fprintf(peer.conn, text + string('\n'))
 					if err != nil {
 						fmt.Println(err.Error())
 					}
-					fmt.Println("peer"+strconv.Itoa(index)+": bytes send: ", n)
 
 				}
-				status=1
+				//status=1
+				status=2
+				time.Sleep(1*time.Second)
 			}
 
 
-			if status==2 {return }
-
+			/*
 			// listen for reply
 			for index, peer := range peers {
 				go func() {
@@ -105,8 +110,8 @@ func TrackerFile(IP string, ports []string, filePath string) {
 						status = 1 // resend message
 					}
 				}()
-			}
-		}
-	}()
+			} */
+		} // <-- for
+	}() // <-- go func
 	time.Sleep(5 * time.Minute)
 }
