@@ -87,17 +87,18 @@ func main() {
 	*/
 
 	go func() {
-		tcp.PeerListen("127.0.0.1:8081")
+		tcp.PeerListen("127.0.0.1:8081",peers)
 	}()
 	go func() {
-		tcp.PeerListen("127.0.0.1:8082")
+		tcp.PeerListen("127.0.0.1:8082",peers)
 	}()
 	go func() {
-		tcp.PeerListen("127.0.0.1:8083")
+		tcp.PeerListen("127.0.0.1:8083",peers)
 	}()
 
 	//tcp.TrackerFile("127.0.0.1",peers, os.Getenv("GOPATH")+"/src/github.com/alruiz12/simpleBT/src/bigFile")
-	tcp.TrackerFile("127.0.0.1",peers,os.Getenv("GOPATH")+"/src/github.com/alruiz12/simpleBT/dataset.xml")
+	//tcp.TrackerFile("127.0.0.1",peers,os.Getenv("GOPATH")+"/src/github.com/alruiz12/simpleBT/dataset.xml")
+	tcp.TrackerDivideLoad("127.0.0.1",peers, os.Getenv("GOPATH")+"/src/github.com/alruiz12/simpleBT/src/bigFile")
 
 
 	}

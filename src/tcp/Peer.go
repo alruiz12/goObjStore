@@ -9,10 +9,29 @@ import ("net"
 	"io/ioutil"
 	"os"
 	"time"
+	"strings"
 
 )
 
-func PeerListen(port string) {
+func PeerListen(port string, peersPorts []string) {
+	// listen to other peers
+	go p2pListen()
+
+	// connect to other peers
+	peers := make([]peer,len(peersPorts-1))
+	for index, peerPort := range peersPorts{
+		if strings.Compare(peerPort,port[len(port)-5:])!=0{
+			//if peerPort == ":self port" { don't add to "peers" }
+			peers[index].port=peerPort
+		}
+
+		// connect to this socket
+		peers[index].conn, err := net.Dial("tcp", peerPort)    //ex:"127.0.0.1:8081"
+		if err != nil {
+			fmt.Println(err.Error())
+		}
+	}
+
 	// Get Peer number from port
 	start:= time.Now()
 	peerNum:=strconv.Itoa(int(port[len(port)-1]-'0'))
@@ -88,6 +107,7 @@ func PeerListen(port string) {
 				fmt.Println("Peer: error creating/writing file", err.Error())
 			}
 			fmt.Println("currentPart:			 ", currentPart)
+			sendToPeers(partBuffer, peersPorts)
 			if currentPart==totalPartsNum {
 				fmt.Println("Exiting")
 				elapsed:= time.Since(start)
@@ -108,14 +128,30 @@ func PeerListen(port string) {
 
 		}
 
-		//@Todo: open peer connections send metadata to peers,
-		//@Todo: chunking algorithm, send chunks
+
+
 
 		*/
 	}
-	fmt.Println("mmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmm")
-	fmt.Println("mmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmm")
-	fmt.Println("mmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmm")
-	fmt.Println("mmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmm")
 	time.Sleep(15 * time.Minute)
+}
+
+func sendToPeers(partBuffer []byte, peers []peer){
+	// @Todo: decide how will peers know each other
+
+	// open connections (and save them in data structure)
+
+
+	// @Todo: send data
+	for peer , index := range peers {
+		_, err := fmt.Fprintf(peer.conn, string(partBuffer))
+		fmt.Println("to peer: ",index)
+		if err != nil {
+			fmt.Println(err.Error())
+		}
+	}
+}
+
+func p2pListen(){
+
 }
