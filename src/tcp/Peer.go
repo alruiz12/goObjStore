@@ -14,6 +14,7 @@ import ("net"
 
 func PeerListen(port string) {
 	// Get Peer number from port
+	start:= time.Now()
 	peerNum:=strconv.Itoa(int(port[len(port)-1]-'0'))
 	os.Mkdir(os.Getenv("GOPATH")+"/src/github.com/alruiz12/simpleBT/src/chunksToSend"+peerNum,07777)
 	fmt.Println("Peer listening...")
@@ -23,7 +24,7 @@ func PeerListen(port string) {
 	if err!=nil{
 		fmt.Printf(err.Error())
 	}
-	defer ln.Close()
+	//defer ln.Close()
 	// It will first read the size of the data to be received,
 	// 	then it will change the limit to EOF,
 	//	when EOF is reached, the limit will change in order to read next size
@@ -36,7 +37,7 @@ func PeerListen(port string) {
 
 	// accept connection on port
 	conn, err := ln.Accept()
-	defer conn.Close()
+	//defer conn.Close()
 	if err != nil {
 		fmt.Println(err.Error())
 	}
@@ -56,6 +57,7 @@ func PeerListen(port string) {
 			if err != nil {
 				fmt.Println(err.Error())
 			}
+
 			totalPartsNum= int(math.Ceil(float64(size)/float64(fileChunk)))
 			currentPart=0
 			firstMssg=false
@@ -88,6 +90,8 @@ func PeerListen(port string) {
 			fmt.Println("currentPart:			 ", currentPart)
 			if currentPart==totalPartsNum {
 				fmt.Println("Exiting")
+				elapsed:= time.Since(start)
+				fmt.Println("Peer: "+peerNum+" |ELAPSED= ",elapsed)
 				return}
 			//--------------------------------------------------------------------------------------
 
@@ -109,5 +113,9 @@ func PeerListen(port string) {
 
 		*/
 	}
-	time.Sleep(5 * time.Minute)
+	fmt.Println("mmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmm")
+	fmt.Println("mmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmm")
+	fmt.Println("mmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmm")
+	fmt.Println("mmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmm")
+	time.Sleep(15 * time.Minute)
 }

@@ -96,6 +96,8 @@ func main() {
 		tcp.PeerListen("127.0.0.1:8083")
 	}()
 
-	tcp.TrackerFile("127.0.0.1",peers, os.Getenv("GOPATH")+"/src/github.com/alruiz12/simpleBT/src/bigFile")
+	//tcp.TrackerFile("127.0.0.1",peers, os.Getenv("GOPATH")+"/src/github.com/alruiz12/simpleBT/src/bigFile")
+	tcp.TrackerFile("127.0.0.1",peers,os.Getenv("GOPATH")+"/src/github.com/alruiz12/simpleBT/dataset.xml")
 
-}
+
+	}

@@ -6,10 +6,12 @@ import (
 	"crypto/md5"
 	"encoding/hex"
 	"strconv"
-	"io/ioutil"
+	//"io/ioutil"
 	"time"
+	"math"
 )
-const fileChunk = 1*(1<<10) // 1 KB
+//const fileChunk = 1*(1<<10) // 1 KB
+const fileChunk = 8*(1<<20) // 8 MB
 type peer struct {
 	port	string
 	conn	net.Conn
@@ -27,7 +29,6 @@ func TrackerFile(IP string, ports []string, filePath string) {
 			// 1 = resend message
 			// 2 = send content
 
-	var allBytes []byte
 	var n int
 	file, err:=os.Open(filePath)
 	if err != nil {
@@ -53,32 +54,42 @@ func TrackerFile(IP string, ports []string, filePath string) {
 
 		text:=strconv.FormatInt(fileInfo.Size(),10)	// size
 		size,_:=strconv.Atoi(text)
-		allBytes,err =ioutil.ReadFile(filePath)
+		//allBytes,err =ioutil.ReadFile(filePath)
 		if err != nil {
 			fmt.Println(err.Error())
 			return
 		}
-		content:=string(allBytes)
-		start:=0
-		end:=fileChunk
-		for {
+		//content:=string(allBytes)
+
+		file, err := os.Open(filePath)
+		if err != nil {
+			fmt.Println(err.Error())
+			panic(err)
+		}
+		totalPartsNum:= int(math.Ceil(float64(size)/float64(fileChunk)))
+		var partSize int
+		var partBuffer []byte
+		currentPart := 0
+		var content string
+		for currentPart<totalPartsNum{
 			if status == 2 {	// send content
 
+				partSize=int(math.Min(fileChunk, float64(size-(currentPart*fileChunk))))
+				partBuffer=make([]byte,partSize)
+				_,err = file.Read(partBuffer)
+				content=string(partBuffer)
 				fmt.Println("sending file data")
-
-
 				// send to sockets
 				for index, peer := range peers {
-					n, err = fmt.Fprintf(peer.conn, content[start:end])
+					n, err = fmt.Fprintf(peer.conn, content)
 					fmt.Println("to peer: ",index)
 					if err != nil {
 						fmt.Println(err.Error())
 					}
 				}
-				start=start+fileChunk
-				end=end+fileChunk
-				if end>size{ end=size-1}
-				if start>=size{return}
+				currentPart++
+
+				//if currentPart >= totalPartsNum {break}
 
 			}else{	// status == 0 -> send size (already stored in 'text')
 				// OR status ==1 -> re send same content (already stored in 'text')
@@ -87,12 +98,12 @@ func TrackerFile(IP string, ports []string, filePath string) {
 					n, err = fmt.Fprintf(peer.conn, text + string('\n'))
 					if err != nil {
 						fmt.Println(err.Error())
+						panic(err)
 					}
 
 				}
 				//status=1
 				status=2
-				time.Sleep(1*time.Second)
 			}
 
 
@@ -113,5 +124,12 @@ func TrackerFile(IP string, ports []string, filePath string) {
 			} */
 		} // <-- for
 	}() // <-- go func
-	time.Sleep(5 * time.Minute)
+
+	fmt.Println("oooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo")
+	fmt.Println("ooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo")
+	fmt.Println("oooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo")
+	fmt.Println("ooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo")
+	fmt.Println("oooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo")
+	fmt.Println("ooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo")
+	time.Sleep(15 * time.Minute)
 }
