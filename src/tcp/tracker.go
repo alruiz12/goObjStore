@@ -6,7 +6,6 @@ import (
 	"crypto/md5"
 	"encoding/hex"
 	"strconv"
-	//"io/ioutil"
 	"time"
 	"math"
 )
@@ -47,8 +46,10 @@ func TrackerFile(IP string, ports []string, filePath string) {
 			// connect to this socket
 			peers[index].conn,err =net.Dial("tcp", IP+port)    //ex:"127.0.0.1:8081"
 			if err != nil {
+				fmt.Println("	Error creating conn")
 				fmt.Println(err.Error())
 			}
+			defer peers[index].conn.Close()
 		}
 
 
@@ -89,7 +90,7 @@ func TrackerFile(IP string, ports []string, filePath string) {
 				}
 				currentPart++
 
-				//if currentPart >= totalPartsNum {break}
+
 
 			}else{	// status == 0 -> send size (already stored in 'text')
 				// OR status ==1 -> re send same content (already stored in 'text')
@@ -107,21 +108,7 @@ func TrackerFile(IP string, ports []string, filePath string) {
 			}
 
 
-			/*
-			// listen for reply
-			for index, peer := range peers {
-				go func() {
-					message, _ := bufio.NewReader(peer.conn).ReadString('\n')
-					fmt.Print("Message from peer" + strconv.Itoa(index) + ": " + message)
 
-					if strings.Compare(message, "OK\n") == 0 {
-						fmt.Println("Received OK")
-						status = 2
-					} else {
-						status = 1 // resend message
-					}
-				}()
-			} */
 		} // <-- for
 	}() // <-- go func
 
@@ -151,7 +138,8 @@ func TrackerDivideLoad(IP string, ports []string, filePath string) {
 			// connect to this socket
 			peers[index].conn,err =net.Dial("tcp", IP+port)    //ex:"127.0.0.1:8081"
 			if err != nil {
-				fmt.Println(err.Error())
+				fmt.Println("Error creating connection in 'peers', port= "+IP+peers[index].port+" index= "+strconv.Itoa( index))
+				fmt.Println("	"+err.Error())
 			}
 		}
 
@@ -163,7 +151,6 @@ func TrackerDivideLoad(IP string, ports []string, filePath string) {
 			fmt.Println(err.Error())
 			return
 		}
-		//content:=string(allBytes)
 
 		file, err := os.Open(filePath)
 		if err != nil {
@@ -198,11 +185,13 @@ func TrackerDivideLoad(IP string, ports []string, filePath string) {
 			}else{	// status == 0 -> send size (already stored in 'text')
 				// OR status ==1 -> re send same content (already stored in 'text')
 				// no need to update 'text'
-				for _, peer := range peers {
-					n, err = fmt.Fprintf(peer.conn, text + string('\n'))
+				for index, peer := range peers {
+					fmt.Println("index ", index)
+					_, err = fmt.Fprintf(peer.conn, text + string('\n'))
 					if err != nil {
+						fmt.Println("Error sending size")
 						fmt.Println(err.Error())
-						panic(err)
+						//panic(err)
 					}
 
 				}
@@ -211,21 +200,6 @@ func TrackerDivideLoad(IP string, ports []string, filePath string) {
 			}
 
 
-			/*
-			// listen for reply
-			for index, peer := range peers {
-				go func() {
-					message, _ := bufio.NewReader(peer.conn).ReadString('\n')
-					fmt.Print("Message from peer" + strconv.Itoa(index) + ": " + message)
-
-					if strings.Compare(message, "OK\n") == 0 {
-						fmt.Println("Received OK")
-						status = 2
-					} else {
-						status = 1 // resend message
-					}
-				}()
-			} */
 		} // <-- for
 	}() // <-- go func
 

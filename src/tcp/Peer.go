@@ -9,31 +9,32 @@ import ("net"
 	"io/ioutil"
 	"os"
 	"time"
-	"strings"
+	"sync"
 
 )
+var currentPart int
+var peerNum string
+var mutex = &sync.Mutex{}
+var size int
 
 func PeerListen(port string, peersPorts []string) {
+	var err error
+
+	// start tracking time
+	start:= time.Now()
+
+	// last char of "port" is peerID
+	peerNum=strconv.Itoa(int(port[len(port)-1]-'0'))
+
 	// listen to other peers
-	go p2pListen()
+	go p2pListen(":809"+peerNum)
 
-	// connect to other peers
-	peers := make([]peer,len(peersPorts-1))
-	for index, peerPort := range peersPorts{
-		if strings.Compare(peerPort,port[len(port)-5:])!=0{
-			//if peerPort == ":self port" { don't add to "peers" }
-			peers[index].port=peerPort
-		}
+	// obtain peer's port
+	selfPort:=port[len(port)-5:]
 
-		// connect to this socket
-		peers[index].conn, err := net.Dial("tcp", peerPort)    //ex:"127.0.0.1:8081"
-		if err != nil {
-			fmt.Println(err.Error())
-		}
-	}
+	peers := setP2Pconnections(peersPorts, selfPort)
 
 	// Get Peer number from port
-	start:= time.Now()
 	peerNum:=strconv.Itoa(int(port[len(port)-1]-'0'))
 	os.Mkdir(os.Getenv("GOPATH")+"/src/github.com/alruiz12/simpleBT/src/chunksToSend"+peerNum,07777)
 	fmt.Println("Peer listening...")
@@ -43,20 +44,18 @@ func PeerListen(port string, peersPorts []string) {
 	if err!=nil{
 		fmt.Printf(err.Error())
 	}
-	//defer ln.Close()
+	defer ln.Close()
 	// It will first read the size of the data to be received,
 	// 	then it will change the limit to EOF,
 	//	when EOF is reached, the limit will change in order to read next size
 	firstMssg:=true
-	var size int
 	var totalPartsNum int
-	var currentPart int
 	var partSize int
 	var partBuffer []byte
 
 	// accept connection on port
 	conn, err := ln.Accept()
-	//defer conn.Close()
+	defer conn.Close()
 	if err != nil {
 		fmt.Println(err.Error())
 	}
@@ -98,16 +97,17 @@ func PeerListen(port string, peersPorts []string) {
 			//----------------------------------------------------------------------OPTIONAL--------
 			// create new file
 			newFileName:= "newFile"+"_"+strconv.Itoa(currentPart)+"_"
-
+			mutex.Lock()
 			currentPart++ //updating part number, to be used to create new file
-
+			mutex.Unlock()
 			// write / save buffer to file
 			err=ioutil.WriteFile(os.Getenv("GOPATH")+"/src/github.com/alruiz12/simpleBT/src/chunksToSend"+peerNum+"/"+newFileName, partBuffer, 0777)
 			if err != nil {
 				fmt.Println("Peer: error creating/writing file", err.Error())
 			}
 			fmt.Println("currentPart:			 ", currentPart)
-			sendToPeers(partBuffer, peersPorts)
+			fmt.Println("len =  ",len(peers))
+			sendToPeers(partBuffer, peers, selfPort)
 			if currentPart==totalPartsNum {
 				fmt.Println("Exiting")
 				elapsed:= time.Since(start)
@@ -136,14 +136,11 @@ func PeerListen(port string, peersPorts []string) {
 	time.Sleep(15 * time.Minute)
 }
 
-func sendToPeers(partBuffer []byte, peers []peer){
-	// @Todo: decide how will peers know each other
-
-	// open connections (and save them in data structure)
-
-
-	// @Todo: send data
-	for peer , index := range peers {
+func sendToPeers(partBuffer []byte, peers []peer, selfPort string){
+	// Only send what TRACKER sent (do not send what peers sent)
+	fmt.Println("sendToPeers start ... ...")
+	for index , peer := range peers {
+		fmt.Println("selfPort: "+selfPort+", sendToPeers, index= "+strconv.Itoa(index)+" , port= "+peer.port+" , len()"+strconv.Itoa( len(peers)) )
 		_, err := fmt.Fprintf(peer.conn, string(partBuffer))
 		fmt.Println("to peer: ",index)
 		if err != nil {
@@ -152,6 +149,89 @@ func sendToPeers(partBuffer []byte, peers []peer){
 	}
 }
 
-func p2pListen(){
+func setP2Pconnections (peersPorts []string, selfPort string)[]peer{
+	var auxPeer peer
+	var err	error
+	// create list of peers (excluding itself)
+	fmt.Println("p2p len: ",len(peersPorts))
+	peers := make([]peer,0)
+	time.Sleep(1*time.Second)
+	for _, peerPort := range peersPorts{
+		fmt.Println("peerPort[len(peerPort)-1]=",peerPort[len(peerPort)-1]-'0')
+		fmt.Println("selfPort[len(selfPort)-1]=",selfPort[len(selfPort)-1]-'0')
+		if peerPort[len(peerPort)-1]  !=  selfPort[len(selfPort)-1]{
+			fmt.Println("IN")
+			//if last char of ports is the same, { don't add to "peers" }
+			auxPeer.port=peerPort
+			auxPeer.conn, err = net.Dial("tcp", peerPort)    //ex:"127.0.0.1:8081"
+			if err != nil {
+				fmt.Println(err.Error())
+			}
+			peers = append(peers, auxPeer)
+
+
+		}else{fmt.Println("OUT")}
+
+		// connect to this socket
+
+	}
+	return peers
+}
+
+
+func p2pListen(port string){
+
+	ln, err := net.Listen("tcp", port) //ex: ":8081"
+	if err!=nil{
+		fmt.Printf("___"+err.Error())
+	}
+	defer ln.Close()
+	for {
+		conn, err := ln.Accept()
+		if err != nil {
+			fmt.Println(err.Error())
+		}
+		go handleP2Pconnection(conn)
+	}
+}
+
+func handleP2Pconnection(conn net.Conn){
+	//var currentPart int
+	var partSize int
+	var partBuffer []byte
+	fmt.Println("handleP2Pconnection START ...")
+
+	// sizing buffer to read from connection
+	//partSize=int(math.Min(fileChunk, float64(size-(currentPart*fileChunk))))
+	partSize=fileChunk
+	fmt.Println("ps ",partSize)
+	partBuffer=make([]byte,partSize)
+
+	// reading partial buffer from connection
+	_,err:=conn.Read(partBuffer)
+	if err != nil {
+		fmt.Println(err)
+	}
+	conn.Close()
+	//----------------------------------------------------------------------OPTIONAL--------
+	// create new file
+	mutex.Lock()
+	currentPart++
+	mutex.Unlock()
+	newFileName:= "newFile"+"_"+strconv.Itoa(currentPart)+"___"
+
+	currentPart++ //updating part number, to be used to create new file
+
+	// write / save buffer to file
+	err=ioutil.WriteFile(os.Getenv("GOPATH")+"/src/github.com/alruiz12/simpleBT/src/chunksToSend"+peerNum+"/"+newFileName, partBuffer, 0777)
+	if err != nil {
+		fmt.Println("Peer: error creating/writing file", err.Error())
+	}
+	fmt.Println("currentPart:			 ", currentPart)
+
+	//--------------------------------------------------------------------------------------
 
 }
+
+
+
