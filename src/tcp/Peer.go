@@ -12,14 +12,15 @@ import ("net"
 	"sync"
 
 )
-var currentPart int
+//var currentPart int
 var peerNum string
 var mutex = &sync.Mutex{}
 var size int
-
+var totalPartsNum int
+var receivedPart int = 0
 func PeerListen(port string, peersPorts []string) {
 	var err error
-
+	var currentPart int
 	// start tracking time
 	start:= time.Now()
 
@@ -49,7 +50,7 @@ func PeerListen(port string, peersPorts []string) {
 	// 	then it will change the limit to EOF,
 	//	when EOF is reached, the limit will change in order to read next size
 	firstMssg:=true
-	var totalPartsNum int
+
 	var partSize int
 	var partBuffer []byte
 
@@ -97,19 +98,16 @@ func PeerListen(port string, peersPorts []string) {
 			//----------------------------------------------------------------------OPTIONAL--------
 			// create new file
 			newFileName:= "newFile"+"_"+strconv.Itoa(currentPart)+"_"
-			mutex.Lock()
 			currentPart++ //updating part number, to be used to create new file
-			mutex.Unlock()
 			// write / save buffer to file
 			err=ioutil.WriteFile(os.Getenv("GOPATH")+"/src/github.com/alruiz12/simpleBT/src/chunksToSend"+peerNum+"/"+newFileName, partBuffer, 0777)
 			if err != nil {
 				fmt.Println("Peer: error creating/writing file", err.Error())
 			}
 			fmt.Println("currentPart:			 ", currentPart)
-			fmt.Println("len =  ",len(peers))
 			sendToPeers(partBuffer, peers, selfPort)
 			if currentPart==totalPartsNum {
-				fmt.Println("Exiting")
+				fmt.Println("**********************************************Exiting")
 				elapsed:= time.Since(start)
 				fmt.Println("Peer: "+peerNum+" |ELAPSED= ",elapsed)
 				return}
@@ -139,12 +137,11 @@ func PeerListen(port string, peersPorts []string) {
 func sendToPeers(partBuffer []byte, peers []peer, selfPort string){
 	// Only send what TRACKER sent (do not send what peers sent)
 	fmt.Println("sendToPeers start ... ...")
-	for index , peer := range peers {
-		fmt.Println("selfPort: "+selfPort+", sendToPeers, index= "+strconv.Itoa(index)+" , port= "+peer.port+" , len()"+strconv.Itoa( len(peers)) )
+	for _ , peer := range peers {
 		_, err := fmt.Fprintf(peer.conn, string(partBuffer))
-		fmt.Println("to peer: ",index)
-		if err != nil {
+		if err != nil {		// receptor finished
 			fmt.Println(err.Error())
+			return
 		}
 	}
 }
@@ -153,14 +150,13 @@ func setP2Pconnections (peersPorts []string, selfPort string)[]peer{
 	var auxPeer peer
 	var err	error
 	// create list of peers (excluding itself)
-	fmt.Println("p2p len: ",len(peersPorts))
 	peers := make([]peer,0)
 	time.Sleep(1*time.Second)
 	for _, peerPort := range peersPorts{
-		fmt.Println("peerPort[len(peerPort)-1]=",peerPort[len(peerPort)-1]-'0')
-		fmt.Println("selfPort[len(selfPort)-1]=",selfPort[len(selfPort)-1]-'0')
+		//fmt.Println("peerPort[len(peerPort)-1]=",peerPort[len(peerPort)-1]-'0')
+		//fmt.Println("selfPort[len(selfPort)-1]=",selfPort[len(selfPort)-1]-'0')
 		if peerPort[len(peerPort)-1]  !=  selfPort[len(selfPort)-1]{
-			fmt.Println("IN")
+			//fmt.Println("IN")
 			//if last char of ports is the same, { don't add to "peers" }
 			auxPeer.port=peerPort
 			auxPeer.conn, err = net.Dial("tcp", peerPort)    //ex:"127.0.0.1:8081"
@@ -170,7 +166,7 @@ func setP2Pconnections (peersPorts []string, selfPort string)[]peer{
 			peers = append(peers, auxPeer)
 
 
-		}else{fmt.Println("OUT")}
+		}else{/*fmt.Println("OUT")*/}
 
 		// connect to this socket
 
@@ -199,12 +195,11 @@ func handleP2Pconnection(conn net.Conn){
 	//var currentPart int
 	var partSize int
 	var partBuffer []byte
-	fmt.Println("handleP2Pconnection START ...")
+	fmt.Println("			handleP2Pconnection START ...")
 
 	// sizing buffer to read from connection
 	//partSize=int(math.Min(fileChunk, float64(size-(currentPart*fileChunk))))
 	partSize=fileChunk
-	fmt.Println("ps ",partSize)
 	partBuffer=make([]byte,partSize)
 
 	// reading partial buffer from connection
@@ -216,18 +211,23 @@ func handleP2Pconnection(conn net.Conn){
 	//----------------------------------------------------------------------OPTIONAL--------
 	// create new file
 	mutex.Lock()
-	currentPart++
+	receivedPart++ 		//updating part number, to be used to create new file
 	mutex.Unlock()
-	newFileName:= "newFile"+"_"+strconv.Itoa(currentPart)+"___"
+	newFileName:= "newFile"+"_"+strconv.Itoa(receivedPart)+"___"
 
-	currentPart++ //updating part number, to be used to create new file
+
 
 	// write / save buffer to file
 	err=ioutil.WriteFile(os.Getenv("GOPATH")+"/src/github.com/alruiz12/simpleBT/src/chunksToSend"+peerNum+"/"+newFileName, partBuffer, 0777)
 	if err != nil {
 		fmt.Println("Peer: error creating/writing file", err.Error())
 	}
-	fmt.Println("currentPart:			 ", currentPart)
+	fmt.Println("currentPart (p2p): 			 ", receivedPart)
+
+	/*if currentPart>=totalPartsNum {
+		fmt.Println("Exiting")
+		return
+	}*/
 
 	//--------------------------------------------------------------------------------------
 
