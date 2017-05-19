@@ -27,13 +27,15 @@ func PeerListen(port string, peersPorts []string) {
 	// last char of "port" is peerID
 	peerNum=strconv.Itoa(int(port[len(port)-1]-'0'))
 
+	finish := make(chan int)
+
 	// listen to other peers
-	go p2pListen(":809"+peerNum)
+	go p2pListen(":809"+peerNum, finish)
 
 	// obtain peer's port
 	selfPort:=port[len(port)-5:]
 
-	peers := setP2Pconnections(peersPorts, selfPort)
+	//peers := setP2Pconnections(peersPorts, selfPort)
 
 	// Get Peer number from port
 	peerNum:=strconv.Itoa(int(port[len(port)-1]-'0'))
@@ -88,12 +90,14 @@ func PeerListen(port string, peersPorts []string) {
 			// sizing buffer to read from connection
 			partSize=int(math.Min(fileChunk, float64(size-(currentPart*fileChunk))))
 			partBuffer=make([]byte,partSize)
-
+			fmt.Println("		about to read")
 			// reading partial buffer from connection
 			_,err=conn.Read(partBuffer)
+			//fmt.Println(conn.)
 			if err != nil {
 				fmt.Println(err)
 			}
+			fmt.Println("		after reading")
 
 			//----------------------------------------------------------------------OPTIONAL--------
 			// create new file
@@ -104,13 +108,17 @@ func PeerListen(port string, peersPorts []string) {
 			if err != nil {
 				fmt.Println("Peer: error creating/writing file", err.Error())
 			}
-			fmt.Println("currentPart:			 ", currentPart)
+			fmt.Println("peer: "+peerNum+", currentPart:			 "+strconv.Itoa( currentPart)+", "+string(partBuffer[:15]))
+			peers := setP2Pconnections(peersPorts, selfPort)
 			sendToPeers(partBuffer, peers, selfPort)
-			if currentPart==totalPartsNum {
-				fmt.Println("**********************************************Exiting")
+			if (currentPart)==(totalPartsNum/3) {
+				fmt.Println("********************************************** WAITING ",peerNum)
 				elapsed:= time.Since(start)
 				fmt.Println("Peer: "+peerNum+" |ELAPSED= ",elapsed)
-				return}
+				<-finish
+				fmt.Println("FINISHED//////////////////////////////////////////")
+				return
+			}
 			//--------------------------------------------------------------------------------------
 
 		}
@@ -136,14 +144,18 @@ func PeerListen(port string, peersPorts []string) {
 
 func sendToPeers(partBuffer []byte, peers []peer, selfPort string){
 	// Only send what TRACKER sent (do not send what peers sent)
-	fmt.Println("sendToPeers start ... ...")
+	fmt.Println("sendToPeers start ... ...",selfPort[len(selfPort)-1]-'0')
+
 	for _ , peer := range peers {
 		_, err := fmt.Fprintf(peer.conn, string(partBuffer))
+		fmt.Println(selfPort+" sending "+string(partBuffer[:15])+" to "+peer.conn.RemoteAddr().String())
 		if err != nil {		// receptor finished
 			fmt.Println(err.Error())
+			fmt.Println("sendToPeers ERROR")
 			return
 		}
 	}
+	fmt.Println("sendToPeers end ... ... ",selfPort[len(selfPort)-1]-'0')
 }
 
 func setP2Pconnections (peersPorts []string, selfPort string)[]peer{
@@ -153,10 +165,7 @@ func setP2Pconnections (peersPorts []string, selfPort string)[]peer{
 	peers := make([]peer,0)
 	time.Sleep(1*time.Second)
 	for _, peerPort := range peersPorts{
-		//fmt.Println("peerPort[len(peerPort)-1]=",peerPort[len(peerPort)-1]-'0')
-		//fmt.Println("selfPort[len(selfPort)-1]=",selfPort[len(selfPort)-1]-'0')
 		if peerPort[len(peerPort)-1]  !=  selfPort[len(selfPort)-1]{
-			//fmt.Println("IN")
 			//if last char of ports is the same, { don't add to "peers" }
 			auxPeer.port=peerPort
 			auxPeer.conn, err = net.Dial("tcp", peerPort)    //ex:"127.0.0.1:8081"
@@ -166,16 +175,14 @@ func setP2Pconnections (peersPorts []string, selfPort string)[]peer{
 			peers = append(peers, auxPeer)
 
 
-		}else{/*fmt.Println("OUT")*/}
-
-		// connect to this socket
+		}
 
 	}
 	return peers
 }
 
 
-func p2pListen(port string){
+func p2pListen(port string, finish chan int){
 
 	ln, err := net.Listen("tcp", port) //ex: ":8081"
 	if err!=nil{
@@ -187,48 +194,51 @@ func p2pListen(port string){
 		if err != nil {
 			fmt.Println(err.Error())
 		}
-		go handleP2Pconnection(conn)
+		go handleP2Pconnection(conn, finish)
 	}
+
 }
 
-func handleP2Pconnection(conn net.Conn){
+func handleP2Pconnection(conn net.Conn, finish chan int) {
 	//var currentPart int
 	var partSize int
 	var partBuffer []byte
-	fmt.Println("			handleP2Pconnection START ...")
+	fmt.Println("			handleP2Pconnection START ...", conn.LocalAddr())
 
 	// sizing buffer to read from connection
 	//partSize=int(math.Min(fileChunk, float64(size-(currentPart*fileChunk))))
-	partSize=fileChunk
-	partBuffer=make([]byte,partSize)
+	partSize = fileChunk
+	partBuffer = make([]byte, partSize)
 
 	// reading partial buffer from connection
-	_,err:=conn.Read(partBuffer)
+	n, err := conn.Read(partBuffer)
 	if err != nil {
 		fmt.Println(err)
 	}
-	conn.Close()
+	defer conn.Close()
+	fmt.Println("	//	//	handleP2Pconnection BYTES: ", n)
 	//----------------------------------------------------------------------OPTIONAL--------
 	// create new file
 	mutex.Lock()
-	receivedPart++ 		//updating part number, to be used to create new file
+	receivedPart++                //updating part number, to be used to create new file
 	mutex.Unlock()
-	newFileName:= "newFile"+"_"+strconv.Itoa(receivedPart)+"___"
+	newFileName := "newFile" + "_" + strconv.Itoa(receivedPart) + "_____"
 
 
-
+	peerID:=int( conn.LocalAddr().String()[len(conn.LocalAddr().String())-1]-'0')		// peerID = last character of local address
+	fmt.Println("ID: ",peerID)
 	// write / save buffer to file
-	err=ioutil.WriteFile(os.Getenv("GOPATH")+"/src/github.com/alruiz12/simpleBT/src/chunksToSend"+peerNum+"/"+newFileName, partBuffer, 0777)
+	err = ioutil.WriteFile(os.Getenv("GOPATH") + "/src/github.com/alruiz12/simpleBT/src/chunksToSend" + strconv.Itoa( peerID)+ "/" + newFileName, partBuffer, 0777)
 	if err != nil {
 		fmt.Println("Peer: error creating/writing file", err.Error())
 	}
-	fmt.Println("currentPart (p2p): 			 ", receivedPart)
-
-	/*if currentPart>=totalPartsNum {
-		fmt.Println("Exiting")
-		return
-	}*/
-
+	//fmt.Println("currentPart (p2p): 			 ", receivedPart)
+	//fmt.Println("RECEIVED= ",receivedPart)
+	if receivedPart == (totalPartsNum / 2) {
+		fmt.Println("	SENDING FINISH ...	--- 		...")
+		finish <- 1
+	  // send finish message
+	}else{fmt.Println("normally exiting HANDLE")}
 	//--------------------------------------------------------------------------------------
 
 }

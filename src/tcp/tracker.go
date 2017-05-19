@@ -171,13 +171,14 @@ func TrackerDivideLoad(IP string, ports []string, filePath string) {
 				partBuffer=make([]byte,partSize)
 				_,err = file.Read(partBuffer)
 				content=string(partBuffer)
-				fmt.Println("sending file data")
+				//fmt.Println("sending file data")
 
 				// send to sockets
 				n, err = fmt.Fprintf(currentPeer.conn, content)
 				if err != nil {
 					fmt.Println(err.Error())
 				}
+				fmt.Println("Tracker: n= ",n/*, content[:25]*/)
 
 				currentPart++
 				currentNum=(currentNum+1)%3
@@ -202,6 +203,6 @@ func TrackerDivideLoad(IP string, ports []string, filePath string) {
 
 		} // <-- for
 	}() // <-- go func
-
+	fmt.Println("tracker finishing ....................................")
 	time.Sleep(15 * time.Minute)
 }
