@@ -18,32 +18,42 @@ var mutex = &sync.Mutex{}
 var size int
 var totalPartsNum int
 var receivedPart int = 0
-func PeerListen(port string, peersPorts []string) {
+func PeerListen(IP1 byte,IP2 byte,IP3 byte,IP4 byte,port int, peersPorts []int) {
 	var err error
 	var currentPart int
 	// start tracking time
 	start:= time.Now()
 
-	// last char of "port" is peerID
-	peerNum=strconv.Itoa(int(port[len(port)-1]-'0'))
+	// last decimal of "port" is peerID
+	peerNum=strconv.Itoa(port%10)
 
 	finish := make(chan int)
 
 	// listen to other peers
-	go p2pListen(":809"+peerNum, finish)
+	var auxAddr *net.TCPAddr
+	fmt.Println("IP========",net.IPv4(IP1, IP2, IP3, IP4))
+	auxAddr.IP =net.IPv4(IP1, IP2, IP3, IP4)
+	auxAddr.Port=port
+	go p2pListen(auxAddr, finish) // <----------------------------------------------------------------------------------------------------------------------------------------<<<----------<<--
+
+	addresses := make([]*net.TCPAddr,len(peersPorts))
+	for index, port := range peersPorts{
+		addresses[index].Port=port
+		addresses[index].IP=net.IPv4(IP1, IP2, IP3, IP4)
+	}
 
 	// obtain peer's port
-	selfPort:=port[len(port)-5:]
+	//selfPort:=port[len(port)-5:]
 
 	//peers := setP2Pconnections(peersPorts, selfPort)
 
 	// Get Peer number from port
-	peerNum:=strconv.Itoa(int(port[len(port)-1]-'0'))
+	//peerNum:=strconv.Itoa(int(port[len(port)-1]-'0'))
 	os.Mkdir(os.Getenv("GOPATH")+"/src/github.com/alruiz12/simpleBT/src/chunksToSend"+peerNum,07777)
 	fmt.Println("Peer listening...")
 
 	// listen on all interfaces
-	ln, err := net.Listen("tcp", port) //ex: ":8081"
+	ln, err := net.Listen("tcp", ":"+strconv.Itoa( port ) )//ex: ":8081"
 	if err!=nil{
 		fmt.Printf(err.Error())
 	}
@@ -109,8 +119,8 @@ func PeerListen(port string, peersPorts []string) {
 				fmt.Println("Peer: error creating/writing file", err.Error())
 			}
 			fmt.Println("peer: "+peerNum+", currentPart:			 "+strconv.Itoa( currentPart)+", "+string(partBuffer[:15]))
-			peers := setP2Pconnections(peersPorts, selfPort)
-			sendToPeers(partBuffer, peers, selfPort)
+			peers := setP2Pconnections(addresses, port)
+			sendToPeers(partBuffer, peers, port)
 			if (currentPart)==(totalPartsNum/3) {
 				fmt.Println("********************************************** WAITING ",peerNum)
 				elapsed:= time.Since(start)
@@ -142,33 +152,34 @@ func PeerListen(port string, peersPorts []string) {
 	time.Sleep(15 * time.Minute)
 }
 
-func sendToPeers(partBuffer []byte, peers []peer, selfPort string){
+func sendToPeers(partBuffer []byte, peers []peer, selfPort int){
 	// Only send what TRACKER sent (do not send what peers sent)
-	fmt.Println("sendToPeers start ... ...",selfPort[len(selfPort)-1]-'0')
-
+	fmt.Println("sendToPeers start ... ...", selfPort%10)
+	var err error
 	for _ , peer := range peers {
-		_, err := fmt.Fprintf(peer.conn, string(partBuffer))
-		fmt.Println(selfPort+" sending "+string(partBuffer[:15])+" to "+peer.conn.RemoteAddr().String())
+		_, err = peer.conn.Write(partBuffer)
+		//_, err := fmt.Fprintf(peer.conn, string(partBuffer))
+		fmt.Println(strconv.Itoa( selfPort) +" sending "+string(partBuffer[:15])+" to "+peer.conn.RemoteAddr().String())
 		if err != nil {		// receptor finished
 			fmt.Println(err.Error())
 			fmt.Println("sendToPeers ERROR")
 			return
 		}
 	}
-	fmt.Println("sendToPeers end ... ... ",selfPort[len(selfPort)-1]-'0')
+	fmt.Println("sendToPeers end ... ... ",selfPort%10)
 }
 
-func setP2Pconnections (peersPorts []string, selfPort string)[]peer{
+func setP2Pconnections (addresses []*net.TCPAddr, selfPort int)[]peer{
 	var auxPeer peer
 	var err	error
 	// create list of peers (excluding itself)
 	peers := make([]peer,0)
 	time.Sleep(1*time.Second)
-	for _, peerPort := range peersPorts{
-		if peerPort[len(peerPort)-1]  !=  selfPort[len(selfPort)-1]{
+	for _, address := range addresses {
+		if address.Port  !=  selfPort{
 			//if last char of ports is the same, { don't add to "peers" }
-			auxPeer.port=peerPort
-			auxPeer.conn, err = net.Dial("tcp", peerPort)    //ex:"127.0.0.1:8081"
+			auxPeer.addr=address
+			auxPeer.conn, err = net.DialTCP("tcp",nil, address)    //ex:"127.0.0.1:8081"
 			if err != nil {
 				fmt.Println(err.Error())
 			}
@@ -182,15 +193,15 @@ func setP2Pconnections (peersPorts []string, selfPort string)[]peer{
 }
 
 
-func p2pListen(port string, finish chan int){
+func p2pListen(addr *net.TCPAddr, finish chan int){
 
-	ln, err := net.Listen("tcp", port) //ex: ":8081"
+	ln, err := net.ListenTCP("tcp", addr) //ex: ":8081"
 	if err!=nil{
 		fmt.Printf("___"+err.Error())
 	}
 	defer ln.Close()
 	for {
-		conn, err := ln.Accept()
+		conn, err := ln.AcceptTCP()
 		if err != nil {
 			fmt.Println(err.Error())
 		}
@@ -199,7 +210,7 @@ func p2pListen(port string, finish chan int){
 
 }
 
-func handleP2Pconnection(conn net.Conn, finish chan int) {
+func handleP2Pconnection(conn *net.TCPConn, finish chan int) {
 	//var currentPart int
 	var partSize int
 	var partBuffer []byte
