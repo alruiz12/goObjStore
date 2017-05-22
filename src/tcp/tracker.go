@@ -23,7 +23,7 @@ func GetMD5Hash(text string) string {
 }
 
 
-func TrackerDivideLoad(IP1 byte,IP2 byte,IP3 byte,IP4 byte, ports []int, filePath string) {
+func TrackerDivideLoad(IP string, ports []int, filePath string) {
 	var status=0	// 0 = send new size
 	// 1 = resend message
 	// 2 = send content
@@ -36,15 +36,15 @@ func TrackerDivideLoad(IP1 byte,IP2 byte,IP3 byte,IP4 byte, ports []int, filePat
 	}
 	defer file.Close()
 	fileInfo, _ := file.Stat()
+
 	go func() {
 		// create list of (port, connection)
-		fmt.Println("len ports", len(ports))
 		peers := make([]peer,len(ports))
 		for index, port := range ports{
-			fmt.Println("index=", index)
-			peers[index].addr.IP =net.IPv4(IP1, IP2, IP3, IP4)
-			peers[index].addr.Port=port
-
+			peers[index].addr, err =net.ResolveTCPAddr("tcp", ":"+strconv.Itoa(port) )
+			if err != nil {
+				fmt.Println("Tracker: ResolveTCPADDr ERROR: ", err.Error())
+			}
 			// connect to this socket
 			peers[index].conn,err =net.DialTCP("tcp", nil ,peers[index].addr)    //ex:"127.0.0.1:8081"
 			if err != nil {
@@ -55,6 +55,7 @@ func TrackerDivideLoad(IP1 byte,IP2 byte,IP3 byte,IP4 byte, ports []int, filePat
 
 
 		text:=strconv.FormatInt(fileInfo.Size(),10)	// size
+		fmt.Println("SIZEEEEEEEEEEEEEE: ",text)
 		size,_:=strconv.Atoi(text)
 		//allBytes,err =ioutil.ReadFile(filePath)
 		if err != nil {
@@ -80,16 +81,16 @@ func TrackerDivideLoad(IP1 byte,IP2 byte,IP3 byte,IP4 byte, ports []int, filePat
 				partSize=int(math.Min(fileChunk, float64(size-(currentPart*fileChunk))))
 				partBuffer=make([]byte,partSize)
 				_,err = file.Read(partBuffer)
-				//content=string(partBuffer)
+				content:=string(partBuffer)
 				//fmt.Println("sending file data")
 
 				// send to sockets
-				n, err= currentPeer.conn.Write(partBuffer)
-				//n, err = fmt.Fprintf(currentPeer.conn, content)
+				//n, err= currentPeer.conn.Write(partBuffer)
+				n, err = fmt.Fprintf(currentPeer.conn, content)
 				if err != nil {
-					fmt.Println(err.Error())
+					fmt.Println("ERROR sendig content !!!!!!!! ",err.Error())
 				}
-				fmt.Println("Tracker: n= ",n/*, content[:25]*/)
+				fmt.Println("Tracker: n= "+ strconv.Itoa( n ) +" currentPart: "+ strconv.Itoa(currentPart) +" current peer"+ strconv.Itoa( currentPeer.addr.Port) )
 
 				currentPart++
 				currentNum=(currentNum+1)%3
@@ -97,16 +98,17 @@ func TrackerDivideLoad(IP1 byte,IP2 byte,IP3 byte,IP4 byte, ports []int, filePat
 			}else{	// status == 0 -> send size (already stored in 'text')
 				// OR status ==1 -> re send same content (already stored in 'text')
 				// no need to update 'text'
-				for index, peer := range peers {
-					fmt.Println("index ", index)
-					text=text + string('\n')
-					copy(partBuffer,text)
-					n, err= peer.conn.Write(partBuffer)
-					//_, err = fmt.Fprintf(peer.conn, text + string('\n'))
+				for _, peer := range peers {
+					//fmt.Println("index ", index)
+					//text=text + string('\n')
+					//copy(partBuffer[:],text)
+					//fmt.Println("cpy: ", text)
+					//n, err= peer.conn.Write(partBuffer)
+					_, err = fmt.Fprintf(peer.conn, text + string('\n'))
 					if err != nil {
 						fmt.Println("Error sending size")
 						fmt.Println(err.Error())
-						//panic(err)
+
 					}
 
 				}
