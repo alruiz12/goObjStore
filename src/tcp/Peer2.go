@@ -84,6 +84,7 @@ func PeerListen2(IP string, port int, peersPorts []int) {
 				//fmt.Println("original msg after sending: ",originalMessage," partBuffer: "+string(partBuffer) )
 				// GO sendToPeers2(partBuffer, peers, port)
 				totalPartsNum = int(math.Ceil(float64(size) / float64(fileChunk)))
+				fmt.Println("total parts num ",totalPartsNum)
 				//time.Sleep(100 * time.Millisecond)
 			}else{fmt.Println("size == 0, re reading")}
 
@@ -117,13 +118,17 @@ func PeerListen2(IP string, port int, peersPorts []int) {
 				//peers := setP2Pconnections(addresses, port)
 				//sendToPeers(partBuffer, peers, port)
 
-				if (currentPart-1)==(totalPartsNum/3) {
+				if (currentPart)==(totalPartsNum/3) {
+					conn.Write([]byte(string(partBuffer[:5])+string('|')))
 					elapsed:= time.Since(start)
 					fmt.Println("Peer: "+peerNum+" |ELAPSED= ",elapsed, " currentPart = ",currentPart, "total parts: ",totalPartsNum)
 					<-finish
 					fmt.Println("FINISHED")
 					return
+				}else{
+					fmt.Println("CURRENTPART=",currentPart," TOTAL PARTS=",totalPartsNum)
 				}
+
 			} else {fmt.Println("/////EXISTS ALREADY!!")}
 
 		}

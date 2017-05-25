@@ -91,7 +91,7 @@ func TrackerDivideLoad2(IP string, ports []int, filePath string) {
 							fmt.Println("ERROR sendig content !!!!!!!! ", err.Error())
 						}
 						fmt.Println("re send ", string(partBuffer[:5]))
-						time.Sleep(1*time.Second)
+						//time.Sleep(1*time.Second)
 						response, err = bufio.NewReader(currentPeer.conn).ReadString('|')
 						if err != nil {
 							fmt.Println("Error in response from peer ", err.Error())

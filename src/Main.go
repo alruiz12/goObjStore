@@ -3,7 +3,7 @@ package main
 import (
 	"github.com/alruiz12/simpleBT/src/tcp"
 	"os"
-	"time"
+	//"time"
 )
 
 func main() {
@@ -32,7 +32,7 @@ func main() {
 	go func() {
 		tcp.PeerListen2("127.0.0.1",peer3,peersp2p)
 	}()
-	time.Sleep(2 * time.Second)
+	//time.Sleep(2 * time.Second)
 	//tcp.TrackerFile("127.0.0.1",peers, os.Getenv("GOPATH")+"/src/github.com/alruiz12/simpleBT/src/bigFile")
 	//tcp.TrackerFile("127.0.0.1",peers,os.Getenv("GOPATH")+"/src/github.com/alruiz12/simpleBT/dataset.xml")
 	tcp.TrackerDivideLoad2("127.0.0.1",peers, os.Getenv("GOPATH")+"/src/github.com/alruiz12/simpleBT/src/bigFile")
