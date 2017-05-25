@@ -10,103 +10,107 @@ import ("net"
 	"os"
 	"time"
 	"sync"
+	//"encoding/json"
+	//"strings"
 
 )
-//var currentPart int
+
 
 var mutex = &sync.Mutex{}
 var size int
 var totalPartsNum int
 var receivedPart int = 0
 func PeerListen(IP string, port int, peersPorts []int) {
-	var peerNum string
 	var err error
 	var currentPart int
-	// start tracking time
+	var partSize int
+	var partBuffer []byte
 	start:= time.Now()
-
-	// last decimal of "port" is peerID
-	peerNum=strconv.Itoa(port%10)
-
 	finish := make(chan int)
 
-	// listen to other peers
+	// last decimal of "port" is peerID
+	peerNum:=strconv.Itoa(port%10)
 
+
+
+	// listen to other peers
 	auxAddr, err := net.ResolveTCPAddr("tcp4",":"+"809"+peerNum )
-	fmt.Println("Peer num",peerNum+",,, port:",port)
-	fmt.Println("peerL", auxAddr)
 	if err != nil {
 		fmt.Println("Error creating auxAddress for p2pListen ",err.Error())
 	}
-	go p2pListen(auxAddr, finish) // <----------------------------------------------------------------------------------------------------------------------------------------<<<----------<<--
+	go p2pListen(auxAddr, finish)
+
+
+
 	addresses := make([]*net.TCPAddr,len(peersPorts))
 	for index, nport := range peersPorts{
 		addresses[index], err =net.ResolveTCPAddr("tcp4",":"+strconv.Itoa(nport) )
-
 	}
 
-	// obtain peer's port
-	//selfPort:=port[len(port)-5:]
-
-	//peers := setP2Pconnections(peersPorts, selfPort)
-
-	// Get Peer number from port
-	//peerNum:=strconv.Itoa(int(port[len(port)-1]-'0'))
-	os.Mkdir(os.Getenv("GOPATH")+"/src/github.com/alruiz12/simpleBT/src/chunksToSend"+peerNum,07777)
-	fmt.Println("Peer listening...")
+	// Create folder to save received data
+	//os.Mkdir(os.Getenv("GOPATH")+"/src/github.com/alruiz12/simpleBT/src/chunksToSend"+peerNum,07777)
 
 	// listen on all interfaces
-	ln, err := net.Listen("tcp4", ":"+strconv.Itoa( port ) )//ex: ":8081"
+	addr, err :=net.ResolveTCPAddr("tcp4", ":"+strconv.Itoa(port) )
+	ln, err := net.ListenTCP("tcp4", addr)//ex: ":8081"
 	if err!=nil{
 		fmt.Printf(err.Error())
 	}
 	defer ln.Close()
-	// It will first read the size of the data to be received,
-	// 	then it will change the limit to EOF,
-	//	when EOF is reached, the limit will change in order to read next size
-	firstMssg:=true
-
-	var partSize int
-	var partBuffer []byte
 
 	// accept connection on port
-	conn, err := ln.Accept()
+	conn, err := ln.AcceptTCP()
 	defer conn.Close()
 	if err != nil {
 		fmt.Println(err.Error())
 	}
+	/*
+	var hashList []string
+	message, err := bufio.NewReader(conn).ReadString('\n')
+	dec := json.NewDecoder(strings.NewReader(message))
+	err = dec.Decode(&hashList)
+	if err != nil {
+		fmt.Println(" error reading list ",err.Error())
+	}
+	fmt.Println(hashList)
+	*/
+	firstMssg:=true
 	for {
 		if firstMssg==true {
-			// listen for message containing the size of the data to be received
-			message, err := bufio.NewReader(conn).ReadString('\n')
+			message, err := bufio.NewReader(conn).ReadString('|')
 			if err != nil {
-				fmt.Println(err.Error())
+				fmt.Println("readString:   ",err.Error())
 			}
 			// remove trailing char ( '/n' )
+			fmt.Println("messagez: ", message)
 			message=message[:len(message)-1]
 
 			size, err = strconv.Atoi(message)
-			fmt.Println("------------____------------Peer: "+peerNum+" = size: ", size)
-			fmt.Println(port)
-			fmt.Println(peerNum)
-			fmt.Println(message)
+			if size != 0 {
 
-			if err != nil {
-				fmt.Println(err.Error())
-			}
+				fmt.Println("------------____------------Peer: " + peerNum + " = size: ", size)
+				if err != nil {
+					fmt.Println(err.Error())
+				}
+				/*
+				totalPartsNum = int(math.Ceil(float64(size) / float64(fileChunk)))
+				currentPart = 0*/
+				firstMssg = false
+				fmt.Println("Peer: " + peerNum + " received size!!")
+				//fmt.Println("Peer: " + peerNum + "|  total parts: ", totalPartsNum)
 
-			totalPartsNum= int(math.Ceil(float64(size)/float64(fileChunk)))
-			currentPart=0
-			firstMssg=false
-			fmt.Println("Peer: "+peerNum+"|  total parts: ",totalPartsNum)
+			}else{fmt.Println("size == 0, re reading")}
 
-		}else{ // not first message, read content
+		}else{
+			fmt.Println("Peer "+peerNum+ " waiting ...")
+			time.Sleep(5*time.Minute)
+			// not first message, read content
 			fmt.Println("else: size ", size)
 			// sizing buffer to read from connection
 			partSize=int(math.Min(fileChunk, float64(size-(currentPart*fileChunk))))
 			partBuffer=make([]byte,partSize)
 			// reading partial buffer from connection
-			_,err=conn.Read(partBuffer)
+			n ,err:=conn.Read(partBuffer)
 			if err != nil {
 				fmt.Println(err)
 			}
@@ -119,37 +123,21 @@ func PeerListen(IP string, port int, peersPorts []int) {
 			err=ioutil.WriteFile(os.Getenv("GOPATH")+"/src/github.com/alruiz12/simpleBT/src/chunksToSend"+peerNum+"/"+newFileName, partBuffer, 0777)
 			if err != nil {
 				fmt.Println("Peer: error creating/writing file", err.Error())
-			}else{fmt.Println("	*	*	*	"+newFileName+ " "+ peerNum+ "  "+string(partBuffer[:10]))}
-			//fmt.Println("peer: "+peerNum+", currentPart:			 "+strconv.Itoa( currentPart)+", "+string(partBuffer[:15]))
+			}else{fmt.Println("	*	*	*	"+newFileName+ " "+ peerNum+ "  "+string(partBuffer)+" n= "+strconv.Itoa(n) )}
 			peers := setP2Pconnections(addresses, port)
 			sendToPeers(partBuffer, peers, port)
-			if (currentPart)==(totalPartsNum/3) {
-				fmt.Println("********************************************** WAITING ",peerNum)
+
+			if (currentPart-1)==(totalPartsNum/3) {
 				elapsed:= time.Since(start)
 				fmt.Println("Peer: "+peerNum+" |ELAPSED= ",elapsed)
 				<-finish
-				fmt.Println("FINISHED//////////////////////////////////////////")
+				fmt.Println("FINISHED")
 				return
 			}
 			//--------------------------------------------------------------------------------------
 
 		}
 
-		/*
-
-		// @Todo: check if different from previous = compute hash and compare to keys in map
-		newHash:=GetMD5Hash(message)
-		vars.FilesMap.Mutex.Lock()
-		defer vars.FilesMap.Mutex.Unlock()
-		files, exists:=vars.FilesMap.Content[newHash]
-		if !exists {
-
-		}
-
-
-
-
-		*/
 	}
 	time.Sleep(15 * time.Minute)
 }
@@ -160,11 +148,10 @@ func sendToPeers(partBuffer []byte, peers []peer, selfPort int){
 	var err error
 	for _ , peer := range peers {
 		_, err = peer.conn.Write(partBuffer)
-		//_, err := fmt.Fprintf(peer.conn, string(partBuffer))
-		fmt.Println(strconv.Itoa( selfPort) +" sending "+string(partBuffer[:15])+" to "+peer.conn.RemoteAddr().String())
+		fmt.Println(strconv.Itoa( selfPort) +" sending "+string(partBuffer[:len(partBuffer)/100])+" to "+peer.conn.RemoteAddr().String())
 		if err != nil {		// receptor finished
 			fmt.Println(err.Error())
-			fmt.Println("sendToPeers ERROR")
+			fmt.Println("sendToPeers ERROR ",err.Error())
 			return
 		}
 	}
@@ -178,7 +165,7 @@ func setP2Pconnections (addresses []*net.TCPAddr, selfPort int)[]peer{
 	peers := make([]peer,0)
 	time.Sleep(1*time.Second)
 	for _, address := range addresses {
-		if address.Port  !=  selfPort{
+		if address.Port%10  !=  selfPort%10{
 			//if last char of ports is the same, { don't add to "peers" }
 			auxPeer.addr=address
 			fmt.Println("SET", address)
@@ -189,8 +176,7 @@ func setP2Pconnections (addresses []*net.TCPAddr, selfPort int)[]peer{
 			peers = append(peers, auxPeer)
 
 
-		}else{fmt.Println("ELSE")}
-
+		}
 	}
 	return peers
 }
@@ -200,7 +186,7 @@ func p2pListen(addr *net.TCPAddr, finish chan int){
 	fmt.Println("p2plisten start")
 	ln, err := net.ListenTCP("tcp4", addr) //ex: ":8081"
 	if err!=nil{
-		fmt.Println("___",err.Error())
+		fmt.Println("p2pListen ListenTCP ",err.Error())
 	}
 	defer ln.Close()
 	for {
@@ -210,17 +196,14 @@ func p2pListen(addr *net.TCPAddr, finish chan int){
 		}
 		go handleP2Pconnection(conn, finish)
 	}
-
 }
 
 func handleP2Pconnection(conn *net.TCPConn, finish chan int) {
-	//var currentPart int
 	var partSize int
 	var partBuffer []byte
-	fmt.Println("			handleP2Pconnection START ..." )
+	fmt.Println("handleP2Pconnection START ..." )
 
 	// sizing buffer to read from connection
-	//partSize=int(math.Min(fileChunk, float64(size-(currentPart*fileChunk))))
 	partSize = fileChunk
 	partBuffer = make([]byte, partSize)
 
@@ -230,30 +213,28 @@ func handleP2Pconnection(conn *net.TCPConn, finish chan int) {
 		fmt.Println(err)
 	}
 	defer conn.Close()
-	fmt.Println("	//	//	handleP2Pconnection BYTES: ", n)
-	//----------------------------------------------------------------------OPTIONAL--------
-	// create new file
+	fmt.Println("handleP2Pconnection BYTES: ", n)
+
 	mutex.Lock()
 	receivedPart++                //updating part number, to be used to create new file
 	mutex.Unlock()
+	//----------------------------------------------------------------------OPTIONAL--------
+	// create new file
 	newFileName := "newFile" + "_" + strconv.Itoa(receivedPart) + "_____"
-
-
 	peerID:=int( conn.LocalAddr().String()[len(conn.LocalAddr().String())-1]-'0')		// peerID = last character of local address
-	fmt.Println("ID: ",peerID)
+	fmt.Println("handlep2pconn ID: ",peerID)
 	// write / save buffer to file
 	err = ioutil.WriteFile(os.Getenv("GOPATH") + "/src/github.com/alruiz12/simpleBT/src/chunksToSend" + strconv.Itoa( peerID)+ "/" + newFileName, partBuffer, 0777)
 	if err != nil {
 		fmt.Println("Peer: error creating/writing file", err.Error())
 	}
-	//fmt.Println("currentPart (p2p): 			 ", receivedPart)
-	//fmt.Println("RECEIVED= ",receivedPart)
+	//--------------------------------------------------------------------------------------
 	if receivedPart == (totalPartsNum / 2) {
 		fmt.Println("	SENDING FINISH ...	--- 		...")
 		finish <- 1
 	  // send finish message
 	}else{fmt.Println("normally exiting HANDLE")}
-	//--------------------------------------------------------------------------------------
+
 
 }
 

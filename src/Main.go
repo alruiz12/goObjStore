@@ -24,18 +24,18 @@ func main() {
 	// e.g. peer1 has port ":8081" and port ":8091"
 
 	go func() {
-		tcp.PeerListen("127.0.0.1",peer1,peersp2p)
+		tcp.PeerListen2("127.0.0.1",peer1,peersp2p)
 	}()
 	go func() {
-		tcp.PeerListen("127.0.0.1",peer2,peersp2p)
+		tcp.PeerListen2("127.0.0.1",peer2,peersp2p)
 	}()
 	go func() {
-		tcp.PeerListen("127.0.0.1",peer3,peersp2p)
+		tcp.PeerListen2("127.0.0.1",peer3,peersp2p)
 	}()
 	time.Sleep(2 * time.Second)
 	//tcp.TrackerFile("127.0.0.1",peers, os.Getenv("GOPATH")+"/src/github.com/alruiz12/simpleBT/src/bigFile")
 	//tcp.TrackerFile("127.0.0.1",peers,os.Getenv("GOPATH")+"/src/github.com/alruiz12/simpleBT/dataset.xml")
-	tcp.TrackerDivideLoad("127.0.0.1",peers, os.Getenv("GOPATH")+"/src/github.com/alruiz12/simpleBT/src/bigFile")
+	tcp.TrackerDivideLoad2("127.0.0.1",peers, os.Getenv("GOPATH")+"/src/github.com/alruiz12/simpleBT/src/bigFile")
 
 
 	}
