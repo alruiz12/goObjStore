@@ -8,6 +8,9 @@ import (
 	"math"
 	"bufio"
 	"strings"
+	"crypto/md5"
+	"encoding/hex"
+
 )
 
 const fileChunk = 1*(1<<10) // 1 KB
@@ -29,6 +32,7 @@ func TrackerDivideLoad2(IP string, ports []int, filePath string) {
 			if err != nil {
 				fmt.Println("Tracker: ResolveTCPADDr ERROR: ", err.Error())
 			}
+
 			// connect to this socket
 			peers[index].conn,err =net.DialTCP("tcp4", nil ,peers[index].addr)    //ex:"127.0.0.1:8081"
 			if err != nil {
@@ -67,7 +71,6 @@ func TrackerDivideLoad2(IP string, ports []int, filePath string) {
 				partSize=int(math.Min(fileChunk, float64(size-(currentPart*fileChunk))))
 				partBuffer=make([]byte,partSize)
 				_,err = file.Read(partBuffer)
-				//content:=string(partBuffer)
 				// send to sockets
 				n, err = currentPeer.conn.Write(partBuffer)
 				if err != nil {
@@ -77,27 +80,22 @@ func TrackerDivideLoad2(IP string, ports []int, filePath string) {
 				if err != nil {
 					fmt.Println("Error in response from peer ", err.Error())
 				}
-				fmt.Println("		RESPONSE: "+response)
-				/*
-				if strings.Compare(string(response[:len(response)-1]), string(partBuffer[:5]))!=0 {
-					time.AfterFunc( 5*time.Second, reSend())
-				}
-				*/
+				//fmt.Println("		RESPONSE: "+response)
 
 
-					for strings.Compare(string(response[:len(response) - 1]), string(partBuffer[:5])) != 0 {
-						n, err = currentPeer.conn.Write(partBuffer)
-						if err != nil {
-							fmt.Println("ERROR sendig content !!!!!!!! ", err.Error())
-						}
-						fmt.Println("re send ", string(partBuffer[:5]))
-						//time.Sleep(1*time.Second)
-						response, err = bufio.NewReader(currentPeer.conn).ReadString('|')
-						if err != nil {
-							fmt.Println("Error in response from peer ", err.Error())
-						}
-						fmt.Println("#")
+				for strings.Compare(string(response[:len(response) - 1]), string(partBuffer[:5])) != 0 {
+					n, err = currentPeer.conn.Write(partBuffer)
+					if err != nil {
+						fmt.Println("ERROR sendig content !!!!!!!! ", err.Error())
 					}
+					fmt.Println("re send ", string(partBuffer[:5]))
+					//time.Sleep(1*time.Second)
+					response, err = bufio.NewReader(currentPeer.conn).ReadString('|')
+					if err != nil {
+						fmt.Println("Error in response from peer ", err.Error())
+					}
+					fmt.Println("#")
+				}
 
 
 
@@ -107,7 +105,6 @@ func TrackerDivideLoad2(IP string, ports []int, filePath string) {
 
 				currentPart++
 				currentNum=(currentNum+1)%3
-				//time.Sleep(200 * time.Millisecond)
 			}else{	// status == 0 -> send size (already stored in 'text')
 				// no need to update 'text'
 				for _, peer := range peers {
@@ -125,7 +122,14 @@ func TrackerDivideLoad2(IP string, ports []int, filePath string) {
 	fmt.Println("tracker finishing ....................................")
 	time.Sleep(15 * time.Minute)
 }
-func reSend(){
+/*
+computes the md5 hash for the string given
+@param path to the file we want to split
+returns the computed hash
+*/
+func getMd5sum(data []byte) string{
+	hasher := md5.New()
+	hasher.Write(data)
+	return hex.EncodeToString(hasher.Sum(nil))
 
 }
-
