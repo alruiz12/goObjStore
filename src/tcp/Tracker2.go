@@ -13,7 +13,9 @@ import (
 
 )
 
-const fileChunk = 1*(1<<10) // 1 KB
+//const fileChunk = 1*(1<<10) // 1 KB
+const fileChunk = 8*(1<<20) // 1 KB
+
 type peer struct {
 	addr	*net.TCPAddr
 	conn	*net.TCPConn
@@ -64,7 +66,7 @@ func TrackerDivideLoad2(IP string, ports []int, filePath string) {
 		var partBuffer []byte
 		var n int
 		// -------------------------------------------------
-
+		var response string
 		for currentPart<totalPartsNum{
 			if status == 2 {	// send content
 				currentPeer=peers[currentNum]
@@ -72,11 +74,14 @@ func TrackerDivideLoad2(IP string, ports []int, filePath string) {
 				partBuffer=make([]byte,partSize)
 				_,err = file.Read(partBuffer)
 				// send to sockets
+				//send.Lock()
+				fmt.Println("peer::::::::::::::::::::::::: ",currentNum)
 				n, err = currentPeer.conn.Write(partBuffer)
+				//send.Unlock()
 				if err != nil {
 					fmt.Println("ERROR sendig content !!!!!!!! ",err.Error())
 				}
-				response, err := bufio.NewReader(currentPeer.conn).ReadString('|')
+				response, err = bufio.NewReader(currentPeer.conn).ReadString('|')
 				if err != nil {
 					fmt.Println("Error in response from peer ", err.Error())
 				}
@@ -84,17 +89,21 @@ func TrackerDivideLoad2(IP string, ports []int, filePath string) {
 
 
 				for strings.Compare(string(response[:len(response) - 1]), string(partBuffer[:5])) != 0 {
+					fmt.Println("XX ",string(response[:len(response) - 1]))
+					fmt.Println("XY ",string(partBuffer[:5]))
+					//send.Lock()
 					n, err = currentPeer.conn.Write(partBuffer)
+					//send.Unlock()
 					if err != nil {
 						fmt.Println("ERROR sendig content !!!!!!!! ", err.Error())
 					}
-					fmt.Println("re send ", string(partBuffer[:5]))
+					fmt.Println("re send ", string(partBuffer[:5])+", currentN:"+strconv.Itoa( currentNum) )
 					//time.Sleep(1*time.Second)
 					response, err = bufio.NewReader(currentPeer.conn).ReadString('|')
 					if err != nil {
 						fmt.Println("Error in response from peer ", err.Error())
 					}
-					fmt.Println("#")
+					fmt.Println("# ")
 				}
 
 
@@ -108,11 +117,13 @@ func TrackerDivideLoad2(IP string, ports []int, filePath string) {
 			}else{	// status == 0 -> send size (already stored in 'text')
 				// no need to update 'text'
 				for _, peer := range peers {
-					_, err = fmt.Fprintf(peer.conn, text + string('|'))
-					if err != nil {
+					peer.conn.Write([]byte(text + string('|')))
+					_, err = bufio.NewReader(peer.conn).ReadString('|')
+					//_, err = fmt.Fprintf(peer.conn, text + string('|'))
+					/*if err != nil {
 						fmt.Println("Error sending size")
 						fmt.Println(err.Error())
-					}
+					}*/
 				}
 				status=2
 			}

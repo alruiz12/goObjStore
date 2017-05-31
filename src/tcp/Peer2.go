@@ -11,11 +11,15 @@ import ("net"
 
 )
 var mutex = &sync.Mutex{}
+var send = &sync.Mutex{}
+var read =&sync.Mutex{}
 var start= time.Now()
 var size int
-var totalPartsNum int
+//var totalPartsNum int
 
 func PeerListen2(IP string, port int, peersPorts []int) {
+	var totalPartsNum int
+
 	var err error
 	var partBuffer []byte
 	finish := make(chan int)
@@ -27,7 +31,7 @@ func PeerListen2(IP string, port int, peersPorts []int) {
 
 
 	// listen to other peers
-	auxAddr, err := net.ResolveTCPAddr("tcp4",":"+"809"+peerNum )
+	//auxAddr, err := net.ResolveTCPAddr("tcp4",":"+"809"+peerNum )
 	if err != nil {
 		fmt.Println("Error creating auxAddress for p2pListen ",err.Error())
 	}
@@ -66,7 +70,7 @@ func PeerListen2(IP string, port int, peersPorts []int) {
 	// Create folder to save received data
 	os.Mkdir(os.Getenv("GOPATH")+"/src/github.com/alruiz12/simpleBT/src/chunksToSend"+peerNum,07777)
 	var originalMessage string
-	for {
+	for{
 		if firstMssg==true {
 			originalMessage, err = bufio.NewReader(conn).ReadString('|')
 			if err != nil {
@@ -84,11 +88,11 @@ func PeerListen2(IP string, port int, peersPorts []int) {
 				firstMssg = false
 				partBuffer=[]byte(originalMessage)
 				// GO sendToPeers2(partBuffer, peers, port)
-				totalPartsNum := int(math.Ceil(float64(size) / float64(fileChunk)))
-				go p2pListen2(auxAddr, finish, totalPartsNum)
+				totalPartsNum = int(math.Ceil(float64(size) / float64(fileChunk)))
+				//go p2pListen2(auxAddr, finish, totalPartsNum)
 				fmt.Println("total parts num ",totalPartsNum)
 			}else{fmt.Println("size == 0, re reading")}
-
+			conn.Write([]byte(string(partBuffer[:5])+string('|')))
 		}else{
 			fmt.Println("Peer: "+peerNum+" about to read part: ",strconv.Itoa( currentPart) )
 			// not first message, read content
@@ -104,6 +108,7 @@ func PeerListen2(IP string, port int, peersPorts []int) {
 			newHash:=getMd5sum(partBuffer)
 			_, exists := hashMap[newHash]
 			if !exists {
+				fmt.Println("nooooooooooooooooooooooooo, ", string(partBuffer[:10]) + " peer: ", peerNum)
 				hashMap[newHash]=true
 				//----------------------------------------------------------------------OPTIONAL--------
 				// create new file
@@ -115,23 +120,33 @@ func PeerListen2(IP string, port int, peersPorts []int) {
 					fmt.Println("Peer: error creating/writing file", err.Error())
 				}else{fmt.Println("*	"+newFileName+ " "+ peerNum+ "  "+string(partBuffer[:10])+" n= "+strconv.Itoa(n) )}
 				//peers := setP2Pconnections(addresses, port)
-				peers:= setP2Pconnections2(addresses, port)
-				go sendToPeers2(partBuffer, peers, port)
-
-				if (currentPart)==(totalPartsNum/3) {
-					conn.Write([]byte(string(partBuffer[:5])+string('|')))
+				//peers:= setP2Pconnections2(addresses, port)
+				//time.Sleep(1 * time.Second)
+				//go sendToPeers2(partBuffer, peers, port)
+				if (currentPart)>(totalPartsNum/3) {
+					//conn.Write([]byte(string(partBuffer[:5])+string('|')))
 					elapsed:= time.Since(start)
 					fmt.Println("Peer: "+peerNum+" |ELAPSED= ",elapsed, " currentPart = ",currentPart, "total parts: ",totalPartsNum)
-					<-finish
 					fmt.Println("FINISHED")
-					return
+					<-finish
+					fmt.Println("finsh REEEEEEEEEEEECEIVED")
+					break
+
 				}
 
+
 			}
+			send.Lock()
+			conn.Write([]byte(string(partBuffer[:5])+string('|')))
+			send.Unlock()
+			fmt.Println("Peer: "+ peerNum +"origin response: ",string(partBuffer[:5])+string('|'))
 
 		}
-		conn.Write([]byte(string(partBuffer[:5])+string('|')))
+		//conn.Write([]byte(string(partBuffer[:5])+string('|')))
 	}
+	elapsed:= time.Since(start)
+	fmt.Println("Peer: "+peerNum+" |ELAPSED= ",elapsed, " currentPart = ",currentPart, "total parts: ",totalPartsNum)
+	fmt.Println("FINISHED")
 	time.Sleep(15 * time.Minute)
 }
 
@@ -163,7 +178,7 @@ func p2pListen2(addr *net.TCPAddr, finish chan int, totalPartsNum int){
 	totalTimeStri:=totalTime.String()
 	totalTimeStri=totalTimeStri[:len(totalTimeStri)-2]
 	time, _:= strconv.ParseFloat(totalTimeStri,64)
-	fmt.Println(  (float64(size)/(1024*1024)) / (time/1000.0) )
+	fmt.Println(  time )
 	fmt.Println("/////////////////////////////////////////////////////////////////////////////////")
 }
 
@@ -222,9 +237,13 @@ func setP2Pconnections2 (addresses []*net.TCPAddr, selfPort int)[]peer{
 
 func sendToPeers2(buf []byte, peers []peer, selfPort int){
 	// Only send what TRACKER sent (do not send what peers sent)
+	fmt.Println("SEEEEEEEEEEEEEEEEEEEEEEEND")
 	var err error
 	for _ , peer := range peers {
+		mutex.Lock()
 		_, err = peer.conn.Write(buf)
+		mutex.Unlock()
+
 		if err != nil {		// receptor finished
 			fmt.Println(err.Error())
 			fmt.Println("sendToPeers ERROR ",err.Error())

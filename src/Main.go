@@ -1,41 +1,28 @@
 package main
 
 import (
-	"github.com/alruiz12/simpleBT/src/tcp"
 	"os"
 	//"time"
+	"github.com/alruiz12/simpleBT/src/httpGo"
+	"net/http"
 )
 
 func main() {
+	var filePath = os.Getenv("GOPATH")+"/src/github.com/alruiz12/simpleBT/src/bigFile"
+
+	var trackerAddr = ":8080"
+
 	// tracker sends to:
-	var peer1 = 8071
-	var peer2 = 8072
-	var peer3 = 8073
-	peers :=[]int{peer1, peer2, peer3}
-
-	// peers p2p address, must start with ":809"
-	var peer1p2p = 8091
-	var peer2p2p = 8092
-	var peer3p2p = 8093
-
-	peersp2p :=[]int{peer1p2p, peer2p2p, peer3p2p}
-
+	var peer1 = "127.0.0.1:8081"
+	var peer2 = "127.0.0.1:8082"
+	var peer3 = "127.0.0.1:8083"
+	peers :=[]string{peer1, peer2, peer3}
 	// last character of port is the peer's internal identifier
-	// e.g. peer1 has port ":8081" and port ":8091"
 
-	go func() {
-		tcp.PeerListen2("127.0.0.1",peer1,peersp2p)
-	}()
-	go func() {
-		tcp.PeerListen2("127.0.0.1",peer2,peersp2p)
-	}()
-	go func() {
-		tcp.PeerListen2("127.0.0.1",peer3,peersp2p)
-	}()
-	//time.Sleep(2 * time.Second)
-	//tcp.TrackerFile("127.0.0.1",peers, os.Getenv("GOPATH")+"/src/github.com/alruiz12/simpleBT/src/bigFile")
-	//tcp.TrackerFile("127.0.0.1",peers,os.Getenv("GOPATH")+"/src/github.com/alruiz12/simpleBT/dataset.xml")
-	tcp.TrackerDivideLoad2("127.0.0.1",peers, os.Getenv("GOPATH")+"/src/github.com/alruiz12/simpleBT/src/bigFile")
-
-
+	routerTracker := httpGo.MyNewRouter()
+	routerPeer := httpGo.MyNewRouter()
+	go func(){httpGo.TrackerDivideLoad(filePath, trackerAddr ,peers)}()
+	go func(){http.ListenAndServe(":8081", routerPeer)}()
+	http.ListenAndServe(":8080", routerTracker)
 	}
+

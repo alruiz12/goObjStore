@@ -104,7 +104,6 @@ func announce(IP string,torrentName string){
 	fmt.Println("announce: ",IP)
 	var reader io.Reader
 	trackerURL := "http://"+vars.TrackerIP+vars.TrackerPort+"/listenAnnounce"
-	//peerURL := trackerURL	//Variable replication just for the sake of clarity
 	jsonContent := `{"file":"`+torrentName+`","IP":"`+IP+`"}`
 	reader = strings.NewReader(jsonContent)
 	request, err := http.NewRequest("POST", trackerURL, reader)
