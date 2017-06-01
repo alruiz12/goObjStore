@@ -19,6 +19,7 @@ func MyNewRouter() *mux.Router {
 
 	router := mux.NewRouter().StrictSlash(true)
 	router.HandleFunc("/PeerListen", PeerListen)
+	router.HandleFunc("/p2pRequest", p2pRequest)
 	for _, route := range routes {
 		router.
 			Methods(route.Method).

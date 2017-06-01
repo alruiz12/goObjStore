@@ -19,8 +19,11 @@ const fileChunk = 8*(1<<20) // 8 MB
 type msg struct {
 	Text string
 }
+var totalPartsNum int
+var start time.Time
 func TrackerDivideLoad(filePath string, addr string, peers []string){
 	time.Sleep(1 * time.Second)
+	start=time.Now()
 	var currentPart int = 0
 	var currentPeer string
 	var partSize int
@@ -47,10 +50,11 @@ func TrackerDivideLoad(filePath string, addr string, peers []string){
 		fmt.Println(err.Error())
 		return
 	}
-	totalPartsNum:= int(math.Ceil(float64(size)/float64(fileChunk)))
+	totalPartsNum= int(math.Ceil(float64(size)/float64(fileChunk)))
 	fmt.Println(totalPartsNum)
 
 	for currentPart<totalPartsNum{
+		fmt.Println("					CURRRRRRRRRRRRRRRRRRRRRRR ",currentPart)
 		currentPeer=peers[currentNum]
 		partSize=int(math.Min(fileChunk, float64(size-(currentPart*fileChunk))))
 		partBuffer=make([]byte,partSize)
@@ -77,4 +81,8 @@ func TrackerDivideLoad(filePath string, addr string, peers []string){
 		currentPart++
 		currentNum=(currentNum+1)%3
 	}
+	fmt.Println("..........................................Tracker END ....................................................")
+	fmt.Println("..........................................Tracker END ....................................................")
+	fmt.Println("..........................................Tracker END ....................................................")
+	fmt.Println("..........................................Tracker END ....................................................")
 }
