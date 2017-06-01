@@ -3,86 +3,58 @@ import(
 	"net/http"
 	"fmt"
 	"io/ioutil"
-	"io"
+	//"io"
 	"log"
 	"os"
 	"encoding/json"
+	"github.com/alruiz12/simpleBT/src/httpVar"
+	"strconv"
 )
+var path = (os.Getenv("GOPATH")+"/src/github.com/alruiz12/simpleBT")
+var chunk msg
 func PeerListen(w http.ResponseWriter, r *http.Request){
 	// Get peer ID
-
+	var peerID int =int(r.Host[len(r.Host)-1]-'0')
 	// Create folder for chunks
 
 
 	// Listen to tracker
-	fmt.Println("*** addFile STARTS ***")
-	var file string
 	if r.Method == http.MethodPost{
+		os.Mkdir(path+"/src/httpReceived"+strconv.Itoa(peerID),07777)
 
+		fmt.Println( "gettig post" )
 
-
-		var announcement string
-		body, err := ioutil.ReadAll(io.LimitReader(r.Body, 1048576))
+		body, err := ioutil.ReadAll(r.Body)
 		if err != nil {
-			panic(err)
+			fmt.Println("error reading ",err)
 		}
 		if err := r.Body.Close(); err != nil {
-			panic(err)
+			fmt.Println("error body ",err)
 		}
-		if err := json.Unmarshal(body, &announcement); err != nil {
+		if err := json.Unmarshal(body, &chunk); err != nil {
 			w.Header().Set("Content-Type", "application/json; charset=UTF-8")
 			w.WriteHeader(422) // unprocessable entity
 			log.Println(err)
 			if err := json.NewEncoder(w).Encode(err); err != nil {
-				panic(err)
+				fmt.Println("error unmarshalling ",err)
 			}
 		}
-		fmt.Println(announcement)
 
-		return
-		//Todo pick 1 method
-		f, header, err := r.FormFile("file")
+		// Save chunk to file
+		err=ioutil.WriteFile(path+"/src/httpReceived"+strconv.Itoa(peerID)+"/NEW"+strconv.Itoa(httpVar.CurrentPart),[]byte(chunk.Text),0777)
 		if err != nil {
-			log.Println(err)
-			http.Error(w, "Error uploading file", 404)
-			return
+			fmt.Println("Peer: error creating/writing file", err.Error())
 		}
-		//if (Exists("../uploadedFiles/"+header.Filename)){ }
-		defer f.Close()
-		fileName:=header.Filename
-		destination, err := os.Create(os.Getenv("GOPATH")+"/src/github.com/alruiz12/simpleBT/src/httpReceived/"+fileName)
-		if err != nil {
-			http.Error(w,err.Error(), 501) //internal server error
-			return
-		}
-		defer destination.Close()
-		io.Copy(destination,f)
+		httpVar.Mutex.Lock()
+		httpVar.CurrentPart++
+		httpVar.Mutex.Unlock()
 
-		body, err = ioutil.ReadAll(f)
-		if err != nil {
-			log.Println(err)
-			http.Error(w, "Error reading file", http.StatusInternalServerError)
-			return
-		}
-
-		//file filled  with body
-		file = string(body)
 
 	}
-	w.Header().Set("CONTENT-TYPE", "text/html; charset=UTF-8")
-	fmt.Fprintln(w,`
-	<form action="/upLoadFile" method="post" enctype="application/json">
-	    upload a file<br>
-	    <input type="file" name="file"><br>
-	    <input type="submit">
-	</form>
-	<br>
-	<br>
-	`,file)
+
 
 	fmt.Println("*** addFile FINISHES ***")
 
-		// Save chunk
 
 		// Send chunk to peers
 

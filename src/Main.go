@@ -8,7 +8,9 @@ import (
 )
 
 func main() {
-	var filePath = os.Getenv("GOPATH")+"/src/github.com/alruiz12/simpleBT/src/bigFile"
+	//var filePath = os.Getenv("GOPATH")+"/src/github.com/alruiz12/simpleBT/src/bigFile"
+	var filePath = os.Getenv("GOPATH")+"/src/github.com/alruiz12/simpleBT/dataset.xml"
+
 
 	var trackerAddr = ":8080"
 
@@ -23,6 +25,8 @@ func main() {
 	routerPeer := httpGo.MyNewRouter()
 	go func(){httpGo.TrackerDivideLoad(filePath, trackerAddr ,peers)}()
 	go func(){http.ListenAndServe(":8081", routerPeer)}()
+	go func(){http.ListenAndServe(":8082", routerPeer)}()
+	go func(){http.ListenAndServe(":8083", routerPeer)}()
 	http.ListenAndServe(":8080", routerTracker)
 	}
 

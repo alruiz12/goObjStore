@@ -6,16 +6,21 @@ import(
 	"math"
 	"net/http"
 	"io"
+	//"io/ioutil"
 	"bytes"
 	"mime/multipart"
 	"time"
 	"encoding/json"
 )
 
-const fileChunk = 1*(1<<10) // 1 KB
-//const fileChunk = 8*(1<<20) // 8 MB
+//const fileChunk = 1*(1<<10) // 1 KB
+const fileChunk = 8*(1<<20) // 8 MB
+
+type msg struct {
+	Text string
+}
 func TrackerDivideLoad(filePath string, addr string, peers []string){
-	time.Sleep(5 * time.Second)
+	time.Sleep(1 * time.Second)
 	var currentPart int = 0
 	var currentPeer string
 	var partSize int
@@ -23,9 +28,10 @@ func TrackerDivideLoad(filePath string, addr string, peers []string){
 	var partBuffer []byte
 	var err error
 	var peerURL string
-	var body *bytes.Buffer
+//	var body *bytes.Buffer
 	var writer *multipart.Writer
-	var fileName string
+	var buf bytes.Buffer
+	_,_=writer, buf // avoiding declared but not used
 
 	// Open file
 	file, err := os.Open(filePath)
@@ -41,57 +47,34 @@ func TrackerDivideLoad(filePath string, addr string, peers []string){
 		fmt.Println(err.Error())
 		return
 	}
-
 	totalPartsNum:= int(math.Ceil(float64(size)/float64(fileChunk)))
+	fmt.Println(totalPartsNum)
 
 	for currentPart<totalPartsNum{
 		currentPeer=peers[currentNum]
 		partSize=int(math.Min(fileChunk, float64(size-(currentPart*fileChunk))))
 		partBuffer=make([]byte,partSize)
-		_,err = file.Read(partBuffer)	// Get chunk
+		_,err = file.Read(partBuffer)		// Get chunk
+		r, w :=io.Pipe()			// create pipe
+
+		go func() {
+			defer w.Close()			// close pipe when go routine finishes
+			m:=msg{Text:string(partBuffer)} // save buffer to object
+			err=json.NewEncoder(w).Encode(&m)
+			if err != nil {
+				fmt.Println("Error encoding to pipe ", err.Error())
+			}
+		}()
+
 
 		peerURL = "http://"+currentPeer+"/PeerListen"
-
-		body = &bytes.Buffer{}
-		writer = multipart.NewWriter(body)
-		fileName = strconv.Itoa(currentPart)
-		part, err := writer.CreateFormFile("file", fileName) // Todo: declare
+		// Send to current peer
+		_, err := http.Post(peerURL, "application/json", r )
 		if err != nil {
-			fmt.Println("creating Form file")
-			fmt.Println(err)
-		}
-		_, err = io.Copy(part, file)
-		err=writer.Close()
-		if err != nil {
-			fmt.Println(err)
-		}
-		request, err := http.NewRequest("POST", peerURL, body) // Todo: declare
-		if err != nil {
-			fmt.Println("Error creating request = ",err)
-		}
-		request.Header.Set("Content-Type", writer.FormDataContentType())
-		//_, err = http.DefaultClient.Do(request) // Todo: declare
-		if err != nil {
-			fmt.Println("Error doing requewst = ",err)
-		}
-		/*
-		if res.StatusCode != 200 {
-			fmt.Println("Success expected: %d", res.StatusCode)
+			fmt.Println("Error sending http POST ", err.Error())
 		}
 
-*/		var buf bytes.Buffer
-		err = json.NewEncoder(&buf).Encode("AAAAAA")
-		http.Post(peerURL, "application/json", &buf )
-
-		return
-		//currentNum++
+		currentPart++
+		currentNum=(currentNum+1)%3
 	}
-
-
-
-
-	// Get chunk
-
-	// Send to current peer
-
 }
