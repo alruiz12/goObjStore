@@ -13,16 +13,13 @@ import(
 )
 var path = (os.Getenv("GOPATH")+"/src/github.com/alruiz12/simpleBT")
 var chunk msg
-func PeerListen(w http.ResponseWriter, r *http.Request){
+func StorageNodeListen(w http.ResponseWriter, r *http.Request){
 
-	// Get peer ID
-	var peerID int =int(r.Host[len(r.Host)-1]-'0')
-	// Create folder for chunks
-
+	// Get node ID
+	var nodeID int =int(r.Host[len(r.Host)-1]-'0')
 
 	// Listen to tracker
 	if r.Method == http.MethodPost{
-
 
 		body, err := ioutil.ReadAll(r.Body)
 		if err != nil {
@@ -39,45 +36,62 @@ func PeerListen(w http.ResponseWriter, r *http.Request){
 				fmt.Println("error unmarshalling ",err)
 			}
 		}
+		fmt.Println(chunk.Hash)
+
+		httpVar.MapMutex.Lock()
+		_, exists := httpVar.HashMap[chunk.Hash]
+		if !exists {
+			httpVar.HashMap[chunk.Hash][nodeID-1] = true
+			// Todo: fix data/dir creation
+			os.Mkdir(os.Getenv("GOPATH")+"/src/github.com/alruiz12/simpleBT/src/data/"+chunk.Hash,07777)
+			os.Mkdir(os.Getenv("GOPATH")+"/src/github.com/alruiz12/simpleBT/src/data/"+chunk.Hash+"/"+strconv.Itoa( nodeID),07777)
+
+			// --> HERE
+		}
+		httpVar.MapMutex.Unlock()
 
 		// Save chunk to file
-		err=ioutil.WriteFile(path+"/src/httpReceived"+strconv.Itoa(peerID)+"/NEW"+strconv.Itoa(httpVar.CurrentPart),[]byte(chunk.Text),0777)
+		err=ioutil.WriteFile(path+"/src/httpReceived"+strconv.Itoa( nodeID)+"/NEW"+strconv.Itoa(httpVar.CurrentPart),[]byte(chunk.Text),0777)
 		if err != nil {
-			fmt.Println("Peer: error creating/writing file", err.Error())
+			fmt.Println("StorageNodeListen: error creating/writing file", err.Error())
 		}
 
 		httpVar.TrackerMutex.Lock()
 		httpVar.CurrentPart++
 		httpVar.TrackerMutex.Unlock()
+
+
+		// Send chunk to peers
+		for _, peer :=range httpVar.Peers {
+			peerURL := "http://" + peer + "/p2pRequest"
+			go func(p string, URL string) {
+				if  nodeID == int(p[len(p)-1]-'0'){
+				}else {
+					rpipe, wpipe :=io.Pipe() // create pipe
+					go func(){
+						err:=json.NewEncoder(wpipe).Encode(&chunk)
+						wpipe.Close()			// close pipe when go routine finishes
+						if err != nil {
+							fmt.Println("Error encoding to pipe ", err.Error())
+						}
+					}()
+					httpVar.SendMutex.Lock()
+					_, err := http.Post(peerURL, "application/json", rpipe)
+					httpVar.SendMutex.Unlock()
+					//fmt.Println(peerURL)
+					if err != nil {
+						fmt.Println("Error sending http POST p2p", err.Error())
+					}
+				}
+			}(peer, peerURL)
+		}
+		fmt.Println(httpVar.CurrentPart)
+		if httpVar.CurrentPart == (totalPartsNum*3)-1 {
+			fmt.Println("..........................................Peer END ....................................................", time.Since(start))
+		}
 	}
 
-	// Send chunk to peers
-	for _, peer :=range httpVar.Peers {
-		peerURL := "http://" + peer + "/p2pRequest"
-		go func(p string, URL string) {
-			if peerID == int(p[len(p)-1]-'0'){
-			}else {
-				rpipe, wpipe :=io.Pipe() // create pipe
-				go func(){
-					err:=json.NewEncoder(wpipe).Encode(&chunk)
-					wpipe.Close()			// close pipe when go routine finishes
-					if err != nil {
-						fmt.Println("Error encoding to pipe ", err.Error())
-					}
-				}()
-				httpVar.SendMutex.Lock()
-				_, err := http.Post(peerURL, "application/json", rpipe)
-				httpVar.SendMutex.Unlock()
-				fmt.Println(peerURL)
-				if err != nil {
-					fmt.Println("Error sending http POST p2p", err.Error())
-				}
-			}
-		}(peer, peerURL)
-	}
-	if httpVar.CurrentPart == totalPartsNum-1 {
-		fmt.Println("..........................................Peer END ....................................................", time.Since(start))
-	}
+
 
 }
 

@@ -1,88 +1,105 @@
 package httpGo
 import(
-	"os"
 	"fmt"
-	"strconv"
-	"math"
+	"github.com/alruiz12/simpleBT/src/httpVar"
 	"net/http"
-	"io"
-	//"io/ioutil"
-	"bytes"
-	"mime/multipart"
-	"time"
 	"encoding/json"
+	"io/ioutil"
+	"io"
+	"strconv"
 )
 
-//const fileChunk = 1*(1<<10) // 1 KB
-const fileChunk = 8*(1<<20) // 8 MB
-
-type msg struct {
-	Text string
+type NodeNum struct {
+	Quantity string		`json:"Quantity"`
 }
-var totalPartsNum int
-var start time.Time
-func TrackerDivideLoad(filePath string, addr string, peers []string){
-	time.Sleep(1 * time.Second)
-	start=time.Now()
-	var currentPart int = 0
-	var currentPeer string
-	var partSize int
-	var currentNum int = 0
-	var partBuffer []byte
-	var err error
-	var peerURL string
-//	var body *bytes.Buffer
-	var writer *multipart.Writer
-	var buf bytes.Buffer
-	_,_=writer, buf // avoiding declared but not used
 
-	// Open file
-	file, err := os.Open(filePath)
+
+func StartTracker(nodeList []string){
+	var nodeAux httpVar.NodeInfo
+	for _, node := range nodeList {
+		nodeAux.Url=node
+		nodeAux.Busy=false
+		httpVar.TrackerNodeList = append(httpVar.TrackerNodeList, nodeAux)
+	}
+}
+
+/*
+GetNodes is called when a GET requests [TrackerURL]/addTorrent.
+Sends new json encoded node list back to the sender
+@param1 used by an HTTP handler to construct an HTTP response.
+@param2 represents HTTP request
+ */
+func GetNodes(w http.ResponseWriter, r *http.Request){
+
+	var nodeNum NodeNum
+	body, err := ioutil.ReadAll(io.LimitReader(r.Body, 1048576))
 	if err != nil {
-		fmt.Println(err.Error())
 		panic(err)
 	}
-	defer file.Close()
-	fileInfo, _ := file.Stat()
-	text:=strconv.FormatInt(fileInfo.Size(),10)	// size
-	size,_:=strconv.Atoi(text)
-	if err != nil {
-		fmt.Println(err.Error())
+	if err := r.Body.Close(); err != nil {
+		panic(err)
+	}
+
+	if err := json.Unmarshal(body, &nodeNum); err != nil {
+		w.Header().Set("Content-Type", "application/json; charset=UTF-8")
+		w.WriteHeader(422) // unprocessable entity
+		if err := json.NewEncoder(w).Encode(err); err != nil {
+			fmt.Println("GetNodes: error unprocessable entity: ",err.Error())
+			return
+		}
 		return
 	}
-	totalPartsNum= int(math.Ceil(float64(size)/float64(fileChunk)))
-	fmt.Println(totalPartsNum)
-
-	for currentPart<totalPartsNum{
-		fmt.Println("					CURRRRRRRRRRRRRRRRRRRRRRR ",currentPart)
-		currentPeer=peers[currentNum]
-		partSize=int(math.Min(fileChunk, float64(size-(currentPart*fileChunk))))
-		partBuffer=make([]byte,partSize)
-		_,err = file.Read(partBuffer)		// Get chunk
-		r, w :=io.Pipe()			// create pipe
-
-		go func() {
-			defer w.Close()			// close pipe when go routine finishes
-			m:=msg{Text:string(partBuffer)} // save buffer to object
-			err=json.NewEncoder(w).Encode(&m)
-			if err != nil {
-				fmt.Println("Error encoding to pipe ", err.Error())
-			}
-		}()
-
-
-		peerURL = "http://"+currentPeer+"/PeerListen"
-		// Send to current peer
-		_, err := http.Post(peerURL, "application/json", r )
-		if err != nil {
-			fmt.Println("Error sending http POST ", err.Error())
+	num, err := strconv.Atoi(nodeNum.Quantity)
+	if err != nil {
+		fmt.Println("GetNodes: error converting string to int response: ",err.Error())
+		w.Header().Set("Content-Type", "application/json; charset=UTF-8")
+		w.WriteHeader(422) // unprocessable entity
+		if err := json.NewEncoder(w).Encode(err); err != nil {
+			fmt.Println("GetNodes: error unprocessable entity: ",err.Error())
+			return
 		}
-
-		currentPart++
-		currentNum=(currentNum+1)%3
+		return
 	}
-	fmt.Println("..........................................Tracker END ....................................................")
-	fmt.Println("..........................................Tracker END ....................................................")
-	fmt.Println("..........................................Tracker END ....................................................")
-	fmt.Println("..........................................Tracker END ....................................................")
+	nodeList:=chooseNodes(num)
+	fmt.Println("GetNodes: About to send : ", nodeList)
+
+	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
+	w.WriteHeader(http.StatusOK)
+	if err := json.NewEncoder(w).Encode(nodeList); err != nil {
+		fmt.Println("GetNodes: error encoding response: ",err.Error())
+	}
+}
+
+func chooseNodes(num int)[]string{
+	i:=0
+	var response []string
+	var busies []string
+	for i<num{
+		if i==len(httpVar.TrackerNodeList){
+			fmt.Println("There is not enough free nodes, adding bussies")
+			chooseBusyNodes(num,busies, &response)
+			return response
+		}
+		if httpVar.TrackerNodeList[i].Busy==false {
+			response = append(response, httpVar.TrackerNodeList[i].Url )
+			httpVar.TrackerNodeList[i].Busy=true
+		}else{
+			busies=append(busies, httpVar.TrackerNodeList[i].Url)
+		}
+		i++
+
+	}
+	return response
+}
+
+func chooseBusyNodes(num int, busies []string, response *[]string){
+	j:=0 // iterates through bussies
+	for len(*response)<num && j<len(busies){
+		*response=append(*response, busies[j])
+		j++
+	}
+	if j==len(busies){fmt.Println(" total node number less than tracker asked ")}
+		// tracker will receive less than expected
+
+
 }

@@ -18,7 +18,7 @@ Router using gorilla/mux
 func MyNewRouter() *mux.Router {
 
 	router := mux.NewRouter().StrictSlash(true)
-	router.HandleFunc("/PeerListen", PeerListen)
+	router.HandleFunc("/StorageNodeListen", StorageNodeListen)
 	router.HandleFunc("/p2pRequest", p2pRequest)
 	for _, route := range routes {
 		router.
@@ -32,13 +32,13 @@ func MyNewRouter() *mux.Router {
 }
 
 var routes = Routes{
-	/*
+
 	Route{
-		"addTorrent",
-		"POST",
-		"/addTorrent",
-		addTorrent,
+		"GetNodes",
+		"GET",
+		"/GetNodes",
+		GetNodes,
 	},
-	*/
+
 
 }
