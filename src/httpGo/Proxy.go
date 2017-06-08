@@ -22,6 +22,8 @@ import(
 const fileChunk = 8*(1<<20) // 8 MB
 
 type msg struct {
+	NodeList []string
+	Num int
 	Hash string
 	Text string
 }
@@ -82,9 +84,9 @@ func ProxyDivideLoad(filePath string, addr string, trackerAddr string, numNodes 
 		auxList=append(auxList, false)
 		i++
 	}
-	httpVar.MapMutex.Lock()
+	httpVar.DirMutex.Lock()
 	httpVar.HashMap[hash]=auxList
-	httpVar.MapMutex.Unlock()
+	httpVar.DirMutex.Unlock()
 	// Open file
 	file, err := os.Open(filePath)
 	if err != nil {
@@ -108,7 +110,7 @@ func ProxyDivideLoad(filePath string, addr string, trackerAddr string, numNodes 
 		partSize=int(math.Min(fileChunk, float64(size-(currentPart*fileChunk))))
 		partBuffer=make([]byte,partSize)
 		_,err = file.Read(partBuffer)		// Get chunk
-		m:=msg{Hash:hash, Text:string(partBuffer)}
+		m:=msg{NodeList:nodeList, Num:numNodes, Hash:hash, Text:string(partBuffer)}
 		r, w :=io.Pipe()			// create pipe
 
 		go func() {
@@ -129,7 +131,8 @@ func ProxyDivideLoad(filePath string, addr string, trackerAddr string, numNodes 
 		}
 
 		currentPart++
-		currentNum=(currentNum+1)%3
+		fmt.Println("adsfasfasfdsdaf ", chunk.Num)
+		currentNum=(currentNum+1)%chunk.Num
 	}
 	fmt.Println("..........................................Proxy END ....................................................")
 	}
