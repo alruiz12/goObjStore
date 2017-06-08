@@ -39,19 +39,39 @@ func StorageNodeListen(w http.ResponseWriter, r *http.Request){
 		fmt.Println(chunk.Hash)
 
 		httpVar.MapMutex.Lock()
+
+		// if data directory doesn't exist, create it
+		_, err = os.Stat(os.Getenv("GOPATH")+"/src/github.com/alruiz12/simpleBT/src/data")
+		if err != nil {
+			os.Mkdir(os.Getenv("GOPATH")+"/src/github.com/alruiz12/simpleBT/src/data",0777)
+		}
+
+		// if data/chunk.Hash directory doesn't exist, create it
+		_, err = os.Stat(os.Getenv("GOPATH")+"/src/github.com/alruiz12/simpleBT/src/data/"+chunk.Hash)
+		if err != nil {
+			os.Mkdir(os.Getenv("GOPATH")+"/src/github.com/alruiz12/simpleBT/src/data/"+chunk.Hash,0777)
+		}
+
+		// if data/chunk.Hash/nodeID directory doesn't exist, create it
+		_, err = os.Stat(os.Getenv("GOPATH")+"/src/github.com/alruiz12/simpleBT/src/data/"+chunk.Hash+"/"+strconv.Itoa( nodeID))
+		if err != nil {
+			os.Mkdir(os.Getenv("GOPATH")+"/src/github.com/alruiz12/simpleBT/src/data/"+chunk.Hash+"/"+strconv.Itoa( nodeID),0777)
+		}
+
+		/*
 		_, exists := httpVar.HashMap[chunk.Hash]
 		if !exists {
 			httpVar.HashMap[chunk.Hash][nodeID-1] = true
-			// Todo: fix data/dir creation
 			os.Mkdir(os.Getenv("GOPATH")+"/src/github.com/alruiz12/simpleBT/src/data/"+chunk.Hash,07777)
 			os.Mkdir(os.Getenv("GOPATH")+"/src/github.com/alruiz12/simpleBT/src/data/"+chunk.Hash+"/"+strconv.Itoa( nodeID),07777)
 
 			// --> HERE
 		}
+		*/
 		httpVar.MapMutex.Unlock()
 
 		// Save chunk to file
-		err=ioutil.WriteFile(path+"/src/httpReceived"+strconv.Itoa( nodeID)+"/NEW"+strconv.Itoa(httpVar.CurrentPart),[]byte(chunk.Text),0777)
+		err=ioutil.WriteFile(path+"/src/data/"+chunk.Hash+"/"+strconv.Itoa( nodeID)+"/NEW"+strconv.Itoa(httpVar.CurrentPart),[]byte(chunk.Text),0777)
 		if err != nil {
 			fmt.Println("StorageNodeListen: error creating/writing file", err.Error())
 		}
