@@ -39,6 +39,13 @@ var routes = Routes{
 		"/GetNodes",
 		GetNodes,
 	},
+	Route{
+		"/GetNodesForKey",
+		"GET",
+		"/GetNodesForKey",
+		GetNodesForKey,
+	},
+
 
 
 }

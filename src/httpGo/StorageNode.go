@@ -135,7 +135,6 @@ func p2pRequest(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			fmt.Println("Peer: error creating/writing file p2p", err.Error())
 		}
-	fmt.Println("LIIIIIIIIIIIIIIIIIIIIMIT ", chunk.Num*(chunk.Num-1))
 		if httpVar.P2pPart >= (totalPartsNum*chunk.Num*(chunk.Num-1))-1 {
 			fmt.Println("p2p: ",time.Since(start))
 			fmt.Println("..........................................p2p END ....................................................",httpVar.P2pPart)

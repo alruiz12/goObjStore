@@ -29,22 +29,24 @@ type msg struct {
 }
 var totalPartsNum int
 var start time.Time
-func ProxyDivideLoad(filePath string, addr string, trackerAddr string, numNodes int){
+func Put(filePath string, addr string, trackerAddr string, numNodes int){
 	time.Sleep(1 * time.Second)
 	start=time.Now()
+	var hash string = md5sum(filePath)
 	var err error
 
 	// ask tracker for nodes
-	quantityJson := `{"Quantity":"`+strconv.Itoa(numNodes)+`"}`
+	quantityJson := `{"Quantity":"`+strconv.Itoa(numNodes)+`","Hash":"`+hash+`"}`
+	//jsonContent := `{"file":"`+torrentName+`","IP":"`+IP+`"}`
 	reader := strings.NewReader(quantityJson)
 	trackerURL:="http://"+trackerAddr+"/GetNodes"
 	request, err := http.NewRequest("GET", trackerURL, reader)
 	if err != nil {
-		fmt.Println("ProxyDivideLoad: error creating request: ",err.Error())
+		fmt.Println("Put: error creating request: ",err.Error())
 	}
 	res, err := http.DefaultClient.Do(request)
 	if err != nil {
-		fmt.Println("ProxyDivideLoad: error sending request: ",err.Error())
+		fmt.Println("Put: error sending request: ",err.Error())
 	}
 	body, err := ioutil.ReadAll(io.LimitReader(res.Body, 1048576))
 	if err != nil {
@@ -55,12 +57,12 @@ func ProxyDivideLoad(filePath string, addr string, trackerAddr string, numNodes 
 	}
 	var nodeList []string
 	if err := json.Unmarshal(body, &nodeList); err != nil {
-		fmt.Println("ProxyDivideLoad: error unprocessable entity: ",err.Error())
+		fmt.Println("Put: error unprocessable entity: ",err.Error())
 		return
 	}
 	fmt.Println("nodeList:",nodeList[0])
 	if err != nil {
-		fmt.Println("ProxyDivideLoad: error reciving response: ",err.Error())
+		fmt.Println("Put: error reciving response: ",err.Error())
 	}
 
 
@@ -75,7 +77,7 @@ func ProxyDivideLoad(filePath string, addr string, trackerAddr string, numNodes 
 	var writer *multipart.Writer
 	var buf bytes.Buffer
 	_,_=writer, buf // avoiding declared but not used
-	var hash string = md5sum(filePath)
+
 	var auxList []bool
 	var i int = 0
 	fmt.Println(numNodes)
@@ -103,7 +105,7 @@ func ProxyDivideLoad(filePath string, addr string, trackerAddr string, numNodes 
 	}
 	totalPartsNum= int(math.Ceil(float64(size)/float64(fileChunk)))
 	fmt.Println(totalPartsNum)
-
+	return
 	for currentPart<totalPartsNum{
 		//fmt.Println("					CURRENT ",currentPart)
 		//currentPeer=peers[currentNum]
@@ -131,7 +133,6 @@ func ProxyDivideLoad(filePath string, addr string, trackerAddr string, numNodes 
 		}
 
 		currentPart++
-		fmt.Println("adsfasfasfdsdaf ", chunk.Num)
 		currentNum=(currentNum+1)%chunk.Num
 	}
 	fmt.Println("..........................................Proxy END ....................................................")
@@ -160,3 +161,65 @@ func md5sum(filePath string) string{
 	mainFileHash:=hex.EncodeToString(hash.Sum(nil))
 	return mainFileHash
 }
+
+func Get(Key string, trackerAddr string){
+	time.Sleep(1 * time.Second)
+
+	// Ask tracker for nodes
+	start=time.Now()
+	var err error
+	// ask tracker for nodes for a given key
+	keyJson := `{"Key":"`+Key+`"}`
+	//jsonContent := `{"file":"`+torrentName+`","IP":"`+IP+`"}`
+	reader := strings.NewReader(keyJson)
+	trackerURL:="http://"+trackerAddr+"/GetNodesForKey"
+	request, err := http.NewRequest("GET", trackerURL, reader)
+	if err != nil {
+		fmt.Println("Get: error creating request: ",err.Error())
+	}
+	res, err := http.DefaultClient.Do(request)
+	if err != nil {
+		fmt.Println("Get: error sending request: ",err.Error())
+	}
+	body, err := ioutil.ReadAll(io.LimitReader(res.Body, 1048576))
+	if err != nil {
+		panic(err)
+	}
+	if err := res.Body.Close(); err != nil {
+		panic(err)
+	}
+	var nodeList []string
+	if err := json.Unmarshal(body, &nodeList); err != nil {
+		fmt.Println("Get: error unprocessable entity: ",err.Error())
+		return
+	}
+	fmt.Println("nodeList for key: ",nodeList)
+	if err != nil {
+		fmt.Println("Get: error reciving response: ",err.Error())
+	}
+	// Create folder for receiving
+
+	// For each node ask for all their Proxy-pieces
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

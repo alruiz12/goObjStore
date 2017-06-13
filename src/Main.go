@@ -2,15 +2,13 @@ package main
 
 import (
 	"os"
-	//"time"
+	"time"
 	"github.com/alruiz12/simpleBT/src/httpGo"
 	"net/http"
 
 )
 
 func main() {
-
-
 
 	//var filePath2 = os.Getenv("GOPATH")+"/src/github.com/alruiz12/simpleBT/src/bigFile"
 	var filePath = os.Getenv("GOPATH")+"/src/github.com/alruiz12/simpleBT/dataset.xml"
@@ -35,12 +33,17 @@ func main() {
 	routerTracker := httpGo.MyNewRouter()
 	routerPeer := httpGo.MyNewRouter()
 	go func(){http.ListenAndServe(":8070", routerPeer)}()
-	go func(){httpGo.ProxyDivideLoad(filePath, proxyAddr, trackerAddr, 5)}()
+	go func(){httpGo.Put(filePath, proxyAddr, trackerAddr, 5)
+		time.Sleep(20*time.Second)
+		httpGo.Get("0527cbea2805d89c6d5d6457b7f9f77c", trackerAddr)
+
+	}()
 	go func(){http.ListenAndServe(":8081", routerPeer)}()
 	go func(){http.ListenAndServe(":8082", routerPeer)}()
 	go func(){http.ListenAndServe(":8083", routerPeer)}()
 	go func(){http.ListenAndServe(":8084", routerPeer)}()
 	go func(){http.ListenAndServe(":8085", routerPeer)}()
+
 	http.ListenAndServe(":8080", routerTracker)
 
 	}

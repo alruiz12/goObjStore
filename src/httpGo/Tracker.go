@@ -11,6 +11,10 @@ import(
 
 type NodeNum struct {
 	Quantity string		`json:"Quantity"`
+	Hash string		`json:"Hash"`
+}
+type jsonKey struct {
+	Key string		`json:"Key"`
 }
 
 
@@ -30,7 +34,6 @@ Sends new json encoded node list back to the sender
 @param2 represents HTTP request
  */
 func GetNodes(w http.ResponseWriter, r *http.Request){
-
 	var nodeNum NodeNum
 	body, err := ioutil.ReadAll(io.LimitReader(r.Body, 1048576))
 	if err != nil {
@@ -61,7 +64,7 @@ func GetNodes(w http.ResponseWriter, r *http.Request){
 		return
 	}
 	nodeList:=chooseNodes(num)
-	fmt.Println("GetNodes: About to send : ", nodeList)
+	httpVar.MapKeyNodes[nodeNum.Hash]=nodeList
 
 	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
 	w.WriteHeader(http.StatusOK)
@@ -102,4 +105,43 @@ func chooseBusyNodes(num int, busies []string, response *[]string){
 		// tracker will receive less than expected
 
 
+}
+
+func GetNodesForKey(w http.ResponseWriter, r *http.Request){
+	body, err := ioutil.ReadAll(io.LimitReader(r.Body, 1048576))
+	if err != nil {
+		panic(err)
+	}
+	if err := r.Body.Close(); err != nil {
+		panic(err)
+	}
+	var key	jsonKey
+	if err := json.Unmarshal(body, &key); err != nil {
+		w.Header().Set("Content-Type", "application/json; charset=UTF-8")
+		w.WriteHeader(422) // unprocessable entity
+		if err := json.NewEncoder(w).Encode(err); err != nil {
+			fmt.Println("GetNodesForKey: error unprocessable entity: ",err.Error())
+			return
+		}
+		return
+	}
+	fmt.Println("GetNodesForKey: KEY IS: ",key.Key)
+	if err != nil {
+		fmt.Println("GetNodesForKey: error converting string to int response: ",err.Error())
+		w.Header().Set("Content-Type", "application/json; charset=UTF-8")
+		w.WriteHeader(422) // unprocessable entity
+		if err := json.NewEncoder(w).Encode(err); err != nil {
+			fmt.Println("GetNodesForKey: error unprocessable entity: ",err.Error())
+			return
+		}
+		return
+	}
+	nodeList:=httpVar.MapKeyNodes[key.Key]
+	fmt.Println("GetNodesForKey: About to send : ", nodeList)
+
+	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
+	w.WriteHeader(http.StatusOK)
+	if err := json.NewEncoder(w).Encode(nodeList); err != nil {
+		fmt.Println("GetNodesForKey: error encoding response: ",err.Error())
+	}
 }

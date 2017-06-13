@@ -20,3 +20,4 @@ type NodeInfo struct {
 	Busy bool
 }
 var TrackerNodeList []NodeInfo
+var MapKeyNodes = make(map[string][]string)
