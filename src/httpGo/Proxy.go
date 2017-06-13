@@ -170,7 +170,6 @@ func Get(Key string, trackerAddr string){
 	var err error
 	// ask tracker for nodes for a given key
 	keyJson := `{"Key":"`+Key+`"}`
-	//jsonContent := `{"file":"`+torrentName+`","IP":"`+IP+`"}`
 	reader := strings.NewReader(keyJson)
 	trackerURL:="http://"+trackerAddr+"/GetNodesForKey"
 	request, err := http.NewRequest("GET", trackerURL, reader)
@@ -198,8 +197,28 @@ func Get(Key string, trackerAddr string){
 		fmt.Println("Get: error reciving response: ",err.Error())
 	}
 	// Create folder for receiving
+	os.Mkdir(os.Getenv("GOPATH")+"/src/github.com/alruiz12/simpleBT/src/local",+0777)
+	os.Mkdir(os.Getenv("GOPATH")+"/src/github.com/alruiz12/simpleBT/src/local/"+Key,0777)
 
 	// For each node ask for all their Proxy-pieces
+	for _, node := range nodeList {
+		url:="http://"+node+"/GetChunks"
+		request, err := http.NewRequest("GET", url, reader)
+		if err != nil {
+			fmt.Println("Get2: error creating request: ",err.Error())
+		}
+		res, err := http.DefaultClient.Do(request)
+		if err != nil {
+			fmt.Println("Get2: error sending request: ",err.Error())
+		}
+		body, err = ioutil.ReadAll(io.LimitReader(res.Body, 1048576))
+		if err != nil {
+			panic(err)
+		}
+		if err := res.Body.Close(); err != nil {
+			panic(err)
+		}
+	}
 }
 
 

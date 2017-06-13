@@ -147,3 +147,6 @@ func p2pRequest(w http.ResponseWriter, r *http.Request) {
 
 	}
 }
+func GetChunks(w http.ResponseWriter, r *http.Request){
+	fmt.Println("GetChunks!",r.Host)
+}
