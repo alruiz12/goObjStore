@@ -10,6 +10,8 @@ import(
 	"github.com/alruiz12/simpleBT/src/httpVar"
 	"strconv"
 	"time"
+	"path/filepath"
+	"strings"
 )
 var path = (os.Getenv("GOPATH")+"/src/github.com/alruiz12/simpleBT")
 var chunk msg
@@ -147,6 +149,83 @@ func p2pRequest(w http.ResponseWriter, r *http.Request) {
 
 	}
 }
+
 func GetChunks(w http.ResponseWriter, r *http.Request){
-	fmt.Println("GetChunks!",r.Host)
+	// Get node ID
+	var nodeIDint int = int(r.Host[len(r.Host) - 1] - '0')
+	var nodeID string = strconv.Itoa(nodeIDint)
+	var keyURL jsonKeyURL
+	body, err := ioutil.ReadAll(io.LimitReader(r.Body, 1048576))
+	if err != nil {
+		panic(err)
+	}
+	if err := r.Body.Close(); err != nil {
+		panic(err)
+	}
+
+	if err := json.Unmarshal(body, &keyURL); err != nil {
+		fmt.Println("GetChunks error Unmashalling ",err.Error())
+		w.Header().Set("Content-Type", "application/json; charset=UTF-8")
+		w.WriteHeader(423) // unprocessable entity
+		if err := json.NewEncoder(w).Encode(err); err != nil {
+			fmt.Println("GetChunks: error unprocessable entity: ",err.Error())
+			return
+		}
+		return
+	}
+
+
+	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
+	w.WriteHeader(http.StatusOK)
+	sendChunksToProxy(nodeID, keyURL.Key, keyURL.URL)
+}
+
+type getMsg struct {
+	Text string
+	Name string
+	NodeID string
+	Key string
+}
+func sendChunksToProxy(nodeID string, key string, URL string){
+	partBuffer:=make([]byte,fileChunk)
+	proxyURL:="http://"+URL
+
+	// for each proxy-name in directory send
+	filepath.Walk(path + "/src/data/"+key+"/"+nodeID, func(path string, info os.FileInfo, err error) error {
+		if strings.Compare(nodeID, "1") == 0{
+			if strings.Contains(info.Name(),"NEW") {
+				file, err := os.Open(path)
+				if err != nil {
+					fmt.Println("sendChunksToProxy error opening file ",err.Error())
+				}
+				_, err = file.Read(partBuffer)
+				if err != nil {
+					fmt.Println("sendChunksToProxy error opening file ",err.Error())
+				}
+				m:=getMsg{Text: string(partBuffer), Name: info.Name(), NodeID:nodeID, Key:key}
+				r, w :=io.Pipe()			// create pipe
+
+				go func() {
+					defer w.Close()			// close pipe when go routine finishes
+					// save buffer to object
+					err=json.NewEncoder(w).Encode(&m)
+					if err != nil {
+						fmt.Println("Error encoding to pipe ", err.Error())
+					}
+				}()
+				res, err := http.Post(proxyURL,"application/json", r )
+				fmt.Println(info.Name())
+				if err != nil {
+					fmt.Println("sendChunksToProxy: error creating request: ",err.Error())
+				}
+				fmt.Println("statusCode: ",res.StatusCode )
+				if err := res.Body.Close(); err != nil {
+					fmt.Println(err)
+				}
+			}
+		}
+		return nil
+
+	})
+	//path + "/src/data/"+chunk.Hash+"/"+strconv.Itoa( peerID)+ "/P2P
 }

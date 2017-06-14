@@ -1,5 +1,6 @@
 package httpGo
-import(
+
+import (
 	"os"
 	"fmt"
 	"strconv"
@@ -13,9 +14,8 @@ import(
 	"encoding/json"
 	"crypto/md5"
 	"encoding/hex"
-	"strings"
-
 	"github.com/alruiz12/simpleBT/src/httpVar"
+	"strings"
 )
 
 //const fileChunk = 1*(1<<10) // 1 KB
@@ -162,7 +162,12 @@ func md5sum(filePath string) string{
 	return mainFileHash
 }
 
-func Get(Key string, trackerAddr string){
+type jsonKeyURL struct {
+	Key string		`json:"Key"`
+	URL string		`json:"URL"`
+}
+
+func Get(Key string, proxyAddr string, trackerAddr string){
 	time.Sleep(1 * time.Second)
 
 	// Ask tracker for nodes
@@ -199,25 +204,62 @@ func Get(Key string, trackerAddr string){
 	// Create folder for receiving
 	os.Mkdir(os.Getenv("GOPATH")+"/src/github.com/alruiz12/simpleBT/src/local",+0777)
 	os.Mkdir(os.Getenv("GOPATH")+"/src/github.com/alruiz12/simpleBT/src/local/"+Key,0777)
+	k:=jsonKeyURL{Key:Key, URL:proxyAddr+"/ReturnData"}
 
 	// For each node ask for all their Proxy-pieces
 	for _, node := range nodeList {
+		r, w :=io.Pipe()			// create pipe
+
+
+		go func() {
+			defer w.Close()			// close pipe when go routine finishes
+			// save buffer to object
+			err=json.NewEncoder(w).Encode(&k)
+			if err != nil {
+				fmt.Println("Error encoding to pipe ", err.Error())
+			}
+		}()
 		url:="http://"+node+"/GetChunks"
-		request, err := http.NewRequest("GET", url, reader)
+		res, err := http.Post(url,"application/json", r )
 		if err != nil {
 			fmt.Println("Get2: error creating request: ",err.Error())
 		}
-		res, err := http.DefaultClient.Do(request)
-		if err != nil {
-			fmt.Println("Get2: error sending request: ",err.Error())
-		}
-		body, err = ioutil.ReadAll(io.LimitReader(res.Body, 1048576))
-		if err != nil {
-			panic(err)
-		}
+		fmt.Println("statusCode: ",res.StatusCode )
 		if err := res.Body.Close(); err != nil {
-			panic(err)
+			fmt.Println(err)
 		}
+	}
+}
+
+func ReturnData(w http.ResponseWriter, r *http.Request){
+	// Listen to tracker
+	var getmsg getMsg
+	if r.Method == http.MethodPost {
+
+		body, err := ioutil.ReadAll(r.Body)
+		if err != nil {
+			fmt.Println("error reading ", err)
+		}
+		if err := r.Body.Close(); err != nil {
+			fmt.Println("error body ", err)
+		}
+		if err := json.Unmarshal(body, &getmsg); err != nil {
+			w.Header().Set("Content-Type", "application/json; charset=UTF-8")
+			w.WriteHeader(422) // unprocessable entity
+			fmt.Println(err.Error())
+			if err := json.NewEncoder(w).Encode(err); err != nil {
+				fmt.Println("error unmarshalling ", err)
+			}
+		}
+		fmt.Println(getmsg.Key,": "+"node: "+getmsg.NodeID+", "+ getmsg.Name)
+		/*
+		// if data directory doesn't exist, create it
+		_, err = os.Stat(os.Getenv("GOPATH") + "/src/github.com/alruiz12/simpleBT/src/data")
+		if err != nil {
+			os.Mkdir(os.Getenv("GOPATH") + "/src/github.com/alruiz12/simpleBT/src/data", 0777)
+		}
+		*/
+
 	}
 }
 

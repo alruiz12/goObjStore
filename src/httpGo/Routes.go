@@ -20,6 +20,7 @@ func MyNewRouter() *mux.Router {
 	router := mux.NewRouter().StrictSlash(true)
 	router.HandleFunc("/StorageNodeListen", StorageNodeListen)
 	router.HandleFunc("/p2pRequest", p2pRequest)
+	router.HandleFunc("/ReturnData",ReturnData)
 	for _, route := range routes {
 		router.
 			Methods(route.Method).
@@ -47,7 +48,7 @@ var routes = Routes{
 	},
 	Route{
 		"/GetChunks",
-		"GET",
+		"POST",
 		"/GetChunks",
 		GetChunks,
 	},
