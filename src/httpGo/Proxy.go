@@ -107,8 +107,6 @@ func Put(filePath string, addr string, trackerAddr string, numNodes int){
 	fmt.Println(totalPartsNum)
 	return
 	for currentPart<totalPartsNum{
-		//fmt.Println("					CURRENT ",currentPart)
-		//currentPeer=peers[currentNum]
 		partSize=int(math.Min(fileChunk, float64(size-(currentPart*fileChunk))))
 		partBuffer=make([]byte,partSize)
 		_,err = file.Read(partBuffer)		// Get chunk
@@ -251,14 +249,13 @@ func ReturnData(w http.ResponseWriter, r *http.Request){
 				fmt.Println("error unmarshalling ", err)
 			}
 		}
+
 		fmt.Println(getmsg.Key,": "+"node: "+getmsg.NodeID+", "+ getmsg.Name)
-		/*
-		// if data directory doesn't exist, create it
-		_, err = os.Stat(os.Getenv("GOPATH") + "/src/github.com/alruiz12/simpleBT/src/data")
+		err = ioutil.WriteFile(path + "/src/local/"+getmsg.Key+"/"+getmsg.Name, []byte(getmsg.Text), 0777)
 		if err != nil {
-			os.Mkdir(os.Getenv("GOPATH") + "/src/github.com/alruiz12/simpleBT/src/data", 0777)
+			fmt.Println("Peer: error creating/writing file p2p", err.Error())
 		}
-		*/
+
 
 	}
 }
