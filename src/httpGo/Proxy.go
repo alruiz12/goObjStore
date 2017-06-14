@@ -29,6 +29,8 @@ type msg struct {
 }
 var totalPartsNum int
 var start time.Time
+var startGet time.Time
+var numGets int = 0
 func Put(filePath string, addr string, trackerAddr string, numNodes int){
 	time.Sleep(1 * time.Second)
 	start=time.Now()
@@ -169,7 +171,7 @@ func Get(Key string, proxyAddr string, trackerAddr string){
 	time.Sleep(1 * time.Second)
 
 	// Ask tracker for nodes
-	start=time.Now()
+	startGet=time.Now()
 	var err error
 	// ask tracker for nodes for a given key
 	keyJson := `{"Key":"`+Key+`"}`
@@ -254,6 +256,10 @@ func ReturnData(w http.ResponseWriter, r *http.Request){
 		err = ioutil.WriteFile(path + "/src/local/"+getmsg.Key+"/"+getmsg.Name, []byte(getmsg.Text), 0777)
 		if err != nil {
 			fmt.Println("Peer: error creating/writing file p2p", err.Error())
+		}
+		numGets++
+		if numGets==totalPartsNum-1{
+			fmt.Println("ELAPSED: ",time.Since(startGet))
 		}
 
 
