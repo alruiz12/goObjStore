@@ -38,7 +38,7 @@ func StorageNodeListen(w http.ResponseWriter, r *http.Request){
 				fmt.Println("error unmarshalling ",err)
 			}
 		}
-		fmt.Println(chunk.Hash)
+		//fmt.Println(chunk.Hash)
 
 		httpVar.DirMutex.Lock()
 
@@ -63,11 +63,12 @@ func StorageNodeListen(w http.ResponseWriter, r *http.Request){
 		httpVar.DirMutex.Unlock()
 
 		// Save chunk to file
+		
 		err=ioutil.WriteFile(path+"/src/data/"+chunk.Hash+"/"+strconv.Itoa( nodeID)+"/NEW"+strconv.Itoa(httpVar.CurrentPart),[]byte(chunk.Text),0777)
 		if err != nil {
 			fmt.Println("StorageNodeListen: error creating/writing file", err.Error())
 		}
-
+		
 		httpVar.TrackerMutex.Lock()
 		httpVar.CurrentPart++
 		httpVar.TrackerMutex.Unlock()
@@ -97,7 +98,7 @@ func StorageNodeListen(w http.ResponseWriter, r *http.Request){
 				}
 			}(peer, peerURL)
 		}
-		fmt.Println(httpVar.CurrentPart)
+		//fmt.Println(httpVar.CurrentPart)
 		if httpVar.CurrentPart == (totalPartsNum*chunk.Num)-1 {
 			fmt.Println("..........................................Peer END ....................................................", time.Since(start))
 		}
@@ -133,10 +134,14 @@ func p2pRequest(w http.ResponseWriter, r *http.Request) {
 			}
 		}
 		// Save chunk to file
+		httpVar.WFileMutex.Lock()
+
 		err = ioutil.WriteFile(path + "/src/data/"+chunk.Hash+"/"+strconv.Itoa( peerID)+ "/P2P" + strconv.Itoa(httpVar.P2pPart), []byte(chunk.Text), 0777)
 		if err != nil {
 			fmt.Println("Peer: error creating/writing file p2p", err.Error())
 		}
+		httpVar.WFileMutex.Unlock()
+
 		if httpVar.P2pPart >= (totalPartsNum*chunk.Num*(chunk.Num-1))-1 {
 			fmt.Println("p2p: ",time.Since(start))
 			fmt.Println("..........................................p2p END ....................................................",httpVar.P2pPart)

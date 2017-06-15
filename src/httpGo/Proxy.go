@@ -107,7 +107,7 @@ func Put(filePath string, addr string, trackerAddr string, numNodes int){
 	}
 	totalPartsNum= int(math.Ceil(float64(size)/float64(fileChunk)))
 	fmt.Println(totalPartsNum)
-	return
+	//return
 	for currentPart<totalPartsNum{
 		partSize=int(math.Min(fileChunk, float64(size-(currentPart*fileChunk))))
 		partBuffer=make([]byte,partSize)

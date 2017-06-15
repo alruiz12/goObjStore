@@ -7,6 +7,7 @@ var TrackerMutex = &sync.Mutex{}
 var PeerMutex = &sync.Mutex{}
 var SendMutex = &sync.Mutex{}
 var DirMutex = &sync.Mutex{}
+var WFileMutex = &sync.Mutex{}
 var HashMap = make(map[string][]bool)
 var Peer1 string
 var Peer2 string

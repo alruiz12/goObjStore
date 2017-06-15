@@ -33,7 +33,7 @@ func main() {
 	routerTracker := httpGo.MyNewRouter()
 	routerPeer := httpGo.MyNewRouter()
 	go func(){http.ListenAndServe(":8070", routerPeer)}()
-	go func(){httpGo.Put(filePath, proxyAddr, trackerAddr, 5)
+	go func(){httpGo.Put(filePath, proxyAddr, trackerAddr, 3)
 		time.Sleep(5*time.Second)
 		httpGo.Get("0527cbea2805d89c6d5d6457b7f9f77c",proxyAddr, trackerAddr)
 
