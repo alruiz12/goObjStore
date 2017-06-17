@@ -16,6 +16,7 @@ import (
 	"encoding/hex"
 	"github.com/alruiz12/simpleBT/src/httpVar"
 	"strings"
+	"sync"
 )
 
 //const fileChunk = 1*(1<<10) // 1 KB
@@ -74,7 +75,7 @@ func Put(filePath string, addr string, trackerAddr string, numNodes int){
 	var partSize int
 	var currentNum int = 0
 	var partBuffer []byte
-	var peerURL string
+	//var peerURL string
 	//var body *bytes.Buffer
 	var writer *multipart.Writer
 	var buf bytes.Buffer
@@ -108,6 +109,8 @@ func Put(filePath string, addr string, trackerAddr string, numNodes int){
 	totalPartsNum= int(math.Ceil(float64(size)/float64(fileChunk)))
 	fmt.Println(totalPartsNum)
 	//return
+	var wg sync.WaitGroup
+	wg.Add(totalPartsNum)
 	for currentPart<totalPartsNum{
 		partSize=int(math.Min(fileChunk, float64(size-(currentPart*fileChunk))))
 		partBuffer=make([]byte,partSize)
@@ -123,19 +126,21 @@ func Put(filePath string, addr string, trackerAddr string, numNodes int){
 				fmt.Println("Error encoding to pipe ", err.Error())
 			}
 		}()
-
-
-		peerURL = "http://"+nodeList[currentNum]+"/StorageNodeListen"
-		// Send to current peer
-		_, err := http.Post(peerURL, "application/json", r )
-		if err != nil {
-			fmt.Println("Error sending http POST ", err.Error())
-		}
-
+		go func(url string, r2 io.Reader) {
+			// peerURL = "http://"+nodeList[currentNum]+"/StorageNodeListen"
+			// Send to current peer
+			_, err := http.Post(url, "application/json", r2 )
+			if err != nil {
+				fmt.Println("Error sending http POST ", err.Error())
+			}
+			defer wg.Done()
+		}("http://"+nodeList[currentNum] + "/StorageNodeListen", r)
 		currentPart++
-		currentNum=(currentNum+1)%chunk.Num
+		currentNum=(currentNum+1)%numNodes
 	}
 	fmt.Println("..........................................Proxy END ....................................................")
+	wg.Wait()
+	fmt.Println("WaitGroup waited!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
 	}
 
 

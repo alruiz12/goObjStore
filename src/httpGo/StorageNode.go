@@ -57,7 +57,12 @@ func StorageNodeListen(w http.ResponseWriter, r *http.Request){
 		// if data/chunk.Hash/nodeID directory doesn't exist, create it
 		_, err = os.Stat(os.Getenv("GOPATH")+"/src/github.com/alruiz12/simpleBT/src/data/"+chunk.Hash+"/"+strconv.Itoa( nodeID))
 		if err != nil {
-			os.Mkdir(os.Getenv("GOPATH")+"/src/github.com/alruiz12/simpleBT/src/data/"+chunk.Hash+"/"+strconv.Itoa( nodeID),0777)
+			err2:=os.Mkdir(os.Getenv("GOPATH")+"/src/github.com/alruiz12/simpleBT/src/data/"+chunk.Hash+"/"+strconv.Itoa( nodeID),0777)
+			fmt.Println("dir created")
+			time.Sleep(5000 * time.Millisecond)
+			if err2!=nil{
+				fmt.Println("StorageNode error making dir", err.Error())
+			}else{fmt.Println("Dir successful")}
 		}
 
 		httpVar.DirMutex.Unlock()
@@ -98,7 +103,7 @@ func StorageNodeListen(w http.ResponseWriter, r *http.Request){
 				}
 			}(peer, peerURL)
 		}
-		//fmt.Println(httpVar.CurrentPart)
+		fmt.Println("currentPART===== ",httpVar.CurrentPart)
 		if httpVar.CurrentPart == (totalPartsNum*chunk.Num)-1 {
 			fmt.Println("..........................................Peer END ....................................................", time.Since(start))
 		}
@@ -134,14 +139,14 @@ func p2pRequest(w http.ResponseWriter, r *http.Request) {
 			}
 		}
 		// Save chunk to file
-		httpVar.WFileMutex.Lock()
+		httpVar.DirMutex.Lock()
 
 		err = ioutil.WriteFile(path + "/src/data/"+chunk.Hash+"/"+strconv.Itoa( peerID)+ "/P2P" + strconv.Itoa(httpVar.P2pPart), []byte(chunk.Text), 0777)
 		if err != nil {
 			fmt.Println("Peer: error creating/writing file p2p", err.Error())
 		}
-		httpVar.WFileMutex.Unlock()
-
+		httpVar.DirMutex.Unlock()
+		fmt.Println("p2pPart= ", httpVar.P2pPart, " total= ",(totalPartsNum*chunk.Num*(chunk.Num-1))-1) 
 		if httpVar.P2pPart >= (totalPartsNum*chunk.Num*(chunk.Num-1))-1 {
 			fmt.Println("p2p: ",time.Since(start))
 			fmt.Println("..........................................p2p END ....................................................",httpVar.P2pPart)
@@ -182,7 +187,7 @@ func GetChunks(w http.ResponseWriter, r *http.Request){
 
 	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
 	w.WriteHeader(http.StatusOK)
-	sendChunksToProxy(nodeID, keyURL.Key, keyURL.URL)
+	go sendChunksToProxy(nodeID, keyURL.Key, keyURL.URL)
 }
 
 type getMsg struct {
