@@ -25,6 +25,7 @@ func main() {
 	var Peer5 = "127.0.0.1:8085"
 	var Peers =[]string{Peer1, Peer2, Peer3, Peer4, Peer5}
 	// last character of port is the peer's internal identifier
+
 	var proxy1 = "127.0.0.1:8070"
 	var proxy2 = "127.0.0.1:8071"
 	var proxy3 = "127.0.0.1:8072"
@@ -36,11 +37,13 @@ func main() {
 	httpGo.StartTracker(Peers, ProxyAddr)
 
 
+
 	routerTracker := httpGo.MyNewRouter()
 	routerPeer := httpGo.MyNewRouter()
 	go func(){http.ListenAndServe(":8070", routerPeer)}()
 	go func(){httpGo.Put(filePath, proxyAddr, trackerAddr, 3)
 		time.Sleep(5*time.Second)
+
 		httpGo.Get("0527cbea2805d89c6d5d6457b7f9f77c",ProxyAddr, trackerAddr)
 
 	}()
@@ -50,11 +53,13 @@ func main() {
 	go func(){http.ListenAndServe(":8084", routerPeer)}()
 	go func(){http.ListenAndServe(":8085", routerPeer)}()
 
+
 	go func(){http.ListenAndServe(":8070", routerPeer)}()
 	go func(){http.ListenAndServe(":8071", routerPeer)}()
 	go func(){http.ListenAndServe(":8072", routerPeer)}()
 	go func(){http.ListenAndServe(":8073", routerPeer)}()
 	go func(){http.ListenAndServe(":8074", routerPeer)}()
+
 
 	http.ListenAndServe(":8080", routerTracker)
 

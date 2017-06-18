@@ -13,6 +13,7 @@ import(
 	"path/filepath"
 	"strings"
 	"sync"
+
 )
 var path = (os.Getenv("GOPATH")+"/src/github.com/alruiz12/simpleBT")
 var chunk msg
@@ -79,6 +80,7 @@ func StorageNodeListen(w http.ResponseWriter, r *http.Request){
 		httpVar.CurrentPart++
 		httpVar.TrackerMutex.Unlock()
 
+
 		var wg sync.WaitGroup
 		wg.Add(len(chunk.NodeList))
 		// Send chunk to peers
@@ -88,6 +90,7 @@ func StorageNodeListen(w http.ResponseWriter, r *http.Request){
 			go func(p string, URL string) {
 				fmt.Println(httpVar.CurrentPart)
 				if  nodeID == int(p[len(p)-1]-'0'){	// Don't send to itself
+
 				}else {
 					rpipe, wpipe :=io.Pipe() // create pipe
 					go func(){
@@ -105,6 +108,7 @@ func StorageNodeListen(w http.ResponseWriter, r *http.Request){
 						fmt.Println("Error sending http POST p2p", err.Error())
 					}
 				}
+
 				defer wg.Done()
 			}(peer, peerURL)
 
@@ -209,7 +213,7 @@ func sendChunksToProxy(nodeID string, key string, URL string){
 
 	// for each proxy-name in directory send
 	filepath.Walk(path + "/src/data/"+key+"/"+nodeID, func(path string, info os.FileInfo, err error) error {
-		//if strings.Compare(nodeID, "1")==0 {
+
 		if strings.Contains(info.Name(),"NEW") {
 			file, err := os.Open(path)
 			if err != nil {

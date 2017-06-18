@@ -172,6 +172,7 @@ type jsonKeyURL struct {
 	URL string		`json:"URL"`
 }
 
+
 func Get(Key string, proxyAddr []string, trackerAddr string){
 	time.Sleep(1 * time.Second)
 
@@ -210,6 +211,7 @@ func Get(Key string, proxyAddr []string, trackerAddr string){
 	os.Mkdir(os.Getenv("GOPATH")+"/src/github.com/alruiz12/simpleBT/src/local",+0777)
 	os.Mkdir(os.Getenv("GOPATH")+"/src/github.com/alruiz12/simpleBT/src/local/"+Key,0777)
 
+
 	//var k jsonKey
 	// For each node ask for all their Proxy-pieces
 	for index, node := range nodeList {
@@ -237,6 +239,9 @@ func Get(Key string, proxyAddr []string, trackerAddr string){
 }
 
 func ReturnData(w http.ResponseWriter, r *http.Request){
+
+	// Listen to tracker
+
 	var getmsg getMsg
 	if r.Method == http.MethodPost {
 

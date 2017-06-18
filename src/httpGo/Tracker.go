@@ -25,9 +25,11 @@ func StartTracker(nodeList []string, proxyAddr []string){
 		nodeAux.Busy=false
 		httpVar.TrackerNodeList = append(httpVar.TrackerNodeList, nodeAux)
 	}
+
 	for _, addr := range proxyAddr {
 		httpVar.ProxyAddr = append(httpVar.ProxyAddr, addr)
 	}
+
 }
 
 /*

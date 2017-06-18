@@ -1,0 +1,12 @@
+language: go
+go:
+  - 1.8.x
+
+install:
+  - go get github.com/gorilla/mux
+  - go get github.com/gorilla/context
+script:
+  - src/test.sh
+
+after_success:
+  - bash <(curl -s https://codecov.io/bash)
