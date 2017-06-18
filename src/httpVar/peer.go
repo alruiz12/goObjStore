@@ -25,4 +25,4 @@ type NodeInfo struct {
 var TrackerNodeList []NodeInfo
 
 var MapKeyNodes = make(map[string][]string)
-
+var ProxyAddr []string
