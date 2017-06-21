@@ -27,6 +27,8 @@ type msg struct {
 	Num int
 	Hash string
 	Text string
+	CurrentNode int
+	Name int
 }
 var totalPartsNum int
 var start time.Time
@@ -115,7 +117,7 @@ func Put(filePath string, addr string, trackerAddr string, numNodes int){
 		partSize=int(math.Min(fileChunk, float64(size-(currentPart*fileChunk))))
 		partBuffer=make([]byte,partSize)
 		_,err = file.Read(partBuffer)		// Get chunk
-		m:=msg{NodeList:nodeList, Num:numNodes, Hash:hash, Text:string(partBuffer)}
+		m:=msg{NodeList:nodeList, Num:numNodes, Hash:hash, Text:string(partBuffer), CurrentNode:currentNum, Name: currentPart}
 		r, w :=io.Pipe()			// create pipe
 
 		go func() {
@@ -126,20 +128,22 @@ func Put(filePath string, addr string, trackerAddr string, numNodes int){
 				fmt.Println("Error encoding to pipe ", err.Error())
 			}
 		}()
-		go func(url string, r2 io.Reader) {
+		go func(url string, r2 io.Reader, pb string, cp int) {
 			// peerURL = "http://"+nodeList[currentNum]+"/StorageNodeListen"
 			// Send to current peer
 			_, err := http.Post(url, "application/json", r2 )
 			if err != nil {
 				fmt.Println("Error sending http POST ", err.Error())
 			}
+			fmt.Println(url, ", ", pb, "         ,", strconv.Itoa(cp ))
 			defer wg.Done()
-		}("http://"+nodeList[currentNum] + "/StorageNodeListen", r)
+		}("http://"+nodeList[currentNum] + "/StorageNodeListen", r, string(partBuffer[:25]), currentPart )
 		currentPart++
 		currentNum=(currentNum+1)%numNodes
 	}
 	fmt.Println("..........................................Proxy END ....................................................")
 	wg.Wait()
+	time.Sleep( 10 * time.Second)
 	fmt.Println("WaitGroup waited!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
 	}
 
