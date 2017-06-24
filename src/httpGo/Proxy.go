@@ -85,9 +85,9 @@ func Put(filePath string, addr string, trackerAddr string, numNodes int){
 
 	var auxList []bool
 	var i int = 0
-	fmt.Println(numNodes)
+	//fmt.Println(numNodes)
 	for i<numNodes {
-		fmt.Println(numNodes)
+		//fmt.Println(numNodes)
 		auxList=append(auxList, false)
 		i++
 	}
@@ -110,7 +110,7 @@ func Put(filePath string, addr string, trackerAddr string, numNodes int){
 	}
 	totalPartsNum= int(math.Ceil(float64(size)/float64(fileChunk)))
 	//fmt.Println(totalPartsNum)
-	//return
+return
 	/*var wg sync.WaitGroup
 	wg.Add(totalPartsNum)*/
 	for currentPart<totalPartsNum{
@@ -207,7 +207,7 @@ func Get(Key string, proxyAddr []string, trackerAddr string){
 		fmt.Println("Get: error unprocessable entity: ",err.Error())
 		return
 	}
-	fmt.Println("nodeList for key: ",nodeList)
+	//fmt.Println("nodeList for key: ",nodeList)
 	if err != nil {
 		fmt.Println("Get: error reciving response: ",err.Error())
 	}
@@ -235,7 +235,7 @@ func Get(Key string, proxyAddr []string, trackerAddr string){
 		if err != nil {
 			fmt.Println("Get2: error creating request: ",err.Error())
 		}
-		fmt.Println("statusCode: ",res.StatusCode )
+		//fmt.Println("statusCode: ",res.StatusCode )
 		if err := res.Body.Close(); err != nil {
 			fmt.Println(err)
 		}
@@ -265,13 +265,15 @@ func ReturnData(w http.ResponseWriter, r *http.Request){
 			}
 		}
 
-		fmt.Println(getmsg.Key,": "+"node: "+getmsg.NodeID+", "+ getmsg.Name)
+		//fmt.Println(getmsg.Key,": "+"node: "+getmsg.NodeID+", "+ getmsg.Name)
 		err = ioutil.WriteFile(path + "/src/local/"+getmsg.Key+"/"+getmsg.Name, []byte(getmsg.Text), 0777)
 		if err != nil {
 			fmt.Println("Peer: error creating/writing file p2p", err.Error())
 		}
+		httpVar.GetMutex.Lock()
 		numGets++
-		if numGets==totalPartsNum-1{
+		httpVar.GetMutex.Unlock()
+		if numGets==totalPartsNum{
 			fmt.Println("ELAPSED: ",time.Since(startGet))
 		}
 

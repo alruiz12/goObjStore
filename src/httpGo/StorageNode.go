@@ -262,11 +262,11 @@ func sendChunksToProxy(nodeID string, key string, URL string){
 				}
 			}()
 			res, err := http.Post(proxyURL,"application/json", r )
-			fmt.Println(info.Name())
+		//	fmt.Println(info.Name())
 			if err != nil {
 				fmt.Println("sendChunksToProxy: error creating request: ",err.Error())
 			}
-			fmt.Println("statusCode: ",res.StatusCode )
+		//	fmt.Println("statusCode: ",res.StatusCode )
 			if err := res.Body.Close(); err != nil {
 				fmt.Println(err)
 			}
