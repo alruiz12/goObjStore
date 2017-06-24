@@ -42,7 +42,6 @@ func Put(filePath string, addr string, trackerAddr string, numNodes int){
 
 	// ask tracker for nodes
 	quantityJson := `{"Quantity":"`+strconv.Itoa(numNodes)+`","Hash":"`+hash+`"}`
-	//jsonContent := `{"file":"`+torrentName+`","IP":"`+IP+`"}`
 	reader := strings.NewReader(quantityJson)
 	trackerURL:="http://"+trackerAddr+"/GetNodes"
 	request, err := http.NewRequest("GET", trackerURL, reader)
@@ -65,7 +64,6 @@ func Put(filePath string, addr string, trackerAddr string, numNodes int){
 		fmt.Println("Put: error unprocessable entity: ",err.Error())
 		return
 	}
-	//fmt.Println("nodeList:",nodeList[0])
 	if err != nil {
 		fmt.Println("Put: error reciving response: ",err.Error())
 	}
@@ -73,21 +71,16 @@ func Put(filePath string, addr string, trackerAddr string, numNodes int){
 
 
 	var currentPart int = 0
-	//var currentPeer string
 	var partSize int
 	var currentNum int = 0
 	var partBuffer []byte
-	//var peerURL string
-	//var body *bytes.Buffer
 	var writer *multipart.Writer
 	var buf bytes.Buffer
 	_,_=writer, buf // avoiding declared but not used
 
 	var auxList []bool
 	var i int = 0
-	//fmt.Println(numNodes)
 	for i<numNodes {
-		//fmt.Println(numNodes)
 		auxList=append(auxList, false)
 		i++
 	}
@@ -109,8 +102,7 @@ func Put(filePath string, addr string, trackerAddr string, numNodes int){
 		return
 	}
 	totalPartsNum= int(math.Ceil(float64(size)/float64(fileChunk)))
-	//fmt.Println(totalPartsNum)
-return
+//return
 	/*var wg sync.WaitGroup
 	wg.Add(totalPartsNum)*/
 	for currentPart<totalPartsNum{
@@ -143,7 +135,6 @@ return
 	}
 	fmt.Println("..........................................Proxy END ....................................................")
 	//wg.Wait()
-	//time.Sleep( 10 * time.Second)
 	fmt.Println("WaitGroup waited!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
 	}
 
@@ -207,7 +198,6 @@ func Get(Key string, proxyAddr []string, trackerAddr string){
 		fmt.Println("Get: error unprocessable entity: ",err.Error())
 		return
 	}
-	//fmt.Println("nodeList for key: ",nodeList)
 	if err != nil {
 		fmt.Println("Get: error reciving response: ",err.Error())
 	}
@@ -216,7 +206,6 @@ func Get(Key string, proxyAddr []string, trackerAddr string){
 	os.Mkdir(os.Getenv("GOPATH")+"/src/github.com/alruiz12/simpleBT/src/local/"+Key,0777)
 
 
-	//var k jsonKey
 	// For each node ask for all their Proxy-pieces
 	for index, node := range nodeList {
 		r, w :=io.Pipe()			// create pipe
@@ -265,7 +254,6 @@ func ReturnData(w http.ResponseWriter, r *http.Request){
 			}
 		}
 
-		//fmt.Println(getmsg.Key,": "+"node: "+getmsg.NodeID+", "+ getmsg.Name)
 		err = ioutil.WriteFile(path + "/src/local/"+getmsg.Key+"/"+getmsg.Name, []byte(getmsg.Text), 0777)
 		if err != nil {
 			fmt.Println("Peer: error creating/writing file p2p", err.Error())
@@ -274,7 +262,7 @@ func ReturnData(w http.ResponseWriter, r *http.Request){
 		numGets++
 		httpVar.GetMutex.Unlock()
 		if numGets==totalPartsNum{
-			fmt.Println("ELAPSED: ",time.Since(startGet))
+			fmt.Println("GET: ",time.Since(startGet))
 		}
 
 

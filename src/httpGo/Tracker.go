@@ -130,7 +130,6 @@ func GetNodesForKey(w http.ResponseWriter, r *http.Request){
 		}
 		return
 	}
-	//fmt.Println("GetNodesForKey: KEY IS: ",key.Key)
 	if err != nil {
 		fmt.Println("GetNodesForKey: error converting string to int response: ",err.Error())
 		w.Header().Set("Content-Type", "application/json; charset=UTF-8")
@@ -142,7 +141,6 @@ func GetNodesForKey(w http.ResponseWriter, r *http.Request){
 		return
 	}
 	nodeList:=httpVar.MapKeyNodes[key.Key]
-	//fmt.Println("GetNodesForKey: About to send : ", nodeList)
 
 	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
 	w.WriteHeader(http.StatusOK)
