@@ -65,7 +65,7 @@ func Put(filePath string, addr string, trackerAddr string, numNodes int){
 		fmt.Println("Put: error unprocessable entity: ",err.Error())
 		return
 	}
-	fmt.Println("nodeList:",nodeList[0])
+	//fmt.Println("nodeList:",nodeList[0])
 	if err != nil {
 		fmt.Println("Put: error reciving response: ",err.Error())
 	}
@@ -109,7 +109,7 @@ func Put(filePath string, addr string, trackerAddr string, numNodes int){
 		return
 	}
 	totalPartsNum= int(math.Ceil(float64(size)/float64(fileChunk)))
-	fmt.Println(totalPartsNum)
+	//fmt.Println(totalPartsNum)
 	//return
 	/*var wg sync.WaitGroup
 	wg.Add(totalPartsNum)*/
@@ -143,7 +143,7 @@ func Put(filePath string, addr string, trackerAddr string, numNodes int){
 	}
 	fmt.Println("..........................................Proxy END ....................................................")
 	//wg.Wait()
-	time.Sleep( 10 * time.Second)
+	//time.Sleep( 10 * time.Second)
 	fmt.Println("WaitGroup waited!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
 	}
 
