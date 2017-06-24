@@ -16,7 +16,7 @@ import (
 	"encoding/hex"
 	"github.com/alruiz12/simpleBT/src/httpVar"
 	"strings"
-	"sync"
+	//"sync"
 )
 
 //const fileChunk = 1*(1<<10) // 1 KB
@@ -111,38 +111,38 @@ func Put(filePath string, addr string, trackerAddr string, numNodes int){
 	totalPartsNum= int(math.Ceil(float64(size)/float64(fileChunk)))
 	fmt.Println(totalPartsNum)
 	//return
-	var wg sync.WaitGroup
-	wg.Add(totalPartsNum)
+	/*var wg sync.WaitGroup
+	wg.Add(totalPartsNum)*/
 	for currentPart<totalPartsNum{
 		partSize=int(math.Min(fileChunk, float64(size-(currentPart*fileChunk))))
 		partBuffer=make([]byte,partSize)
 		_,err = file.Read(partBuffer)		// Get chunk
 		m:=msg{NodeList:nodeList, Num:numNodes, Hash:hash, Text:string(partBuffer), CurrentNode:currentNum, Name: currentPart}
 		r, w :=io.Pipe()			// create pipe
+		//go func(url string, r2 io.Reader, pb string, cp int) {
+			go func() {
+				defer w.Close()			// close pipe when go routine finishes
+				 // save buffer to object
+				err=json.NewEncoder(w).Encode(&m)
+				if err != nil {
+					fmt.Println("Error encoding to pipe ", err.Error())
+				}
+			}()
 
-		go func() {
-			defer w.Close()			// close pipe when go routine finishes
-			 // save buffer to object
-			err=json.NewEncoder(w).Encode(&m)
-			if err != nil {
-				fmt.Println("Error encoding to pipe ", err.Error())
-			}
-		}()
-		go func(url string, r2 io.Reader, pb string, cp int) {
 			// peerURL = "http://"+nodeList[currentNum]+"/StorageNodeListen"
 			// Send to current peer
-			_, err := http.Post(url, "application/json", r2 )
+			_, err := http.Post("http://"+nodeList[currentNum] + "/StorageNodeListen", "application/json", r )
 			if err != nil {
 				fmt.Println("Error sending http POST ", err.Error())
 			}
-			fmt.Println(url, ", ", pb, "         ,", strconv.Itoa(cp ))
-			defer wg.Done()
-		}("http://"+nodeList[currentNum] + "/StorageNodeListen", r, string(partBuffer[:25]), currentPart )
+			//fmt.Println(url, ", ", pb, "         ,", strconv.Itoa(cp ))
+			//defer wg.Done()
+		//}("http://"+nodeList[currentNum] + "/StorageNodeListen", r, string(partBuffer[:25]), currentPart )
 		currentPart++
 		currentNum=(currentNum+1)%numNodes
 	}
 	fmt.Println("..........................................Proxy END ....................................................")
-	wg.Wait()
+	//wg.Wait()
 	time.Sleep( 10 * time.Second)
 	fmt.Println("WaitGroup waited!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
 	}

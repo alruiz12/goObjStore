@@ -61,7 +61,7 @@ func StorageNodeListen(w http.ResponseWriter, r *http.Request){
 		if err != nil {
 			err2:=os.Mkdir(os.Getenv("GOPATH")+"/src/github.com/alruiz12/simpleBT/src/data/"+chunk.Hash+"/"+strconv.Itoa( nodeID),0777)
 			fmt.Println("dir created")
-			time.Sleep(5000 * time.Millisecond)
+			//time.Sleep(5000 * time.Millisecond)
 			if err2!=nil{
 				fmt.Println("StorageNode error making dir", err.Error())
 			}else{fmt.Println("Dir successful")}
@@ -134,6 +134,34 @@ func p2pRequest(w http.ResponseWriter, r *http.Request) {
 	var peerID int = int(r.Host[len(r.Host) - 1] - '0')
 	// Listen to tracker
 	if r.Method == http.MethodPost {
+
+		httpVar.DirMutex.Lock()
+
+		// if data directory doesn't exist, create it
+		_, err := os.Stat(os.Getenv("GOPATH")+"/src/github.com/alruiz12/simpleBT/src/data")
+		if err != nil {
+			os.Mkdir(os.Getenv("GOPATH")+"/src/github.com/alruiz12/simpleBT/src/data",0777)
+		}
+
+		// if data/chunk.Hash directory doesn't exist, create it
+		_, err = os.Stat(os.Getenv("GOPATH")+"/src/github.com/alruiz12/simpleBT/src/data/"+chunk.Hash)
+		if err != nil {
+			os.Mkdir(os.Getenv("GOPATH")+"/src/github.com/alruiz12/simpleBT/src/data/"+chunk.Hash,0777)
+		}
+
+		// if data/chunk.Hash/nodeID directory doesn't exist, create it
+		_, err = os.Stat(os.Getenv("GOPATH")+"/src/github.com/alruiz12/simpleBT/src/data/"+chunk.Hash+"/"+strconv.Itoa( peerID))
+		if err != nil {
+			err2:=os.Mkdir(os.Getenv("GOPATH")+"/src/github.com/alruiz12/simpleBT/src/data/"+chunk.Hash+"/"+strconv.Itoa( peerID),0777)
+			fmt.Println("dir created")
+			//time.Sleep(5000 * time.Millisecond)
+			if err2!=nil{
+				fmt.Println("StorageNode error making dir", err.Error())
+			}else{fmt.Println("Dir successful")}
+		}
+
+		httpVar.DirMutex.Unlock()
+
 		body, err := ioutil.ReadAll(r.Body)
 		if err != nil {
 			fmt.Println("error reading ", err)
