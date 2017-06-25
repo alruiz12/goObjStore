@@ -23,6 +23,8 @@ func MyNewRouter() *mux.Router {
 
 	router.HandleFunc("/p2pRequest", p2pRequest)
 	router.HandleFunc("/ReturnData",ReturnData)
+	router.HandleFunc("/prepNode",prepNode)
+
 	for _, route := range routes {
 		router.
 			Methods(route.Method).
