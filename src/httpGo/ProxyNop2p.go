@@ -14,6 +14,7 @@ import (
 	"encoding/json"
 	"github.com/alruiz12/simpleBT/src/httpVar"
 	"strings"
+	"math/rand"
 )
 
 func PutNoP2P(filePath string, addr string, trackerAddr string, numNodes int){
@@ -129,21 +130,21 @@ func PutNoP2P(filePath string, addr string, trackerAddr string, numNodes int){
                         }()
 
 
-		_, err := http.Post("http://"+nodeList[currentNum] + "/StorageNodeListen", "application/json", r )
+		_, err := http.Post("http://"+nodeList[currentNum] + "/SNodeListenNoP2P", "application/json", r )
 		if err != nil {
 			fmt.Println("Error sending http POST ", err.Error())
 		}
 		currentNum=(currentNum+1)%numNodes
 
 
-	         _, err = http.Post("http://"+nodeList[currentNum] + "/StorageNodeListen", "application/json", r2 )
+	         _, err = http.Post("http://"+nodeList[currentNum] + "/SNodeListenNoP2P", "application/json", r2 )
                  if err != nil {
                         fmt.Println("Error sending http POST ", err.Error())
                  }
                 currentNum=(currentNum+1)%numNodes      
 	
                 
- 		 _, err = http.Post("http://"+nodeList[currentNum] + "/StorageNodeListen", "application/json", r3 )
+ 		 _, err = http.Post("http://"+nodeList[currentNum] + "/SNodeListenNoP2P", "application/json", r3 )
                  if err != nil {
                         fmt.Println("Error sending http POST ", err.Error())
                  }
@@ -195,29 +196,27 @@ func GetNoP2P(Key string, proxyAddr []string, trackerAddr string){
 	os.Mkdir(os.Getenv("GOPATH")+"/src/github.com/alruiz12/simpleBT/src/local",+0777)
 	os.Mkdir(os.Getenv("GOPATH")+"/src/github.com/alruiz12/simpleBT/src/local/"+Key,0777)
 
-
+	node:=nodeList[rand.Intn(3)]
 	// For each node ask for all their Proxy-pieces
-	for index, node := range nodeList {
-		r, w :=io.Pipe()			// create pipe
-		k:=jsonKeyURL{Key:Key, URL:proxyAddr[index]+"/ReturnData"}
+	r, w :=io.Pipe()			// create pipe
+	k:=jsonKeyURL{Key:Key, URL:proxyAddr[0]+"/ReturnData"}
 
-		go func() {
-			defer w.Close()			// close pipe when go routine finishes
-			// save buffer to object
-			err=json.NewEncoder(w).Encode(&k)
-			if err != nil {
-				fmt.Println("Error encoding to pipe ", err.Error())
-			}
-		}()
-		url:="http://"+node+"/GetChunks"
-		res, err := http.Post(url,"application/json", r )
+	go func() {
+		defer w.Close()			// close pipe when go routine finishes
+		// save buffer to object
+		err=json.NewEncoder(w).Encode(&k)
 		if err != nil {
-			fmt.Println("Get2: error creating request: ",err.Error())
+			fmt.Println("Error encoding to pipe ", err.Error())
 		}
-		//fmt.Println("statusCode: ",res.StatusCode )
-		if err := res.Body.Close(); err != nil {
-			fmt.Println(err)
-		}
+	}()
+	url:="http://"+node+"/GetChunks"
+	res, err = http.Post(url,"application/json", r )
+	if err != nil {
+		fmt.Println("Get2: error creating request: ",err.Error())
+	}
+	//fmt.Println("statusCode: ",res.StatusCode )
+	if err := res.Body.Close(); err != nil {
+		fmt.Println(err)
 	}
 }
 

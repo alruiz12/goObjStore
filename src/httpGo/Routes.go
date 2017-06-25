@@ -19,6 +19,8 @@ func MyNewRouter() *mux.Router {
 
 	router := mux.NewRouter().StrictSlash(true)
 	router.HandleFunc("/StorageNodeListen", StorageNodeListen)
+	router.HandleFunc("/SNodeListenNoP2P", SNodeListenNoP2P)
+
 	router.HandleFunc("/p2pRequest", p2pRequest)
 	router.HandleFunc("/ReturnData",ReturnData)
 	for _, route := range routes {
