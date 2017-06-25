@@ -12,29 +12,11 @@ import (
 	"mime/multipart"
 	"time"
 	"encoding/json"
-	"crypto/md5"
-	"encoding/hex"
 	"github.com/alruiz12/simpleBT/src/httpVar"
 	"strings"
-	"sync"
 )
 
-//const fileChunk = 1*(1<<10) // 1 KB
-const fileChunk = 8*(1<<20) // 8 MB
-
-type msg struct {
-	NodeList []string
-	Num int
-	Hash string
-	Text string
-	CurrentNode int
-	Name int
-}
-var totalPartsNum int
-var start time.Time
-var startGet time.Time
-var numGets int = 0
-func Put(filePath string, addr string, trackerAddr string, numNodes int){
+func PutNoP2P(filePath string, addr string, trackerAddr string, numNodes int){
 	time.Sleep(1 * time.Second)
 	start=time.Now()
 	var hash string = md5sum(filePath)
@@ -103,83 +85,80 @@ func Put(filePath string, addr string, trackerAddr string, numNodes int){
 	}
 	totalPartsNum= int(math.Ceil(float64(size)/float64(fileChunk)))
 //return
-	var wg sync.WaitGroup
-	wg.Add(totalPartsNum)
 	for currentPart<totalPartsNum{
 		partSize=int(math.Min(fileChunk, float64(size-(currentPart*fileChunk))))
 		partBuffer=make([]byte,partSize)
 		_,err = file.Read(partBuffer)		// Get chunk
 		m:=msg{NodeList:nodeList, Num:numNodes, Hash:hash, Text:string(partBuffer), CurrentNode:currentNum, Name: currentPart}
-		//r, w :=io.Pipe()			// create pipe
-		//go func(url string, r2 io.Reader, pb string, cp int) {
-			go func(m2 msg, url2 string) {
-				fmt.Println("go routine start")
-				r, w :=io.Pipe()
-				 // save buffer to object
+ 		m2:=msg{NodeList:nodeList, Num:numNodes, Hash:hash, Text:string(partBuffer), CurrentNode:currentNum, Name: currentPart}
+ 		m3:=msg{NodeList:nodeList, Num:numNodes, Hash:hash, Text:string(partBuffer), CurrentNode:currentNum, Name: currentPart}
+		r, w :=io.Pipe()			// create pipe
+		r2, w2 :=io.Pipe()                        // create pipe
+		r3, w3 :=io.Pipe()                        // create pipe
+
+
+			go func() {
+				// save buffer to object
 				err=json.NewEncoder(w).Encode(&m)
 				if err != nil {
 					fmt.Println("Error encoding to pipe ", err.Error())
 				}
-				fmt.Println("goR")
-				w.Close()			// close pipe //when go routine finishes
-				fmt.Println("go routine middle")
-				_, err := http.Post(url2, "application/json", r )
-				if err != nil {
-					fmt.Println("Error sending http POST ", err.Error())
-				}
-				defer wg.Done()
-			}(m, "http://"+nodeList[currentNum] + "/StorageNodeListen")
+				defer  w.Close()                 // close pipe //when go routine finishes
 
-			// peerURL = "http://"+nodeList[currentNum]+"/StorageNodeListen"
-			// Send to current peer
-		/*
-			_, err := http.Post("http://"+nodeList[currentNum] + "/StorageNodeListen", "application/json", r )
-			if err != nil {
-				fmt.Println("Error sending http POST ", err.Error())
-			}
-		*/
-			//fmt.Println(url, ", ", pb, "         ,", strconv.Itoa(cp ))
-			//defer wg.Done()
-		//}("http://"+nodeList[currentNum] + "/StorageNodeListen", r, string(partBuffer[:25]), currentPart )
-		currentPart++
+			}()
+
+		 go func() {
+                                // save buffer to object
+                                err=json.NewEncoder(w2).Encode(&m2)
+                                if err != nil {
+                                        fmt.Println("Error encoding to pipe ", err.Error())
+                                }
+                                defer  w2.Close()                 // close pipe //when go routine finishes
+
+                        }()
+
+
+		 go func() {
+                                // save buffer to object
+                                err=json.NewEncoder(w3).Encode(&m3)
+                                if err != nil {
+                                        fmt.Println("Error encoding to pipe ", err.Error())
+                                }
+                                defer  w3.Close()                 // close pipe //when go routine finishes
+
+                        }()
+
+
+		_, err := http.Post("http://"+nodeList[currentNum] + "/StorageNodeListen", "application/json", r )
+		if err != nil {
+			fmt.Println("Error sending http POST ", err.Error())
+		}
+		currentNum=(currentNum+1)%numNodes
+
+
+	         _, err = http.Post("http://"+nodeList[currentNum] + "/StorageNodeListen", "application/json", r2 )
+                 if err != nil {
+                        fmt.Println("Error sending http POST ", err.Error())
+                 }
+                currentNum=(currentNum+1)%numNodes      
+	
+                
+ 		 _, err = http.Post("http://"+nodeList[currentNum] + "/StorageNodeListen", "application/json", r3 )
+                 if err != nil {
+                        fmt.Println("Error sending http POST ", err.Error())
+                 }
+
+
+                currentPart++
+
 		currentNum=(currentNum+1)%numNodes
 	}
-	fmt.Println("..........................................Proxy END ....................................................")
-	wg.Wait()
-	fmt.Println("WaitGroup waited!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
-	}
-
-
-/*
-md5sum opens the file we want to compute the hash and computes it
-@param path to the file we want to split
-returns the computed hash
-*/
-func md5sum(filePath string) string{
-	file, err:=os.Open(filePath)
-	if err != nil {
-		fmt.Println(err)
-		return ""
-	}
-	defer file.Close()
-
-	hash := md5.New()
-	_, err = io.Copy(hash,file)
-	if err != nil {
-		fmt.Println(err)
-		return ""
-	}
-	mainFileHash:=hex.EncodeToString(hash.Sum(nil))
-	return mainFileHash
-}
-
-type jsonKeyURL struct {
-	Key string		`json:"Key"`
-	URL string		`json:"URL"`
+	fmt.Println("End of PutNoP2P!")
 }
 
 
-func Get(Key string, proxyAddr []string, trackerAddr string){
+
+func GetNoP2P(Key string, proxyAddr []string, trackerAddr string){
 	time.Sleep(1 * time.Second)
 
 	// Ask tracker for nodes
@@ -241,63 +220,6 @@ func Get(Key string, proxyAddr []string, trackerAddr string){
 		}
 	}
 }
-
-func ReturnData(w http.ResponseWriter, r *http.Request){
-
-	// Listen to tracker
-
-	var getmsg getMsg
-	if r.Method == http.MethodPost {
-
-		body, err := ioutil.ReadAll(r.Body)
-		if err != nil {
-			fmt.Println("error reading ", err)
-		}
-		if err := r.Body.Close(); err != nil {
-			fmt.Println("error body ", err)
-		}
-		if err := json.Unmarshal(body, &getmsg); err != nil {
-			w.Header().Set("Content-Type", "application/json; charset=UTF-8")
-			w.WriteHeader(422) // unprocessable entity
-			fmt.Println(err.Error())
-			if err := json.NewEncoder(w).Encode(err); err != nil {
-				fmt.Println("error unmarshalling ", err)
-			}
-		}
-
-		err = ioutil.WriteFile(path + "/src/local/"+getmsg.Key+"/"+getmsg.Name, []byte(getmsg.Text), 0777)
-		if err != nil {
-			fmt.Println("Peer: error creating/writing file p2p", err.Error())
-		}
-		httpVar.GetMutex.Lock()
-		numGets++
-		httpVar.GetMutex.Unlock()
-		if numGets==totalPartsNum{
-			fmt.Println("GET: ",time.Since(startGet))
-		}
-
-
-	}
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
