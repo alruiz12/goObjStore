@@ -103,18 +103,30 @@ func Put(filePath string, addr string, trackerAddr string, numNodes int) {
 		return
 	}
 	totalPartsNum = int(math.Ceil(float64(size) / float64(fileChunk)))
-	rpipe, wpipe :=io.Pipe()
-	mHash:=hashMsg{Hash:hash}
-	go func() {
+	//rpipe, wpipe :=io.Pipe()
+	//mHash:=hashMsg{Hash:hash}
+	//go func() {
 		//r, w := io.Pipe()
 		// save buffer to object
-		err = json.NewEncoder(wpipe).Encode(mHash)
-		if err != nil {
-			fmt.Println("Error encoding to pipe ", err.Error())
-		}
-		defer wpipe.Close()			// close pipe //when go routine finishes
-	}()
+	//	err = json.NewEncoder(wpipe).Encode(mHash)
+	//	if err != nil {
+	//		fmt.Println("Error encoding to pipe ", err.Error())
+	//	}
+	//	defer wpipe.Close()			// close pipe //when go routine finishes
+	//}()
 	for currentNum < numNodes {
+		rpipe, wpipe :=io.Pipe()
+	        mHash:=hashMsg{Hash:hash}
+        	go func() {
+                //r, w := io.Pipe()
+                // save buffer to object
+                	err = json.NewEncoder(wpipe).Encode(mHash)
+	                if err != nil {
+        	                fmt.Println("Error encoding to pipe ", err.Error())
+                	}
+	                defer wpipe.Close()                     // close pipe //when go routine finishes
+        	}()
+
 		_, err = http.Post("http://" + nodeList[currentNum] + "/prepNode", "application/json", rpipe)
 		if err != nil {
 			fmt.Println("to prepNode, Error sending http POST ", err.Error())

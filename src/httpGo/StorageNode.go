@@ -68,7 +68,7 @@ func StorageNodeListen(w http.ResponseWriter, r *http.Request){
 	// Listen to tracker
 	if r.Method == http.MethodPost{
 
-		body, err := ioutil.ReadAll(r.Body):
+		body, err := ioutil.ReadAll(r.Body)
 		if err != nil {
 			fmt.Println("error reading ",err)
 		}
@@ -84,21 +84,23 @@ func StorageNodeListen(w http.ResponseWriter, r *http.Request){
 			}
 		}
 
+		 var wg sync.WaitGroup
+                wg.Add(len(chunk.NodeList)+1)
 
+		go func(CurrentPart int, text string){
+			// Save chunk to file
+			err=ioutil.WriteFile(path+"/src/data/"+chunk.Hash+"/"+strconv.Itoa( nodeID)+"/NEW"+strconv.Itoa(CurrentPart),[]byte(text),0777)
+			if err != nil {
+				fmt.Println("StorageNodeListen: error creating/writing file", err.Error())
+			}
+			defer wg.Done()
+		}(httpVar.CurrentPart, chunk.Text)
 
-		// Save chunk to file
-		err=ioutil.WriteFile(path+"/src/data/"+chunk.Hash+"/"+strconv.Itoa( nodeID)+"/NEW"+strconv.Itoa(httpVar.CurrentPart),[]byte(chunk.Text),0777)
-		if err != nil {
-			fmt.Println("StorageNodeListen: error creating/writing file", err.Error())
-		}
-		
 		httpVar.TrackerMutex.Lock()
 		httpVar.CurrentPart++
 		httpVar.TrackerMutex.Unlock()
 
-
-		var wg sync.WaitGroup
-		wg.Add(len(chunk.NodeList))
+		
 		// Send chunk to peers
 		for _, peer :=range chunk.NodeList {
 			peerURL := "http://" + peer + "/p2pRequest"
@@ -148,29 +150,6 @@ func p2pRequest(w http.ResponseWriter, r *http.Request) {
 	// Listen to tracker
 	if r.Method == http.MethodPost {
 
-		httpVar.DirMutex.Lock()
-		// if data directory doesn't exist, create it
-		_, err := os.Stat(os.Getenv("GOPATH")+"/src/github.com/alruiz12/simpleBT/src/data")
-		if err != nil {
-			os.Mkdir(os.Getenv("GOPATH")+"/src/github.com/alruiz12/simpleBT/src/data",0777)
-		}
-
-		// if data/chunk.Hash directory doesn't exist, create it
-		_, err = os.Stat(os.Getenv("GOPATH")+"/src/github.com/alruiz12/simpleBT/src/data/"+chunk.Hash)
-		if err != nil {
-			os.Mkdir(os.Getenv("GOPATH")+"/src/github.com/alruiz12/simpleBT/src/data/"+chunk.Hash,0777)
-		}
-
-		// if data/chunk.Hash/nodeID directory doesn't exist, create it
-		_, err = os.Stat(os.Getenv("GOPATH")+"/src/github.com/alruiz12/simpleBT/src/data/"+chunk.Hash+"/"+strconv.Itoa( peerID))
-		if err != nil {
-			err2:=os.Mkdir(os.Getenv("GOPATH")+"/src/github.com/alruiz12/simpleBT/src/data/"+chunk.Hash+"/"+strconv.Itoa( peerID),0777)
-			if err2!=nil{
-				fmt.Println("StorageNode error making dir", err.Error())
-			}
-		}
-		httpVar.DirMutex.Unlock()
-
 		body, err := ioutil.ReadAll(r.Body)
 		if err != nil {
 			fmt.Println("error reading ", err)
@@ -187,13 +166,13 @@ func p2pRequest(w http.ResponseWriter, r *http.Request) {
 			}
 		}
 		// Save chunk to file
-		httpVar.DirMutex.Lock()
+	//	httpVar.DirMutex.Lock()
 
 		err = ioutil.WriteFile(path + "/src/data/"+chunk.Hash+"/"+strconv.Itoa( peerID)+ "/P2P" + strconv.Itoa(httpVar.P2pPart), []byte(chunk.Text), 0777)
 		if err != nil {
 			fmt.Println("Peer: error creating/writing file p2p", err.Error())
 		}
-		httpVar.DirMutex.Unlock()
+	//	httpVar.DirMutex.Unlock()
 		if httpVar.P2pPart >= (totalPartsNum*(chunk.Num-1))-1 {
 			fmt.Println("p2p: ",time.Since(start))
 			fmt.Println("..........................................p2p END ....................................................",httpVar.P2pPart)
