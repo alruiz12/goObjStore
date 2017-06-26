@@ -94,7 +94,7 @@ func StorageNodeListen(w http.ResponseWriter, r *http.Request){
 				fmt.Println("StorageNodeListen: error creating/writing file", err.Error())
 			}
 			defer wg.Done()
-		}(httpVar.CurrentPart, chunk.Text)
+		}(chunk.Name, chunk.Text)
 
 		httpVar.TrackerMutex.Lock()
 		httpVar.CurrentPart++
