@@ -299,9 +299,22 @@ func ReturnData(w http.ResponseWriter, r *http.Request){
 		if err != nil {
 			fmt.Println("Peer: error creating/writing file p2p", err.Error())
 		}
+		if strings.Compare(getmsg.Name, "NEW291")==0{
+			file, err := os.Open(path + "/src/local/"+getmsg.Key+"/"+getmsg.Name)
+			if err != nil {
+				fmt.Println(err.Error())
+				panic(err)
+			}
+			defer file.Close()
+			fileInfo, _ := file.Stat()
+			text := strconv.FormatInt(fileInfo.Size(), 10)        // size
+			size, _ := strconv.Atoi(text)
+			fmt.Println("SIZE: ", size)
+		}
 		httpVar.GetMutex.Lock()
 		numGets++
 		httpVar.GetMutex.Unlock()
+//		fmt.Println(getmsg.Name)
 		if numGets==totalPartsNum{
 			fmt.Println("GET: ",time.Since(startGet))
 		}

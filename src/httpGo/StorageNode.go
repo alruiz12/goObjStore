@@ -117,9 +117,11 @@ func StorageNodeListen(w http.ResponseWriter, r *http.Request){
 							fmt.Println("Error encoding to pipe ", err.Error())
 						}
 					}()
-					//httpVar.SendMutex.Lock()
+					httpVar.SendMutex.Lock()
 					_, err := http.Post(peerURL, "application/json", rpipe)
-					//httpVar.SendMutex.Unlock()
+				//	res.Close = true
+			//		 res.Body.Close()
+					httpVar.SendMutex.Unlock()
 					if err != nil {
 						fmt.Println("Error sending http POST p2p", err.Error())
 					}
@@ -166,13 +168,13 @@ func p2pRequest(w http.ResponseWriter, r *http.Request) {
 			}
 		}
 		// Save chunk to file
-	//	httpVar.DirMutex.Lock()
+		httpVar.DirMutex.Lock()
 
 		err = ioutil.WriteFile(path + "/src/data/"+chunk.Hash+"/"+strconv.Itoa( peerID)+ "/P2P" + strconv.Itoa(httpVar.P2pPart), []byte(chunk.Text), 0777)
 		if err != nil {
-			fmt.Println("Peer: error creating/writing file p2p", err.Error())
+			fmt.Println("P2pRequest: Peer: error creating/writing file p2p", err.Error())
 		}
-	//	httpVar.DirMutex.Unlock()
+		httpVar.DirMutex.Unlock()
 		if httpVar.P2pPart >= (totalPartsNum*(chunk.Num-1))-1 {
 			fmt.Println("p2p: ",time.Since(start))
 			fmt.Println("..........................................p2p END ....................................................",httpVar.P2pPart)
@@ -223,13 +225,14 @@ type getMsg struct {
 	Key string
 }
 func sendChunksToProxy(nodeID string, key string, URL string){
-	partBuffer:=make([]byte,fileChunk)
+	//partBuffer:=make([]byte,fileChunk)
 	proxyURL:="http://"+URL
 
 	// for each proxy-name in directory send
 	filepath.Walk(path + "/src/data/"+key+"/"+nodeID, func(path string, info os.FileInfo, err error) error {
 
 		if strings.Contains(info.Name(),"NEW") {
+			partBuffer:=make([]byte,info.Size())
 			file, err := os.Open(path)
 			if err != nil {
 				fmt.Println("sendChunksToProxy error opening file ",err.Error())
@@ -250,6 +253,7 @@ func sendChunksToProxy(nodeID string, key string, URL string){
 				}
 			}()
 			res, err := http.Post(proxyURL,"application/json", r )
+			if strings.Compare(m.Name, "NEW291")==0 {fmt.Println(info.Size())}
 		//	fmt.Println(info.Name())
 			if err != nil {
 				fmt.Println("sendChunksToProxy: error creating request: ",err.Error())
