@@ -116,9 +116,11 @@ func StorageNodeListen(w http.ResponseWriter, r *http.Request){
 							fmt.Println("Error encoding to pipe ", err.Error())
 						}
 					}()
-					httpVar.SendMutex.Lock()
+					//httpVar.SendMutex.Lock()
+					httpVar.SendReady <- 1
 					_, err := http.Post(peerURL, "application/json", rpipe)
-					httpVar.SendMutex.Unlock()
+					<- httpVar.SendReady
+					//httpVar.SendMutex.Unlock()
 					if err != nil {
 						fmt.Println("Error sending http POST p2p", err.Error())
 					}

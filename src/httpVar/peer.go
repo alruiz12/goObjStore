@@ -26,3 +26,4 @@ var TrackerNodeList []NodeInfo
 
 var MapKeyNodes = make(map[string][]string)
 var ProxyAddr []string
+var SendReady = make(chan int, 1)
