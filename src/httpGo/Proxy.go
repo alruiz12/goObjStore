@@ -302,6 +302,7 @@ func ReturnData(w http.ResponseWriter, r *http.Request){
 		httpVar.GetMutex.Lock()
 		numGets++
 		httpVar.GetMutex.Unlock()
+		fmt.Println(numGets)
 		if numGets==totalPartsNum{
 			fmt.Println("GET: ",time.Since(startGet))
 		}
