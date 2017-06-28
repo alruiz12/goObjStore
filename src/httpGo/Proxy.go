@@ -270,7 +270,7 @@ func Get(Key string, proxyAddr []string, trackerAddr string){
 			fmt.Println(err)
 		}
 	}
-	go checkNumGets()
+
 }
 
 func ReturnData(w http.ResponseWriter, r *http.Request){

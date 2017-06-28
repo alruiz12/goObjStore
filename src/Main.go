@@ -27,13 +27,13 @@ func main() {
 	var Peers =[]string{Peer1, Peer2, Peer3, Peer4, Peer5}
 	// last character of port is the peer's internal identifier
 
-	var proxy1 = "127.0.0.1:8070"
+	//var proxy1 = "127.0.0.1:8070"
 	var proxy2 = "127.0.0.1:8071"
 	var proxy3 = "127.0.0.1:8072"
 	var proxy4 = "127.0.0.1:8073"
 	var proxy5 = "127.0.0.1:8074"
 
-	var ProxyAddr=[]string{proxy1,proxy2,proxy3,proxy4,proxy5}
+	var ProxyAddr=[]string{/*proxy1,*/proxy2,proxy3,proxy4,proxy5}
 
 	httpGo.StartTracker(Peers, ProxyAddr)
 

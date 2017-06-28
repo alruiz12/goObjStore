@@ -2,7 +2,9 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="8e47a50e-bf29-44c1-8c05-f500e1510716" name="Default" comment="">
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/httpGo/httpGo_test.go" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/Main.go" afterPath="$PROJECT_DIR$/src/Main.go" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/httpGo/Proxy.go" afterPath="$PROJECT_DIR$/src/httpGo/Proxy.go" />
     </list>
     <option name="TRACKING_ENABLED" value="true" />
@@ -11,116 +13,167 @@
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
+  <component name="CoverageDataManager">
+    <SUITE FILE_PATH="coverage/simpleBT$TestDirecories_in_httpGo_test_go.coverage" NAME="TestDirecories in httpGo_test.go Coverage Results" MODIFIED="1498664418247" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="GoCoverage" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" />
+  </component>
   <component name="CreatePatchCommitExecutor">
     <option name="PATCH_PATH" value="" />
   </component>
   <component name="ExecutionTargetManager" SELECTED_TARGET="default_target" />
   <component name="FileEditorManager">
-    <splitter split-orientation="horizontal" split-proportion="0.7391017">
+    <splitter split-orientation="horizontal" split-proportion="0.64529055">
       <split-first>
+        <splitter split-orientation="horizontal" split-proportion="0.5">
+          <split-first>
+            <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
+              <file leaf-file-name="peer.go" pinned="false" current-in-tab="false">
+                <entry file="file://$PROJECT_DIR$/src/httpVar/peer.go">
+                  <provider selected="true" editor-type-id="text-editor">
+                    <state relative-caret-position="180">
+                      <caret line="10" column="30" lean-forward="false" selection-start-line="10" selection-start-column="30" selection-end-line="10" selection-end-column="30" />
+                      <folding />
+                    </state>
+                  </provider>
+                </entry>
+              </file>
+              <file leaf-file-name="Main.go" pinned="false" current-in-tab="false">
+                <entry file="file://$PROJECT_DIR$/src/Main.go">
+                  <provider selected="true" editor-type-id="text-editor">
+                    <state relative-caret-position="52">
+                      <caret line="24" column="36" lean-forward="false" selection-start-line="24" selection-start-column="36" selection-end-line="24" selection-end-column="36" />
+                      <folding />
+                    </state>
+                  </provider>
+                </entry>
+              </file>
+              <file leaf-file-name="server.go" pinned="false" current-in-tab="false">
+                <entry file="file:///usr/local/go/src/net/http/server.go">
+                  <provider selected="true" editor-type-id="text-editor">
+                    <state relative-caret-position="263">
+                      <caret line="2311" column="5" lean-forward="false" selection-start-line="2311" selection-start-column="5" selection-end-line="2311" selection-end-column="5" />
+                      <folding />
+                    </state>
+                  </provider>
+                </entry>
+              </file>
+              <file leaf-file-name="FileOp2_test.go" pinned="false" current-in-tab="false">
+                <entry file="file://$PROJECT_DIR$/src/conf/FileOp2_test.go">
+                  <provider selected="true" editor-type-id="text-editor">
+                    <state relative-caret-position="0">
+                      <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+                      <folding />
+                    </state>
+                  </provider>
+                </entry>
+              </file>
+              <file leaf-file-name="fileOp_test.go" pinned="false" current-in-tab="false">
+                <entry file="file://$PROJECT_DIR$/src/conf/fileOp_test.go">
+                  <provider selected="true" editor-type-id="text-editor">
+                    <state relative-caret-position="0">
+                      <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+                      <folding />
+                    </state>
+                  </provider>
+                </entry>
+              </file>
+              <file leaf-file-name="p2pComparison.png" pinned="false" current-in-tab="false">
+                <entry file="file://$PROJECT_DIR$/p2pComparison.png">
+                  <provider selected="true" editor-type-id="images">
+                    <state />
+                  </provider>
+                </entry>
+              </file>
+              <file leaf-file-name="Routes.go" pinned="false" current-in-tab="false">
+                <entry file="file://$PROJECT_DIR$/src/httpGo/Routes.go">
+                  <provider selected="true" editor-type-id="text-editor">
+                    <state relative-caret-position="396">
+                      <caret line="25" column="47" lean-forward="false" selection-start-line="25" selection-start-column="47" selection-end-line="25" selection-end-column="47" />
+                      <folding />
+                    </state>
+                  </provider>
+                </entry>
+              </file>
+              <file leaf-file-name="ProxyNop2p.go" pinned="false" current-in-tab="false">
+                <entry file="file://$PROJECT_DIR$/src/httpGo/ProxyNop2p.go">
+                  <provider selected="true" editor-type-id="text-editor">
+                    <state relative-caret-position="324">
+                      <caret line="33" column="50" lean-forward="false" selection-start-line="33" selection-start-column="50" selection-end-line="33" selection-end-column="50" />
+                      <folding />
+                    </state>
+                  </provider>
+                </entry>
+              </file>
+              <file leaf-file-name="Proxy.go" pinned="false" current-in-tab="true">
+                <entry file="file://$PROJECT_DIR$/src/httpGo/Proxy.go">
+                  <provider selected="true" editor-type-id="text-editor">
+                    <state relative-caret-position="-468">
+                      <caret line="211" column="30" lean-forward="false" selection-start-line="211" selection-start-column="21" selection-end-line="211" selection-end-column="30" />
+                      <folding>
+                        <element signature="e#16#234#0" expanded="true" />
+                      </folding>
+                    </state>
+                  </provider>
+                </entry>
+              </file>
+            </leaf>
+          </split-first>
+          <split-second>
+            <leaf>
+              <file leaf-file-name="httpGo_test.go" pinned="false" current-in-tab="true">
+                <entry file="file://$PROJECT_DIR$/src/httpGo/httpGo_test.go">
+                  <provider selected="true" editor-type-id="text-editor">
+                    <state relative-caret-position="-126">
+                      <caret line="56" column="37" lean-forward="false" selection-start-line="56" selection-start-column="37" selection-end-line="56" selection-end-column="37" />
+                      <folding>
+                        <element signature="e#15#92#0" expanded="true" />
+                      </folding>
+                    </state>
+                  </provider>
+                </entry>
+              </file>
+            </leaf>
+          </split-second>
+        </splitter>
+      </split-first>
+      <split-second>
         <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-          <file leaf-file-name="peer.go" pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/src/httpVar/peer.go">
+          <file leaf-file-name="StorageNode.go" pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/src/httpGo/StorageNode.go">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="180">
-                  <caret line="10" column="30" lean-forward="true" selection-start-line="10" selection-start-column="30" selection-end-line="10" selection-end-column="30" />
+                <state relative-caret-position="253">
+                  <caret line="161" column="87" lean-forward="false" selection-start-line="161" selection-start-column="86" selection-end-line="161" selection-end-column="87" />
                   <folding />
                 </state>
               </provider>
             </entry>
           </file>
-          <file leaf-file-name="Main.go" pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/src/Main.go">
+          <file leaf-file-name="conf_test.go" pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/src/conf/conf_test.go">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="108">
-                  <caret line="20" column="28" lean-forward="true" selection-start-line="20" selection-start-column="28" selection-end-line="20" selection-end-column="28" />
+                <state relative-caret-position="-90">
+                  <caret line="4" column="0" lean-forward="false" selection-start-line="3" selection-start-column="8" selection-end-line="6" selection-end-column="13" />
                   <folding />
                 </state>
               </provider>
             </entry>
           </file>
-          <file leaf-file-name="Tracker.go" pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/src/httpGo/Tracker.go">
+          <file leaf-file-name="announce_test.go" pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/src/conf/announce_test.go">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="2430">
-                  <caret line="143" column="0" lean-forward="false" selection-start-line="143" selection-start-column="0" selection-end-line="143" selection-end-column="0" />
-                  <folding />
-                </state>
-              </provider>
-            </entry>
-          </file>
-          <file leaf-file-name="ioutil.go" pinned="false" current-in-tab="false">
-            <entry file="file:///usr/local/go/src/io/ioutil/ioutil.go">
-              <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="265">
-                  <caret line="75" column="5" lean-forward="false" selection-start-line="75" selection-start-column="5" selection-end-line="75" selection-end-column="5" />
-                  <folding />
-                </state>
-              </provider>
-            </entry>
-          </file>
-          <file leaf-file-name="p2pComparison.png" pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/p2pComparison.png">
-              <provider selected="true" editor-type-id="images">
-                <state />
-              </provider>
-            </entry>
-          </file>
-          <file leaf-file-name="Routes.go" pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/src/httpGo/Routes.go">
-              <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="396">
-                  <caret line="25" column="47" lean-forward="false" selection-start-line="25" selection-start-column="47" selection-end-line="25" selection-end-column="47" />
-                  <folding />
-                </state>
-              </provider>
-            </entry>
-          </file>
-          <file leaf-file-name="SNodeNoP2p.go" pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/src/httpGo/SNodeNoP2p.go">
-              <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="0">
-                  <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-                  <folding />
-                </state>
-              </provider>
-            </entry>
-          </file>
-          <file leaf-file-name="ProxyNop2p.go" pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/src/httpGo/ProxyNop2p.go">
-              <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="324">
-                  <caret line="33" column="50" lean-forward="true" selection-start-line="33" selection-start-column="50" selection-end-line="33" selection-end-column="50" />
-                  <folding />
-                </state>
-              </provider>
-            </entry>
-          </file>
-          <file leaf-file-name="Proxy.go" pinned="false" current-in-tab="true">
-            <entry file="file://$PROJECT_DIR$/src/httpGo/Proxy.go">
-              <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="461">
-                  <caret line="146" column="41" lean-forward="true" selection-start-line="146" selection-start-column="41" selection-end-line="146" selection-end-column="41" />
+                <state relative-caret-position="270">
+                  <caret line="15" column="42" lean-forward="false" selection-start-line="15" selection-start-column="42" selection-end-line="15" selection-end-column="42" />
                   <folding>
-                    <element signature="e#16#234#0" expanded="true" />
-                    <marker date="1498640799994" expanded="true" signature="607:4884" ph="{...}" />
-                    <marker date="1498640799994" expanded="true" signature="3322:4670" ph="{...}" />
-                    <marker date="1498640799994" expanded="true" signature="3668:4082" ph="{...}" />
-                    <marker date="1498640799994" expanded="true" signature="3690:3926" ph="/*...*/" />
+                    <element signature="e#14#111#0" expanded="true" />
                   </folding>
                 </state>
               </provider>
             </entry>
           </file>
-        </leaf>
-      </split-first>
-      <split-second>
-        <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-          <file leaf-file-name="StorageNode.go" pinned="false" current-in-tab="true">
-            <entry file="file://$PROJECT_DIR$/src/httpGo/StorageNode.go">
+          <file leaf-file-name="Tracker.go" pinned="false" current-in-tab="true">
+            <entry file="file://$PROJECT_DIR$/src/vars/Tracker.go">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="825">
-                  <caret line="121" column="43" lean-forward="false" selection-start-line="121" selection-start-column="43" selection-end-line="121" selection-end-column="43" />
+                <state relative-caret-position="108">
+                  <caret line="9" column="4" lean-forward="false" selection-start-line="9" selection-start-column="4" selection-end-line="9" selection-end-column="4" />
                   <folding />
                 </state>
               </provider>
@@ -159,6 +212,8 @@
         <option value="$PROJECT_DIR$/src/httpGo/StorageNode.go" />
         <option value="$PROJECT_DIR$/src/httpVar/peer.go" />
         <option value="$PROJECT_DIR$/src/httpGo/Proxy.go" />
+        <option value="$PROJECT_DIR$/src/Main.go" />
+        <option value="$PROJECT_DIR$/src/httpGo/httpGo_test.go" />
       </list>
     </option>
   </component>
@@ -169,10 +224,10 @@
     <sorting>DEFINITION_ORDER</sorting>
   </component>
   <component name="ProjectFrameBounds">
-    <option name="x" value="1046" />
-    <option name="y" value="52" />
-    <option name="width" value="1514" />
-    <option name="height" value="1028" />
+    <option name="x" value="65" />
+    <option name="y" value="24" />
+    <option name="width" value="2495" />
+    <option name="height" value="1056" />
   </component>
   <component name="ProjectView">
     <navigator currentView="ProjectPane" proportions="" version="1">
@@ -251,6 +306,24 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="simpleBT" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="simpleBT" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="conf" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
         </subPane>
       </pane>
       <pane id="PackagesPane" />
@@ -262,12 +335,21 @@
     <property name="GO_FMT" value="false" />
     <property name="DefaultGoTemplateProperty" value="Go File" />
   </component>
-  <component name="RunManager" selected="Go Application.Build Main.go and run">
+  <component name="RunManager" selected="Go Test.TestDirecories in httpGo_test.go">
     <configuration default="false" name="Build Main.go and run" type="GoApplicationRunConfiguration" factoryName="Go Application" temporary="true">
       <module name="simpleBT" />
       <working_directory value="$PROJECT_DIR$" />
       <filePath value="$PROJECT_DIR$/src/Main.go" />
       <kind value="FILE" />
+      <method />
+    </configuration>
+    <configuration default="false" name="TestDirecories in httpGo_test.go" type="GoTestRunConfiguration" factoryName="Go Test" temporary="true">
+      <module name="simpleBT" />
+      <working_directory value="$PROJECT_DIR$" />
+      <framework value="gotest" />
+      <kind value="PACKAGE" />
+      <package value="github.com/alruiz12/simpleBT/src/httpGo" />
+      <pattern value="^TestDirecories$" />
       <method />
     </configuration>
     <configuration default="true" type="#org.jetbrains.idea.devkit.run.PluginConfigurationType" factoryName="Plugin">
@@ -670,12 +752,14 @@
     <configuration default="true" type="osgi.bnd.run" factoryName="Test Launcher (JUnit)">
       <method />
     </configuration>
-    <list size="1">
+    <list size="2">
       <item index="0" class="java.lang.String" itemvalue="Go Application.Build Main.go and run" />
+      <item index="1" class="java.lang.String" itemvalue="Go Test.TestDirecories in httpGo_test.go" />
     </list>
     <recent_temporary>
-      <list size="1">
-        <item index="0" class="java.lang.String" itemvalue="Go Application.Build Main.go and run" />
+      <list size="2">
+        <item index="0" class="java.lang.String" itemvalue="Go Test.TestDirecories in httpGo_test.go" />
+        <item index="1" class="java.lang.String" itemvalue="Go Application.Build Main.go and run" />
       </list>
     </recent_temporary>
   </component>
@@ -693,7 +777,7 @@
       <workItem from="1497809071924" duration="10000" />
       <workItem from="1497811447546" duration="27830000" />
       <workItem from="1498431885619" duration="2573000" />
-      <workItem from="1498437368037" duration="9906000" />
+      <workItem from="1498437368037" duration="15520000" />
     </task>
     <task id="LOCAL-00001" summary="EC2 from local machine">
       <created>1497808757959</created>
@@ -765,14 +849,53 @@
       <option name="project" value="LOCAL" />
       <updated>1498639997438</updated>
     </task>
-    <option name="localTasksCounter" value="11" />
+    <task id="LOCAL-00011" summary="cancelling bytes.buffer instead of pipe">
+      <created>1498640821090</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1498640821090</updated>
+    </task>
+    <option name="localTasksCounter" value="12" />
     <servers />
   </component>
+  <component name="TestHistory">
+    <history-entry file="TestDirecories_in_httpGo_test_go - 2017.06.28 at 17h 38m 38s.xml">
+      <configuration name="TestDirecories in httpGo_test.go" configurationId="GoTestRunConfiguration" />
+    </history-entry>
+    <history-entry file="TestDirecories_in_httpGo_test_go - 2017.06.28 at 17h 39m 30s.xml">
+      <configuration name="TestDirecories in httpGo_test.go" configurationId="GoTestRunConfiguration" />
+    </history-entry>
+    <history-entry file="TestDirecories_in_httpGo_test_go - 2017.06.28 at 17h 40m 31s.xml">
+      <configuration name="TestDirecories in httpGo_test.go" configurationId="GoTestRunConfiguration" />
+    </history-entry>
+    <history-entry file="TestDirecories_in_httpGo_test_go - 2017.06.28 at 17h 40m 33s.xml">
+      <configuration name="TestDirecories in httpGo_test.go" configurationId="GoTestRunConfiguration" />
+    </history-entry>
+    <history-entry file="TestDirecories_in_httpGo_test_go - 2017.06.28 at 17h 40m 57s.xml">
+      <configuration name="TestDirecories in httpGo_test.go" configurationId="GoTestRunConfiguration" />
+    </history-entry>
+    <history-entry file="TestDirecories_in_httpGo_test_go - 2017.06.28 at 17h 46m 21s.xml">
+      <configuration name="TestDirecories in httpGo_test.go" configurationId="GoTestRunConfiguration" />
+    </history-entry>
+    <history-entry file="TestDirecories_in_httpGo_test_go - 2017.06.28 at 17h 49m 11s.xml">
+      <configuration name="TestDirecories in httpGo_test.go" configurationId="GoTestRunConfiguration" />
+    </history-entry>
+    <history-entry file="TestDirecories_in_httpGo_test_go - 2017.06.28 at 17h 50m 21s.xml">
+      <configuration name="TestDirecories in httpGo_test.go" configurationId="GoTestRunConfiguration" />
+    </history-entry>
+    <history-entry file="TestDirecories_in_httpGo_test_go - 2017.06.28 at 17h 58m 56s.xml">
+      <configuration name="TestDirecories in httpGo_test.go" configurationId="GoTestRunConfiguration" />
+    </history-entry>
+    <history-entry file="TestDirecories_in_httpGo_test_go - 2017.06.28 at 18h 04m 00s.xml">
+      <configuration name="TestDirecories in httpGo_test.go" configurationId="GoTestRunConfiguration" />
+    </history-entry>
+  </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="40720000" />
+    <option name="totallyTimeSpent" value="46334000" />
   </component>
   <component name="ToolWindowManager">
-    <frame x="1046" y="52" width="1514" height="1028" extended-state="4" />
+    <frame x="65" y="24" width="2495" height="1056" extended-state="6" />
     <editor active="true" />
     <layout>
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
@@ -784,12 +907,13 @@
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.18423747" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.40199006" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Coverage" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="-1" side_tool="true" content_ui="tabs" />
       <window_info id="Properties" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Capture Tool" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25297225" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.16272545" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
@@ -821,7 +945,8 @@
     <MESSAGE value="EC2 from local machine,  unbuffered channel attemp" />
     <MESSAGE value="continuation 2" />
     <MESSAGE value="trying bytes.buffer instead of pipe" />
-    <option name="LAST_COMMIT_MESSAGE" value="trying bytes.buffer instead of pipe" />
+    <MESSAGE value="cancelling bytes.buffer instead of pipe" />
+    <option name="LAST_COMMIT_MESSAGE" value="cancelling bytes.buffer instead of pipe" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager />
@@ -950,11 +1075,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/p2pComparison.png">
-      <provider selected="true" editor-type-id="images">
-        <state />
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/dataset.xml">
       <provider selected="true" editor-type-id="LargeFileEditor">
         <state />
@@ -1000,22 +1120,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/Main.go">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="108">
-          <caret line="20" column="28" lean-forward="true" selection-start-line="20" selection-start-column="28" selection-end-line="20" selection-end-column="28" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/httpGo/StorageNode.go">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="825">
-          <caret line="121" column="43" lean-forward="false" selection-start-line="121" selection-start-column="43" selection-end-line="121" selection-end-column="43" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/httpGo/SNodeNoP2p.go">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
@@ -1027,15 +1131,7 @@
     <entry file="file://$PROJECT_DIR$/src/httpGo/ProxyNop2p.go">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="324">
-          <caret line="33" column="50" lean-forward="true" selection-start-line="33" selection-start-column="50" selection-end-line="33" selection-end-column="50" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/httpVar/peer.go">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="180">
-          <caret line="10" column="30" lean-forward="true" selection-start-line="10" selection-start-column="30" selection-end-line="10" selection-end-column="30" />
+          <caret line="33" column="50" lean-forward="false" selection-start-line="33" selection-start-column="50" selection-end-line="33" selection-end-column="50" />
           <folding />
         </state>
       </provider>
@@ -1048,16 +1144,101 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/p2pComparison.png">
+      <provider selected="true" editor-type-id="images">
+        <state />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/conf/FileOp2_test.go">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/conf/fileOp_test.go">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file:///usr/local/go/src/net/http/server.go">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="263">
+          <caret line="2311" column="5" lean-forward="false" selection-start-line="2311" selection-start-column="5" selection-end-line="2311" selection-end-column="5" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/httpVar/peer.go">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="180">
+          <caret line="10" column="30" lean-forward="false" selection-start-line="10" selection-start-column="30" selection-end-line="10" selection-end-column="30" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/httpGo/StorageNode.go">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="253">
+          <caret line="161" column="87" lean-forward="false" selection-start-line="161" selection-start-column="86" selection-end-line="161" selection-end-column="87" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/conf/conf_test.go">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-90">
+          <caret line="4" column="0" lean-forward="false" selection-start-line="3" selection-start-column="8" selection-end-line="6" selection-end-column="13" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Main.go">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="52">
+          <caret line="24" column="36" lean-forward="false" selection-start-line="24" selection-start-column="36" selection-end-line="24" selection-end-column="36" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/httpGo/Proxy.go">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="461">
-          <caret line="146" column="41" lean-forward="true" selection-start-line="146" selection-start-column="41" selection-end-line="146" selection-end-column="41" />
+        <state relative-caret-position="-468">
+          <caret line="211" column="30" lean-forward="false" selection-start-line="211" selection-start-column="21" selection-end-line="211" selection-end-column="30" />
           <folding>
             <element signature="e#16#234#0" expanded="true" />
-            <marker date="1498640799994" expanded="true" signature="607:4884" ph="{...}" />
-            <marker date="1498640799994" expanded="true" signature="3322:4670" ph="{...}" />
-            <marker date="1498640799994" expanded="true" signature="3668:4082" ph="{...}" />
-            <marker date="1498640799994" expanded="true" signature="3690:3926" ph="/*...*/" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/conf/announce_test.go">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="270">
+          <caret line="15" column="42" lean-forward="false" selection-start-line="15" selection-start-column="42" selection-end-line="15" selection-end-column="42" />
+          <folding>
+            <element signature="e#14#111#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/vars/Tracker.go">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="108">
+          <caret line="9" column="4" lean-forward="false" selection-start-line="9" selection-start-column="4" selection-end-line="9" selection-end-column="4" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/httpGo/httpGo_test.go">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-126">
+          <caret line="56" column="37" lean-forward="false" selection-start-line="56" selection-start-column="37" selection-end-line="56" selection-end-column="37" />
+          <folding>
+            <element signature="e#15#92#0" expanded="true" />
           </folding>
         </state>
       </provider>
