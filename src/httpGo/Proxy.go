@@ -144,7 +144,10 @@ func Put(filePath string, addr string, trackerAddr string, numNodes int) {
 		m:=msg{NodeList:nodeList, Num:numNodes, Hash:hash, Text:string(partBuffer), CurrentNode:currentNum, Name: currentPart}
 		//r, w :=io.Pipe()			// create pipe
 		go func(m msg, url string) {
-			r, w := io.Pipe()
+			//r, w := io.Pipe()
+			var buf bytes.Buffer
+			err = json.NewEncoder(&buf).Encode(&m)
+			/*
 			go func() {
 				// save buffer to object
 				err = json.NewEncoder(w).Encode(m)
@@ -153,7 +156,10 @@ func Put(filePath string, addr string, trackerAddr string, numNodes int) {
 				}
 				defer w.Close()			// close pipe //when go routine finishes
 			}()
-			_, err := http.Post(url, "application/json", r )
+			*/
+			//_, err := http.Post(url, "application/json", r )
+			_, err := http.Post(url, "application/json", &buf )
+
 			if err != nil {
 				fmt.Println("Error sending http POST ", err.Error())
 			}
