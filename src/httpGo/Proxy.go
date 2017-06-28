@@ -270,6 +270,7 @@ func Get(Key string, proxyAddr []string, trackerAddr string){
 			fmt.Println(err)
 		}
 	}
+	go checkNumGets()
 }
 
 func ReturnData(w http.ResponseWriter, r *http.Request){
@@ -294,14 +295,17 @@ func ReturnData(w http.ResponseWriter, r *http.Request){
 				fmt.Println("error unmarshalling ", err)
 			}
 		}
+		httpVar.GetMutex.Lock()
+                numGets++
+                httpVar.GetMutex.Unlock()
 
 		err = ioutil.WriteFile(path + "/src/local/"+getmsg.Key+"/"+getmsg.Name, []byte(getmsg.Text), 0777)
 		if err != nil {
 			fmt.Println("Peer: error creating/writing file p2p", err.Error())
 		}
-		httpVar.GetMutex.Lock()
-		numGets++
-		httpVar.GetMutex.Unlock()
+//		httpVar.GetMutex.Lock()
+//		numGets++
+//		httpVar.GetMutex.Unlock()
 		fmt.Println(numGets)
 		if numGets==totalPartsNum{
 			fmt.Println("GET: ",time.Since(startGet))
@@ -310,5 +314,6 @@ func ReturnData(w http.ResponseWriter, r *http.Request){
 
 	}
 }
+
 
 

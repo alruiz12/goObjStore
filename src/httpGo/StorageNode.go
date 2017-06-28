@@ -117,9 +117,9 @@ func StorageNodeListen(w http.ResponseWriter, r *http.Request){
 						}
 					}()
 					//httpVar.SendMutex.Lock()
-					httpVar.SendReady <- 1
+				 //	httpVar.SendReady <- 1
 					_, err := http.Post(peerURL, "application/json", rpipe)
-					<- httpVar.SendReady
+				//	<- httpVar.SendReady
 					//httpVar.SendMutex.Unlock()
 					if err != nil {
 						fmt.Println("Error sending http POST p2p", err.Error())
@@ -167,13 +167,20 @@ func p2pRequest(w http.ResponseWriter, r *http.Request) {
 			}
 		}
 		// Save chunk to file
-//		httpVar.DirMutex.Lock()
+		httpVar.DirMutex.Lock()
 
 		err = ioutil.WriteFile(path + "/src/data/"+chunk.Hash+"/"+strconv.Itoa( peerID)+ "/P2P" + strconv.Itoa(httpVar.P2pPart), []byte(chunk.Text), 0777)
 		if err != nil {
 			fmt.Println("P2pRequest: Peer: error creating/writing file p2p", err.Error())
 		}
-//		httpVar.DirMutex.Unlock()
+		_, err = os.Stat(path+ "/src/data/"+chunk.Hash+"/"+strconv.Itoa( peerID)+ "/P2P" + strconv.Itoa(httpVar.P2pPart))
+		if err != nil {
+			err = ioutil.WriteFile(path + "/src/data/"+chunk.Hash+"/"+strconv.Itoa( peerID)+ "/P2P" + strconv.Itoa(httpVar.P2pPart), []byte(chunk.Text), 0777)
+                if err != nil {
+                        fmt.Println("P2pRequest: Peer: error creating/writing file p2p", err.Error())
+                }
+		}
+		httpVar.DirMutex.Unlock()
 		if httpVar.P2pPart >= (totalPartsNum*(chunk.Num-1))-1 {
 			fmt.Println("p2p: ",time.Since(start))
 			fmt.Println("..........................................p2p END ....................................................",httpVar.P2pPart)
@@ -242,7 +249,6 @@ func sendChunksToProxy(nodeID string, key string, URL string){
 			}
 			m:=getMsg{Text: string(partBuffer), Name: info.Name(), NodeID:nodeID, Key:key}
 			r, w :=io.Pipe()			// create pipe
-
 			go func() {
 				defer w.Close()			// close pipe when go routine finishes
 				// save buffer to object
