@@ -316,4 +316,78 @@ func ReturnData(w http.ResponseWriter, r *http.Request){
 }
 
 
+/*
+CheckPieces walks through the subfiles directory, creates a new file to be filled out with the content of each subfile,
+and compares the new hash with the original one.
+@param path to the file we want to split
+Returns true if both hash are identic and false if not
+*/
+func CheckPieces(key string ,fileName string) bool{
+
+	// Subfiles directory
+	path:=os.Getenv("GOPATH")+"/src/github.com/alruiz12/simpleBT/src/local/"+key+"/"
+	files, err := ioutil.ReadDir(path)
+	if err != nil {
+		fmt.Println(err)
+		return false
+	}
+
+	// Create new file
+	_, err = os.Create(os.Getenv("GOPATH") + "/src/github.com/alruiz12/simpleBT/src" + fileName)
+	newFile, err := os.OpenFile(os.Getenv("GOPATH") + "/src/github.com/alruiz12/simpleBT/src" + fileName, os.O_APPEND | os.O_WRONLY, 0666)
+	if err != nil {
+		fmt.Println(err)
+		return false
+	}
+	defer newFile.Close()
+
+
+
+	// Trying to fill out the new file using subfiles (in order)
+	var inOrderCount uint64 = 0
+	var maxTimes int = 0
+	for inOrderCount<totalPartsNum {
+		for _, file := range files {
+			if strings.Compare(file.Name(), fileName + strconv.FormatUint(inOrderCount, 10) + "_") == 0 {
+				inOrderCount++
+
+				currentFile, err := os.Open(path + file.Name())
+				if err != nil {
+					fmt.Println(err)
+					return false
+				}
+
+				bytesCurrentFile, err := ioutil.ReadFile(path + file.Name())
+
+				_, err = newFile.WriteString(string(bytesCurrentFile))
+				if err != nil {
+					fmt.Println(err)
+					return false
+				}
+
+				currentFile.Close()
+			}
+
+		}
+		if inOrderCount == 0 {
+			maxTimes++
+		}
+		if maxTimes > 1 {
+			return false
+		}
+	}
+
+	// Compute and compare new hash
+	newHash := md5sum(os.Getenv("GOPATH") + "/src/github.com/alruiz12/simpleBT/src" + fileName)
+	fmt.Println(newHash + ", dir: "+ subDir.Name())
+	if strings.Compare(key, newHash) != 0 {
+		return false
+	}
+
+
+	return true
+}
+
+
+
 

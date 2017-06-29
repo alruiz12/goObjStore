@@ -5,6 +5,7 @@ import (
 	"time"
 	"github.com/alruiz12/simpleBT/src/httpGo"
 	"net/http"
+	"fmt"
 
 )
 
@@ -46,6 +47,7 @@ func main() {
 		time.Sleep(5*time.Second)
 
 		httpGo.Get("0527cbea2805d89c6d5d6457b7f9f77c",ProxyAddr, trackerAddr)
+		fmt.Println(httpGo.CheckPieces("0527cbea2805d89c6d5d6457b7f9f77c","NEW"))
 
 	}()
 	go func(){http.ListenAndServe(":8081", routerPeer)}()
