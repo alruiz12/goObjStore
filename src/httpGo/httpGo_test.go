@@ -8,7 +8,7 @@ import (
 	"os"
 )
 func TestDirecories(t *testing.T){
-	router := MyNewRouter()
+	router :=MyNewRouter()
 
 
 

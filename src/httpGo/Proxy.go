@@ -27,7 +27,7 @@ type msg struct {
 	NodeList [][]string
 	Num int
 	Hash string
-	Text string
+	Text []byte 
 	CurrentNode int
 	Name int
 }
@@ -132,7 +132,7 @@ func Put(filePath string, trackerAddr string, numNodes int) {
 		partSize=int(math.Min(fileChunk, float64(size-(currentPart*fileChunk))))
 		partBuffer=make([]byte,partSize)
 		_,err = file.Read(partBuffer)		// Get chunk
-		m:=msg{NodeList:nodeList, Num:numNodes, Hash:hash, Text:string(partBuffer), CurrentNode:currentNum, Name: currentPart}
+		m:=msg{NodeList:nodeList, Num:numNodes, Hash:hash, Text:partBuffer, CurrentNode:currentNum, Name: currentPart}
 		//r, w :=io.Pipe()			// create pipe
 		go func(m msg, url string) {
 			r, w := io.Pipe()
@@ -285,7 +285,7 @@ func ReturnData(w http.ResponseWriter, r *http.Request){
                 numGets++
                 httpVar.GetMutex.Unlock()
 
-		err = ioutil.WriteFile(path + "/src/local/"+getmsg.Key+"/"+getmsg.Name, []byte(getmsg.Text), 0777)
+		err = ioutil.WriteFile(path + "/src/local/"+getmsg.Key+"/"+getmsg.Name, getmsg.Text, 0777)
 		if err != nil {
 			fmt.Println("Peer: error creating/writing file p2p", err.Error())
 		}

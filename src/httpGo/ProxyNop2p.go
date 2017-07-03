@@ -90,9 +90,9 @@ func PutNoP2P(filePath string, addr string, trackerAddr string, numNodes int){
 		partSize=int(math.Min(fileChunk, float64(size-(currentPart*fileChunk))))
 		partBuffer=make([]byte,partSize)
 		_,err = file.Read(partBuffer)		// Get chunk
-		m:=msg{NodeList:nodeList, Num:numNodes, Hash:hash, Text:string(partBuffer), CurrentNode:currentNum, Name: currentPart}
- 		m2:=msg{NodeList:nodeList, Num:numNodes, Hash:hash, Text:string(partBuffer), CurrentNode:currentNum, Name: currentPart}
- 		m3:=msg{NodeList:nodeList, Num:numNodes, Hash:hash, Text:string(partBuffer), CurrentNode:currentNum, Name: currentPart}
+		m:=msg{NodeList:nodeList, Num:numNodes, Hash:hash, Text:partBuffer, CurrentNode:currentNum, Name: currentPart}
+ 		m2:=msg{NodeList:nodeList, Num:numNodes, Hash:hash, Text:partBuffer, CurrentNode:currentNum, Name: currentPart}
+ 		m3:=msg{NodeList:nodeList, Num:numNodes, Hash:hash, Text:partBuffer, CurrentNode:currentNum, Name: currentPart}
 		r, w :=io.Pipe()			// create pipe
 		r2, w2 :=io.Pipe()                        // create pipe
 		r3, w3 :=io.Pipe()                        // create pipe

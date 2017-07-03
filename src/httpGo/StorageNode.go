@@ -86,16 +86,25 @@ func StorageNodeListen(w http.ResponseWriter, r *http.Request){
 		}
 
 		 var wg sync.WaitGroup
-                wg.Add(len(chunk.NodeList)+1)
+                wg.Add(len(chunk.NodeList)/*+1*/)
 
-		go func(CurrentPart int, text string){
+		//go func(CurrentPart int,text []byte){
 			// Save chunk to file
-			err=ioutil.WriteFile(path+"/src/data/"+chunk.Hash+"/"+strconv.Itoa( nodeID)+"/NEW"+strconv.Itoa(CurrentPart),[]byte(text),0777)
+			err=ioutil.WriteFile(path+"/src/data/"+chunk.Hash+"/"+strconv.Itoa( nodeID)+"/NEW"+strconv.Itoa(chunk.Name),chunk.Text,0777)
 			if err != nil {
 				fmt.Println("StorageNodeListen: error creating/writing file", err.Error())
 			}
-			defer wg.Done()
-		}(chunk.Name, chunk.Text)
+			 _, err = os.Stat(path+ "/src/data/"+chunk.Hash+"/"+strconv.Itoa( nodeID)+ "/NEW" + strconv.Itoa(chunk.Name))
+                        for err != nil {
+                                err = ioutil.WriteFile(path+"/src/data/"+chunk.Hash+"/"+strconv.Itoa( nodeID)+"/NEW"+strconv.Itoa(chunk.Name), chunk.Text, 0777)
+                                if err != nil {
+                                        fmt.Println("P2pRequest: Peer: error creating/writing file p2p", err.Error())
+                                }
+                                fmt.Println("for", chunk.Name)
+                        }
+
+//			defer wg.Done()
+//		}(chunk.Name, chunk.Text)
 
 		httpVar.TrackerMutex.Lock()
 		httpVar.CurrentPart++
@@ -133,7 +142,7 @@ func StorageNodeListen(w http.ResponseWriter, r *http.Request){
 			}(peer, peerURL)
 		}
 		wg.Wait()
-		if httpVar.CurrentPart == (totalPartsNum*chunk.Num)-1 {
+		if httpVar.CurrentPart == (totalPartsNum*chunk.Num) {
 			fmt.Println("..........................................Peer END ....................................................", time.Since(start))
 		}
 	}
@@ -171,13 +180,13 @@ func p2pRequest(w http.ResponseWriter, r *http.Request) {
 		// Save chunk to file
 		httpVar.DirMutex.Lock()
 
-		err = ioutil.WriteFile(path + "/src/data/"+chunk.Hash+"/"+strconv.Itoa( peerID)+ "/P2P" + strconv.Itoa(httpVar.P2pPart), []byte(chunk.Text), 0777)
+		err = ioutil.WriteFile(path + "/src/data/"+chunk.Hash+"/"+strconv.Itoa( peerID)+ "/P2P" + strconv.Itoa(httpVar.P2pPart),chunk.Text, 0777)
 		if err != nil {
 			fmt.Println("P2pRequest: Peer: error creating/writing file p2p", err.Error())
 		}
 		_, err = os.Stat(path+ "/src/data/"+chunk.Hash+"/"+strconv.Itoa( peerID)+ "/P2P" + strconv.Itoa(httpVar.P2pPart))
 		if err != nil {
-			err = ioutil.WriteFile(path + "/src/data/"+chunk.Hash+"/"+strconv.Itoa( peerID)+ "/P2P" + strconv.Itoa(httpVar.P2pPart), []byte(chunk.Text), 0777)
+			err = ioutil.WriteFile(path + "/src/data/"+chunk.Hash+"/"+strconv.Itoa( peerID)+ "/P2P" + strconv.Itoa(httpVar.P2pPart), chunk.Text, 0777)
                 	if err != nil {
                       		fmt.Println("P2pRequest: Peer: error creating/writing file p2p", err.Error())
                 	}
@@ -227,7 +236,7 @@ func GetChunks(w http.ResponseWriter, r *http.Request){
 }
 
 type getMsg struct {
-	Text string
+	Text []byte
 	Name string
 	NodeID string
 	Key string
@@ -249,7 +258,7 @@ func sendChunksToProxy(nodeID string, key string, URL string){
 			if err != nil {
 				fmt.Println("sendChunksToProxy error opening file ",err.Error())
 			}
-			m:=getMsg{Text: string(partBuffer), Name: info.Name(), NodeID:nodeID, Key:key}
+			m:=getMsg{Text:partBuffer, Name: info.Name(), NodeID:nodeID, Key:key}
 			r, w :=io.Pipe()			// create pipe
 			go func() {
 				defer w.Close()			// close pipe when go routine finishes
