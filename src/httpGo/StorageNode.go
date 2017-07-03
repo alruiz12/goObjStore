@@ -99,13 +99,13 @@ func StorageNodeListen(w http.ResponseWriter, r *http.Request){
 		httpVar.TrackerMutex.Lock()
 		httpVar.CurrentPart++
 		httpVar.TrackerMutex.Unlock()
-
+		var currentAdr int = 0
 		// Send chunk to peers
 		for _, peer :=range chunk.NodeList {
-			peerURL := "http://" + peer + "/p2pRequest"
+			peerURL := "http://" + peer[currentAdr] + "/p2pRequest"
 
-			go func(p string, URL string) {
-				if  nodeID == int(p[len(p)-1]-'0'){	// Don't send to itself
+			go func(p []string, URL string) {
+				if  nodeID == int(p[0][len(p)-1]-'0'){	// Don't send to itself
 
 				}else {
 					rpipe, wpipe :=io.Pipe() // create pipe
@@ -128,7 +128,7 @@ func StorageNodeListen(w http.ResponseWriter, r *http.Request){
 
 				defer wg.Done()
 			}(peer, peerURL)
-
+			currentAdr=(currentAdr+1)%len(chunk.NodeList[0])
 		}
 		wg.Wait()
 		if httpVar.CurrentPart == (totalPartsNum*chunk.Num)-1 {

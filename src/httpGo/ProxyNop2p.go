@@ -42,7 +42,7 @@ func PutNoP2P(filePath string, addr string, trackerAddr string, numNodes int){
 	if err := res.Body.Close(); err != nil {
 		panic(err)
 	}
-	var nodeList []string
+	var nodeList [][]string
 	if err := json.Unmarshal(body, &nodeList); err != nil {
 		fmt.Println("Put: error unprocessable entity: ",err.Error())
 		return
@@ -130,21 +130,21 @@ func PutNoP2P(filePath string, addr string, trackerAddr string, numNodes int){
                         }()
 
 
-		_, err := http.Post("http://"+nodeList[currentNum] + "/SNodeListenNoP2P", "application/json", r )
+		_, err := http.Post("http://"+nodeList[currentNum][0] + "/SNodeListenNoP2P", "application/json", r )
 		if err != nil {
 			fmt.Println("Error sending http POST ", err.Error())
 		}
 		currentNum=(currentNum+1)%numNodes
 
 
-	         _, err = http.Post("http://"+nodeList[currentNum] + "/SNodeListenNoP2P", "application/json", r2 )
+	         _, err = http.Post("http://"+nodeList[currentNum][0] + "/SNodeListenNoP2P", "application/json", r2 )
                  if err != nil {
                         fmt.Println("Error sending http POST ", err.Error())
                  }
                 currentNum=(currentNum+1)%numNodes      
 	
                 
- 		 _, err = http.Post("http://"+nodeList[currentNum] + "/SNodeListenNoP2P", "application/json", r3 )
+ 		 _, err = http.Post("http://"+nodeList[currentNum][0] + "/SNodeListenNoP2P", "application/json", r3 )
                  if err != nil {
                         fmt.Println("Error sending http POST ", err.Error())
                  }

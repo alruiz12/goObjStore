@@ -23,7 +23,7 @@ import (
 const fileChunk = 8*(1<<20) // 8 MB
 
 type msg struct {
-	NodeList []string
+	NodeList [][]string
 	Num int
 	Hash string
 	Text string
@@ -70,7 +70,8 @@ func Put(filePath string, trackerAddr string, numNodes int) {
 	if err != nil {
 		fmt.Println("Put: error reciving response: ", err.Error())
 	}
-
+	fmt.Println("OOOOOOOOOOOOOOOOOOOOOOK")
+	return
 	var currentPart int = 0
 	var partSize int
 	var currentNum int = 0
@@ -103,7 +104,7 @@ func Put(filePath string, trackerAddr string, numNodes int) {
 		return
 	}
 	totalPartsNum = int(math.Ceil(float64(size) / float64(fileChunk)))
-
+	var currentAdr int = 0
 
 	for currentNum < numNodes {
 		rpipe, wpipe :=io.Pipe()
@@ -118,7 +119,7 @@ func Put(filePath string, trackerAddr string, numNodes int) {
 			defer wpipe.Close()                     // close pipe //when go routine finishes
 		}()
 
-		_, err = http.Post("http://" + nodeList[currentNum] + "/prepNode", "application/json", rpipe)
+		_, err = http.Post("http://" + nodeList[currentNum][currentAdr] + "/prepNode", "application/json", rpipe)
 		if err != nil {
 			fmt.Println("to prepNode, Error sending http POST ", err.Error())
 		}
@@ -149,11 +150,12 @@ func Put(filePath string, trackerAddr string, numNodes int) {
 				fmt.Println("Error sending http POST ", err.Error())
 			}
 			defer wg.Done()
-		}(m, "http://"+nodeList[currentNum] + "/StorageNodeListen")
+		}(m, "http://"+nodeList[currentNum][currentAdr] + "/StorageNodeListen")
 
 
 		currentPart++
 		currentNum=(currentNum+1)%numNodes
+		currentAdr=(currentAdr+1)%len(nodeList[currentNum])
 	}
 	fmt.Println("..........................................Proxy END ....................................................")
 	wg.Wait()
@@ -325,11 +327,11 @@ func CheckPieces(key string ,fileName string) bool{
 
 
 	// Trying to fill out the new file using subfiles (in order)
-	var inOrderCount uint64 = 0
+	var inOrderCount = 0
 	var maxTimes int = 0
 	for inOrderCount<totalPartsNum {
 		for _, file := range files {
-			if strings.Compare(file.Name(), fileName + strconv.FormatUint(inOrderCount, 10) + "_") == 0 {
+			if strings.Compare(file.Name(), fileName + strconv.Itoa(inOrderCount) + "_") == 0 {
 				inOrderCount++
 
 				currentFile, err := os.Open(path + file.Name())
@@ -360,7 +362,7 @@ func CheckPieces(key string ,fileName string) bool{
 
 	// Compute and compare new hash
 	newHash := md5sum(os.Getenv("GOPATH") + "/src/github.com/alruiz12/simpleBT/src" + fileName)
-	fmt.Println(newHash + ", dir: "+ subDir.Name())
+	fmt.Println(newHash + ", dir: ")
 	if strings.Compare(key, newHash) != 0 {
 		return false
 	}
