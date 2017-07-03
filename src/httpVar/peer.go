@@ -11,19 +11,14 @@ var GetMutex = &sync.Mutex{}
 var WFileMutex = &sync.Mutex{}
 
 var HashMap = make(map[string][]bool)
-var Peer1 string
-var Peer2 string
-var Peer3 string
-var Peers []string
-
 
 
 type NodeInfo struct {
-	Url string
+	Url []string
 	Busy bool
 }
 var TrackerNodeList []NodeInfo
 
-var MapKeyNodes = make(map[string][]string)
+var MapKeyNodes = make(map[string][][]string)
 var ProxyAddr []string
 var SendReady = make(chan int, 400)

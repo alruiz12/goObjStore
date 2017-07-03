@@ -17,8 +17,13 @@ type jsonKey struct {
 	Key string		`json:"Key"`
 }
 
-
-func StartTracker(nodeList []string, proxyAddr []string){
+/*
+StartTracker is called when a Tracker is being initialized.
+Registers the nodes' addresses
+@param1 List of nodes lists of addresses (each node can have multiple addresses)
+	check httpGo/Main.go for details
+ */
+func StartTracker(nodeList [][]string){
 	var nodeAux httpVar.NodeInfo
 	for _, node := range nodeList {
 		nodeAux.Url=node
@@ -26,14 +31,11 @@ func StartTracker(nodeList []string, proxyAddr []string){
 		httpVar.TrackerNodeList = append(httpVar.TrackerNodeList, nodeAux)
 	}
 
-	for _, addr := range proxyAddr {
-		httpVar.ProxyAddr = append(httpVar.ProxyAddr, addr)
-	}
 
 }
 
 /*
-GetNodes is called when a GET requests [TrackerURL]/addTorrent.
+GetNodes is called when a GET requests [TrackerURL]/GetNodes.
 Sends new json encoded node list back to the sender
 @param1 used by an HTTP handler to construct an HTTP response.
 @param2 represents HTTP request
@@ -78,10 +80,10 @@ func GetNodes(w http.ResponseWriter, r *http.Request){
 	}
 }
 
-func chooseNodes(num int)[]string{
+func chooseNodes(num int)[][]string{
 	i:=0
-	var response []string
-	var busies []string
+	var response [][]string
+	var busies [][]string
 	for i<num{
 		if i==len(httpVar.TrackerNodeList){
 			fmt.Println("There is not enough free nodes, adding bussies")
@@ -100,14 +102,14 @@ func chooseNodes(num int)[]string{
 	return response
 }
 
-func chooseBusyNodes(num int, busies []string, response *[]string){
+func chooseBusyNodes(num int, busies [][]string, response *[][]string){
 	j:=0 // iterates through bussies
 	for len(*response)<num && j<len(busies){
 		*response=append(*response, busies[j])
 		j++
 	}
-	if j==len(busies){fmt.Println(" total node number less than tracker asked ")}
-		// tracker will receive less than expected
+	if j==len(busies){fmt.Println(" total number of nodes less than proxy asked ")}
+		// proxy will receive less nodes than expected
 
 
 }

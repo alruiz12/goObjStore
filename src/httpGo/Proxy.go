@@ -37,13 +37,13 @@ var totalPartsNum int
 var start time.Time
 var startGet time.Time
 var numGets int = 0
-func Put(filePath string, addr string, trackerAddr string, numNodes int) {
+func Put(filePath string, trackerAddr string, numNodes int) {
 	time.Sleep(1 * time.Second)
 	start = time.Now()
 	var hash string = md5sum(filePath)
 	var err error
 
-	// ask tracker for nodes
+	// Aask tracker for nodes
 	quantityJson := `{"Quantity":"` + strconv.Itoa(numNodes) + `","Hash":"` + hash + `"}`
 	reader := strings.NewReader(quantityJson)
 	trackerURL := "http://" + trackerAddr + "/GetNodes"
@@ -62,7 +62,7 @@ func Put(filePath string, addr string, trackerAddr string, numNodes int) {
 	if err := res.Body.Close(); err != nil {
 		panic(err)
 	}
-	var nodeList []string
+	var nodeList [][]string		// Todo: MODIFY FROM HERE <--------------------------------------------
 	if err := json.Unmarshal(body, &nodeList); err != nil {
 		fmt.Println("Put: error unprocessable entity: ", err.Error())
 		return
@@ -103,17 +103,8 @@ func Put(filePath string, addr string, trackerAddr string, numNodes int) {
 		return
 	}
 	totalPartsNum = int(math.Ceil(float64(size) / float64(fileChunk)))
-	//rpipe, wpipe :=io.Pipe()
-	//mHash:=hashMsg{Hash:hash}
-	//go func() {
-	//r, w := io.Pipe()
-	// save buffer to object
-	//	err = json.NewEncoder(wpipe).Encode(mHash)
-	//	if err != nil {
-	//		fmt.Println("Error encoding to pipe ", err.Error())
-	//	}
-	//	defer wpipe.Close()			// close pipe //when go routine finishes
-	//}()
+
+
 	for currentNum < numNodes {
 		rpipe, wpipe :=io.Pipe()
 		mHash:=hashMsg{Hash:hash}
@@ -160,17 +151,7 @@ func Put(filePath string, addr string, trackerAddr string, numNodes int) {
 			defer wg.Done()
 		}(m, "http://"+nodeList[currentNum] + "/StorageNodeListen")
 
-		// peerURL = "http://"+nodeList[currentNum]+"/StorageNodeListen"
-		// Send to current peer
-		/*
-			_, err := http.Post("http://"+nodeList[currentNum] + "/StorageNodeListen", "application/json", r )
-			if err != nil {
-				fmt.Println("Error sending http POST ", err.Error())
-			}
-		*/
-		//fmt.Println(url, ", ", pb, "         ,", strconv.Itoa(cp ))
-		//defer wg.Done()
-		//}("http://"+nodeList[currentNum] + "/StorageNodeListen", r, string(partBuffer[:25]), currentPart )
+
 		currentPart++
 		currentNum=(currentNum+1)%numNodes
 	}
