@@ -13,6 +13,7 @@ import(
 	"path/filepath"
 	"strings"
 	"sync"
+	"math/rand"
 
 )
 var path = (os.Getenv("GOPATH")+"/src/github.com/alruiz12/simpleBT")
@@ -99,10 +100,12 @@ func StorageNodeListen(w http.ResponseWriter, r *http.Request){
 		httpVar.TrackerMutex.Lock()
 		httpVar.CurrentPart++
 		httpVar.TrackerMutex.Unlock()
-		var currentAdr int = 0
+
 		// Send chunk to peers
+			// sending only one chunk to the rest of peers once, don't need to use multiple addr per peer
+		var currentAddr int = rand.Intn(len(chunk.NodeList))
 		for _, peer :=range chunk.NodeList {
-			peerURL := "http://" + peer[currentAdr] + "/p2pRequest"
+			peerURL := "http://" + peer[currentAddr] + "/p2pRequest"
 
 			go func(p []string, URL string) {
 				if  nodeID == int(p[0][len(p)-1]-'0'){	// Don't send to itself
@@ -128,7 +131,6 @@ func StorageNodeListen(w http.ResponseWriter, r *http.Request){
 
 				defer wg.Done()
 			}(peer, peerURL)
-			currentAdr=(currentAdr+1)%len(chunk.NodeList[0])
 		}
 		wg.Wait()
 		if httpVar.CurrentPart == (totalPartsNum*chunk.Num)-1 {
@@ -176,9 +178,9 @@ func p2pRequest(w http.ResponseWriter, r *http.Request) {
 		_, err = os.Stat(path+ "/src/data/"+chunk.Hash+"/"+strconv.Itoa( peerID)+ "/P2P" + strconv.Itoa(httpVar.P2pPart))
 		if err != nil {
 			err = ioutil.WriteFile(path + "/src/data/"+chunk.Hash+"/"+strconv.Itoa( peerID)+ "/P2P" + strconv.Itoa(httpVar.P2pPart), []byte(chunk.Text), 0777)
-                if err != nil {
-                        fmt.Println("P2pRequest: Peer: error creating/writing file p2p", err.Error())
-                }
+                	if err != nil {
+                      		fmt.Println("P2pRequest: Peer: error creating/writing file p2p", err.Error())
+                	}
 		}
 		httpVar.DirMutex.Unlock()
 		if httpVar.P2pPart >= (totalPartsNum*(chunk.Num-1))-1 {

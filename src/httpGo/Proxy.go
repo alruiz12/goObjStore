@@ -17,6 +17,7 @@ import (
 	"github.com/alruiz12/simpleBT/src/httpVar"
 	"strings"
 	"sync"
+	"math/rand"
 )
 
 //const fileChunk = 1*(1<<10) // 1 KB
@@ -70,8 +71,6 @@ func Put(filePath string, trackerAddr string, numNodes int) {
 	if err != nil {
 		fmt.Println("Put: error reciving response: ", err.Error())
 	}
-	fmt.Println("OOOOOOOOOOOOOOOOOOOOOOK")
-	return
 	var currentPart int = 0
 	var partSize int
 	var currentNum int = 0
@@ -110,7 +109,6 @@ func Put(filePath string, trackerAddr string, numNodes int) {
 		rpipe, wpipe :=io.Pipe()
 		mHash:=hashMsg{Hash:hash}
 		go func() {
-			//r, w := io.Pipe()
 			// save buffer to object
 			err = json.NewEncoder(wpipe).Encode(mHash)
 			if err != nil {
@@ -119,6 +117,7 @@ func Put(filePath string, trackerAddr string, numNodes int) {
 			defer wpipe.Close()                     // close pipe //when go routine finishes
 		}()
 
+		// Prepare node for content
 		_, err = http.Post("http://" + nodeList[currentNum][currentAdr] + "/prepNode", "application/json", rpipe)
 		if err != nil {
 			fmt.Println("to prepNode, Error sending http POST ", err.Error())
@@ -155,7 +154,11 @@ func Put(filePath string, trackerAddr string, numNodes int) {
 
 		currentPart++
 		currentNum=(currentNum+1)%numNodes
-		currentAdr=(currentAdr+1)%len(nodeList[currentNum])
+
+		// Every 'numNodes' iterations, send chunk to next address, first send to different nodes, then change address
+		if currentNum==0 {
+			currentAdr = (currentAdr+1) % len(nodeList[currentNum])
+		}
 	}
 	fmt.Println("..........................................Proxy END ....................................................")
 	wg.Wait()
@@ -217,7 +220,7 @@ func Get(Key string, proxyAddr []string, trackerAddr string){
 	if err := res.Body.Close(); err != nil {
 		panic(err)
 	}
-	var nodeList []string
+	var nodeList [][]string
 	if err := json.Unmarshal(body, &nodeList); err != nil {
 		fmt.Println("Get: error unprocessable entity: ",err.Error())
 		return
@@ -229,7 +232,7 @@ func Get(Key string, proxyAddr []string, trackerAddr string){
 	os.Mkdir(os.Getenv("GOPATH")+"/src/github.com/alruiz12/simpleBT/src/local",+0777)
 	os.Mkdir(os.Getenv("GOPATH")+"/src/github.com/alruiz12/simpleBT/src/local/"+Key,0777)
 
-
+	var currentAddr int = rand.Intn(len(chunk.NodeList))
 	// For each node ask for all their Proxy-pieces
 	for index, node := range nodeList {
 		r, w :=io.Pipe()			// create pipe
@@ -243,7 +246,7 @@ func Get(Key string, proxyAddr []string, trackerAddr string){
 				fmt.Println("Error encoding to pipe ", err.Error())
 			}
 		}()
-		url:="http://"+node+"/GetChunks"
+		url:="http://"+node[currentAddr]+"/GetChunks"
 		res, err := http.Post(url,"application/json", r )
 		if err != nil {
 			fmt.Println("Get2: error creating request: ",err.Error())
