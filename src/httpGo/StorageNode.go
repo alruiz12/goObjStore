@@ -101,7 +101,9 @@ func StorageNodeListen(w http.ResponseWriter, r *http.Request){
                                         fmt.Println("P2pRequest: Peer: error creating/writing file p2p", err.Error())
                                 }
                                 fmt.Println("for", chunk.Name)
-                        }
+				_, err = os.Stat(path+ "/src/data/"+chunk.Hash+"/"+strconv.Itoa( nodeID)+ "/NEW" + strconv.Itoa(chunk.Name))
+
+			}
 
 //			defer wg.Done()
 //		}(chunk.Name, chunk.Text)
