@@ -17,7 +17,7 @@ import(
 
 )
 var path = (os.Getenv("GOPATH")+"/src/github.com/alruiz12/simpleBT")
-var chunk msg
+//var chunk msg
 var hashRecived hashMsg
 func prepNode(w http.ResponseWriter, r *http.Request){
 	var nodeID int =int(r.Host[len(r.Host)-1]-'0')
@@ -62,7 +62,7 @@ func prepNode(w http.ResponseWriter, r *http.Request){
 }
 
 func StorageNodeListen(w http.ResponseWriter, r *http.Request){
-
+	var chunk msg
 	// Get node ID
 	var nodeID int =int(r.Host[len(r.Host)-1]-'0')
 
@@ -160,6 +160,7 @@ func StorageNodeListen(w http.ResponseWriter, r *http.Request){
 
 // Listen to other peers
 func p2pRequest(w http.ResponseWriter, r *http.Request) {
+	var chunk msg
 	// Get peer ID
 	var peerID int = int(r.Host[len(r.Host) - 1] - '0')
 	// Listen to tracker

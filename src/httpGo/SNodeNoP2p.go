@@ -12,7 +12,7 @@ import(
 
 )
 func SNodeListenNoP2P(w http.ResponseWriter, r *http.Request){
-
+	var chunk msg
 	// Get node ID
 	var nodeID int =int(r.Host[len(r.Host)-1]-'0')
 

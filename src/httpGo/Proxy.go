@@ -198,7 +198,7 @@ type jsonKeyURL struct {
 
 func Get(Key string, proxyAddr []string, trackerAddr string){
 	time.Sleep(1 * time.Second)
-
+	var chunk msg
 	// Ask tracker for nodes
 	startGet=time.Now()
 	var err error
