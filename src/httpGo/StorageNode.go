@@ -144,7 +144,8 @@ func StorageNodeListen(w http.ResponseWriter, r *http.Request){
 			}(peer, peerURL)
 		}
 		wg.Wait()
-		if httpVar.CurrentPart == (totalPartsNum*chunk.Num) {
+		fmt.Println("SNL: ",httpVar.CurrentPart, " ", chunk.Name," ", r.URL)
+		if httpVar.CurrentPart == (totalPartsNum) {
 			fmt.Println("..........................................Peer END ....................................................", time.Since(start))
 		}
 	}

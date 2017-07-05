@@ -134,17 +134,18 @@ func Put(filePath string, trackerAddr string, numNodes int) {
 		_,err = file.Read(partBuffer)		// Get chunk
 		m:=msg{NodeList:nodeList, Num:numNodes, Hash:hash, Text:partBuffer, CurrentNode:currentNum, Name: currentPart}
 		//r, w :=io.Pipe()			// create pipe
-		go func(m msg, url string) {
+		go func(m2 msg, url string) {
 			r, w := io.Pipe()
 			go func() {
 				// save buffer to object
-				err = json.NewEncoder(w).Encode(m)
+				err = json.NewEncoder(w).Encode(m2)
 				if err != nil {
 					fmt.Println("Error encoding to pipe ", err.Error())
 				}
 				defer w.Close()			// close pipe //when go routine finishes
 			}()
 			_, err := http.Post(url, "application/json", r )
+			fmt.Println(url, " ", m2.Name)
 			if err != nil {
 				fmt.Println("Error sending http POST ", err.Error())
 			}
