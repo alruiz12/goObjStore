@@ -21,4 +21,6 @@ var TrackerNodeList []NodeInfo
 
 var MapKeyNodes = make(map[string][][]string)
 var ProxyAddr []string
-var SendReady = make(chan int, 4444)
+var SendReady = make(chan int, 200)
+var SendP2PReady = make(chan int, 50)
+
