@@ -131,9 +131,9 @@ func StorageNodeListen(w http.ResponseWriter, r *http.Request){
 						}
 					}()
 					//httpVar.SendMutex.Lock()
-				 //	httpVar.SendReady <- 1
+					httpVar.SendReady <- 1
 					_, err := http.Post(peerURL, "application/json", rpipe)
-				//	<- httpVar.SendReady
+					<- httpVar.SendReady
 					//httpVar.SendMutex.Unlock()
 					if err != nil {
 						fmt.Println("Error sending http POST p2p", err.Error())
