@@ -62,102 +62,108 @@ func prepNode(w http.ResponseWriter, r *http.Request){
 }
 
 func StorageNodeListen(w http.ResponseWriter, r *http.Request){
-	var chunk msg
-	// Get node ID
-	var nodeID int =int(r.Host[len(r.Host)-1]-'0')
+	var listenWg sync.WaitGroup
+	listenWg.Add(1)
+	go func() {
+		var chunk msg
+		// Get node ID
+		var nodeID int = int(r.Host[len(r.Host) - 1] - '0')
 
-	// Listen to tracker
-	if r.Method == http.MethodPost{
+		// Listen to tracker
+		if r.Method == http.MethodPost {
 
-		body, err := ioutil.ReadAll(r.Body)
-		if err != nil {
-			fmt.Println("error reading ",err)
-		}
-		if err := r.Body.Close(); err != nil {
-			fmt.Println("error body ",err)
-		}
-		if err := json.Unmarshal(body, &chunk); err != nil {
-			w.Header().Set("Content-Type", "application/json; charset=UTF-8")
-			w.WriteHeader(422) // unprocessable entity
-			log.Println(err)
-			if err := json.NewEncoder(w).Encode(err); err != nil {
-				fmt.Println("error unmarshalling ",err)
+			body, err := ioutil.ReadAll(r.Body)
+			if err != nil {
+				fmt.Println("error reading ", err)
 			}
-		}
+			if err := r.Body.Close(); err != nil {
+				fmt.Println("error body ", err)
+			}
+			if err := json.Unmarshal(body, &chunk); err != nil {
+				w.Header().Set("Content-Type", "application/json; charset=UTF-8")
+				w.WriteHeader(422) // unprocessable entity
+				log.Println(err)
+				if err := json.NewEncoder(w).Encode(err); err != nil {
+					fmt.Println("error unmarshalling ", err)
+				}
+			}
 
 
 
-		//go func(CurrentPart int,text []byte){
+			//go func(CurrentPart int,text []byte){
 			// Save chunk to file
-			err=ioutil.WriteFile(path+"/src/data/"+chunk.Hash+"/"+strconv.Itoa( nodeID)+"/NEW"+strconv.Itoa(chunk.Name),chunk.Text,0777)
+			err = ioutil.WriteFile(path + "/src/data/" + chunk.Hash + "/" + strconv.Itoa(nodeID) + "/NEW" + strconv.Itoa(chunk.Name), chunk.Text, 0777)
 			if err != nil {
 				fmt.Println("StorageNodeListen: error creating/writing file", err.Error())
 			}
-			 _, err = os.Stat(path+ "/src/data/"+chunk.Hash+"/"+strconv.Itoa( nodeID)+ "/NEW" + strconv.Itoa(chunk.Name))
-                        for err != nil {
-                                err = ioutil.WriteFile(path+"/src/data/"+chunk.Hash+"/"+strconv.Itoa( nodeID)+"/NEW"+strconv.Itoa(chunk.Name), chunk.Text, 0777)
-                                if err != nil {
-                                        fmt.Println("P2pRequest: Peer: error creating/writing file p2p", err.Error())
-                                }
-                                fmt.Println("for", chunk.Name)
-				_, err = os.Stat(path+ "/src/data/"+chunk.Hash+"/"+strconv.Itoa( nodeID)+ "/NEW" + strconv.Itoa(chunk.Name))
+			_, err = os.Stat(path + "/src/data/" + chunk.Hash + "/" + strconv.Itoa(nodeID) + "/NEW" + strconv.Itoa(chunk.Name))
+			for err != nil {
+				err = ioutil.WriteFile(path + "/src/data/" + chunk.Hash + "/" + strconv.Itoa(nodeID) + "/NEW" + strconv.Itoa(chunk.Name), chunk.Text, 0777)
+				if err != nil {
+					fmt.Println("P2pRequest: Peer: error creating/writing file p2p", err.Error())
+				}
+				fmt.Println("for", chunk.Name)
+				_, err = os.Stat(path + "/src/data/" + chunk.Hash + "/" + strconv.Itoa(nodeID) + "/NEW" + strconv.Itoa(chunk.Name))
 
 			}
 
-//			defer wg.Done()
-//		}(chunk.Name, chunk.Text)
+			//			defer wg.Done()
+			//		}(chunk.Name, chunk.Text)
 
-		httpVar.TrackerMutex.Lock()
-		httpVar.CurrentPart++
-		httpVar.TrackerMutex.Unlock()
+			httpVar.TrackerMutex.Lock()
+			httpVar.CurrentPart++
+			httpVar.TrackerMutex.Unlock()
 
-		if httpVar.CurrentPart == (totalPartsNum) {
-			fmt.Println("..........................................Peer0 END ....................................................", time.Since(start))
-		}
-		return
+			if httpVar.CurrentPart == (totalPartsNum) {
+				fmt.Println("..........................................Peer0 END ....................................................", time.Since(start))
+			}
+			listenWg.Done()
+			return
 
-		var wg sync.WaitGroup
-		wg.Add(len(chunk.NodeList)/*+1*/)
+			var wg sync.WaitGroup
+			wg.Add(len(chunk.NodeList)/*+1*/)
 
-		// Send chunk to peers
+			// Send chunk to peers
 			// sending only one chunk to the rest of peers once, don't need to use multiple addr per peer
-		var currentAddr int = rand.Intn(len(chunk.NodeList))
-		for _, peer :=range chunk.NodeList {
-			peerURL := "http://" + peer[currentAddr] + "/p2pRequest"
+			var currentAddr int = rand.Intn(len(chunk.NodeList))
+			for _, peer := range chunk.NodeList {
+				peerURL := "http://" + peer[currentAddr] + "/p2pRequest"
 
-			go func(p []string, URL string) {
-				if  nodeID == int(p[0][len(p)-1]-'0'){	// Don't send to itself
+				go func(p []string, URL string) {
+					if nodeID == int(p[0][len(p) - 1] - '0') {
+						// Don't send to itself
 
-				}else {
-					rpipe, wpipe :=io.Pipe() // create pipe
-					go func(){
-						err:=json.NewEncoder(wpipe).Encode(&chunk)
-						wpipe.Close()			// close pipe when go routine finishes
+					} else {
+						rpipe, wpipe := io.Pipe() // create pipe
+						go func() {
+							err := json.NewEncoder(wpipe).Encode(&chunk)
+							wpipe.Close()                        // close pipe when go routine finishes
+							if err != nil {
+								fmt.Println("Error encoding to pipe ", err.Error())
+							}
+						}()
+						//httpVar.SendMutex.Lock()
+						httpVar.SendReady <- 1
+						_, err := http.Post(peerURL, "application/json", rpipe)
+						<-httpVar.SendReady
+						//httpVar.SendMutex.Unlock()
 						if err != nil {
-							fmt.Println("Error encoding to pipe ", err.Error())
+							fmt.Println("Error sending http POST p2p", err.Error())
 						}
-					}()
-					//httpVar.SendMutex.Lock()
-					httpVar.SendReady <- 1
-					_, err := http.Post(peerURL, "application/json", rpipe)
-					<- httpVar.SendReady
-					//httpVar.SendMutex.Unlock()
-					if err != nil {
-						fmt.Println("Error sending http POST p2p", err.Error())
 					}
-				}
 
-				defer wg.Done()
-			}(peer, peerURL)
+					defer wg.Done()
+				}(peer, peerURL)
+			}
+			wg.Wait()
+			fmt.Println("SNL: ", httpVar.CurrentPart, " ", chunk.Name, " ", r.URL)
+			if httpVar.CurrentPart == (totalPartsNum) {
+				fmt.Println("..........................................Peer END ....................................................", time.Since(start))
+			}
 		}
-		wg.Wait()
-		fmt.Println("SNL: ",httpVar.CurrentPart, " ", chunk.Name," ", r.URL)
-		if httpVar.CurrentPart == (totalPartsNum) {
-			fmt.Println("..........................................Peer END ....................................................", time.Since(start))
-		}
-	}
-
-
+		//listenWg.Done()
+	}()
+	listenWg.Wait()
 
 }
 
