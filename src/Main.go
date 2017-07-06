@@ -2,7 +2,7 @@ package main
 
 import (
 	"os"
-	//"time"
+	"time"
 	"github.com/alruiz12/simpleBT/src/httpGo"
 	"net/http"
 	"fmt"
@@ -56,7 +56,7 @@ func main() {
 	var proxy5 = IP+":8074"
 	*/
 
-	//var ProxyAddr=[]string{proxy1,proxy2,proxy3/*,proxy4,proxy5*/}
+	var ProxyAddr=[]string{proxy1,proxy2,proxy3/*,proxy4,proxy5*/}
 
 
 
@@ -66,13 +66,13 @@ func main() {
 	routerPeer := httpGo.MyNewRouter()
 
 	go func(){
-		//httpGo.Put(filePath, trackerAddr, 3)
+		httpGo.Put(filePath, trackerAddr, 3)
 
-		//time.Sleep(5*time.Second)
+		time.Sleep(5*time.Second)
 
-		//httpGo.Get("0527cbea2805d89c6d5d6457b7f9f77c",ProxyAddr, trackerAddr)
+		httpGo.Get("0527cbea2805d89c6d5d6457b7f9f77c",ProxyAddr, trackerAddr)
 		
-		//time.Sleep(45*time.Second)
+		time.Sleep(45*time.Second)
 		
 		fmt.Println(httpGo.CheckPieces("0527cbea2805d89c6d5d6457b7f9f77c","NEW.xml",filePath))
 

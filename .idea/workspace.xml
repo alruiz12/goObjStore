@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="8e47a50e-bf29-44c1-8c05-f500e1510716" name="Default" comment="">
-      <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/Main.go" afterPath="$PROJECT_DIR$/src/Main.go" />
     </list>
     <option name="TRACKING_ENABLED" value="true" />
@@ -35,9 +35,11 @@
           <file leaf-file-name="Main.go" pinned="false" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/src/Main.go">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="72">
-                  <caret line="4" column="10" lean-forward="false" selection-start-line="4" selection-start-column="10" selection-end-line="4" selection-end-column="10" />
-                  <folding />
+                <state relative-caret-position="831">
+                  <caret line="68" column="16" lean-forward="false" selection-start-line="68" selection-start-column="16" selection-end-line="68" selection-end-column="16" />
+                  <folding>
+                    <element signature="e#14#101#0" expanded="true" />
+                  </folding>
                 </state>
               </provider>
             </entry>
@@ -235,6 +237,9 @@
       <pane id="Scope" />
       <pane id="Scratches" />
     </panes>
+  </component>
+  <component name="PropertiesComponent">
+    <property name="GO_FMT" value="false" />
   </component>
   <component name="RunManager" selected="Go Application.Build Main.go and run">
     <configuration default="false" name="Build Main.go and run" type="GoApplicationRunConfiguration" factoryName="Go Application" temporary="true">
@@ -675,11 +680,18 @@
       <option name="project" value="LOCAL" />
       <updated>1499366888409</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="trying to use checkPieces for data/? + Main.go">
+      <created>1499367775048</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1499367775048</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="1659000" />
+    <option name="totallyTimeSpent" value="2379000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="65" y="24" width="2495" height="1056" extended-state="6" />
@@ -740,7 +752,8 @@
     <MESSAGE value="trying to optimize RAM memory, observing until p2p, goRoutine in whole StorageNodeListen" />
     <MESSAGE value="trying to optimize RAM memory, SendReady for Proxy" />
     <MESSAGE value="trying to use checkPieces for data/?" />
-    <option name="LAST_COMMIT_MESSAGE" value="trying to use checkPieces for data/?" />
+    <MESSAGE value="trying to use checkPieces for data/? + Main.go" />
+    <option name="LAST_COMMIT_MESSAGE" value="trying to use checkPieces for data/? + Main.go" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager />
@@ -759,7 +772,9 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="1332">
           <caret line="74" column="41" lean-forward="false" selection-start-line="74" selection-start-column="41" selection-end-line="74" selection-end-column="41" />
-          <folding />
+          <folding>
+            <element signature="e#14#101#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -823,7 +838,9 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="270">
           <caret line="15" column="0" lean-forward="false" selection-start-line="15" selection-start-column="0" selection-end-line="15" selection-end-column="0" />
-          <folding />
+          <folding>
+            <element signature="e#14#101#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -880,7 +897,9 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="162">
           <caret line="15" column="0" lean-forward="false" selection-start-line="15" selection-start-column="0" selection-end-line="15" selection-end-column="0" />
-          <folding />
+          <folding>
+            <element signature="e#14#101#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -1085,9 +1104,11 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/Main.go">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="72">
-          <caret line="4" column="10" lean-forward="false" selection-start-line="4" selection-start-column="10" selection-end-line="4" selection-end-column="10" />
-          <folding />
+        <state relative-caret-position="831">
+          <caret line="68" column="16" lean-forward="false" selection-start-line="68" selection-start-column="16" selection-end-line="68" selection-end-column="16" />
+          <folding>
+            <element signature="e#14#101#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
