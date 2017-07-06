@@ -16,7 +16,7 @@ import(
 	"math/rand"
 
 )
-const path = (os.Getenv("GOPATH")+"/src/github.com/alruiz12/simpleBT")
+var path = (os.Getenv("GOPATH")+"/src/github.com/alruiz12/simpleBT")
 //var chunk msg
 var hashRecived hashMsg
 func prepNode(w http.ResponseWriter, r *http.Request){

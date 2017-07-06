@@ -165,6 +165,7 @@ func Put(filePath string, trackerAddr string, numNodes int) {
 		}
 		fmt.Println("..........................................Proxy END ....................................................")
 		wg.Wait()
+		putWg.Done()
 	}()
 	fmt.Println("Waiting for PUT Wg")
 	putWg.Wait()
