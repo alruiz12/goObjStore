@@ -72,11 +72,6 @@ func StorageNodeListen(w http.ResponseWriter, r *http.Request){
 		// Listen to tracker
 		if r.Method == http.MethodPost {
 			
-
-                        httpVar.TrackerMutex.Lock()
-                        httpVar.CurrentPart++
-                        httpVar.TrackerMutex.Unlock()
-
                         var wg sync.WaitGroup
 
 
@@ -155,10 +150,13 @@ func StorageNodeListen(w http.ResponseWriter, r *http.Request){
 			}
 			wg.Wait()
 			chunk=msg{}
-			fmt.Println("SNL: ", httpVar.CurrentPart, " ", chunk.Name, " ", r.URL)
+		 	httpVar.TrackerMutex.Lock()
+                        httpVar.CurrentPart++
+
 			if httpVar.CurrentPart == (totalPartsNum) {
-				fmt.Println("..........................................Peer END ....................................................", time.Since(start))
+				fmt.Println("Proxy data ended ...", time.Since(start), " currentPart= ",httpVar.CurrentPart)
 			}
+                        httpVar.TrackerMutex.Unlock()
 		}
 		listenWg.Done()
 	}()
@@ -209,7 +207,7 @@ func p2pRequest(w http.ResponseWriter, r *http.Request) {
 		}
 		httpVar.DirMutex.Unlock()
 		if httpVar.P2pPart >= (totalPartsNum*(chunk.Num-1))-1 {
-			fmt.Println("p2p: ",time.Since(start))
+			fmt.Println("p2p data ended: ",time.Since(start))
 			fmt.Println("..........................................p2p END ....................................................",httpVar.P2pPart)
 			return
 		}
@@ -293,7 +291,8 @@ func sendChunksToProxy(nodeID string, key string, URL string){
 			}
 		}
 
+		//return nil
 		return nil
-
 	})
+	
 }

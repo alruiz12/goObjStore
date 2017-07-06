@@ -17,7 +17,7 @@ import (
 	"github.com/alruiz12/simpleBT/src/httpVar"
 	"strings"
 	"sync"
-	"math/rand"
+//	"math/rand"
 )
 
 //const fileChunk = 1*(1<<10) // 1 KB
@@ -149,7 +149,6 @@ func Put(filePath string, trackerAddr string, numNodes int) {
 					defer w.Close()                        // close pipe //when go routine finishes
 				}()
 				_, err := http.Post(url, "application/json", r)
-				fmt.Println(url, " ", m2.Name)
 				if err != nil {
 					fmt.Println("Error sending http POST ", err.Error())
 				}
@@ -165,13 +164,12 @@ func Put(filePath string, trackerAddr string, numNodes int) {
 				currentAdr = (currentAdr + 1) % len(nodeList[currentNum])
 			}
 		}
-		fmt.Println("..........................................Proxy END ....................................................")
 		wg.Wait()
 		putWg.Done()
 	}()
-	fmt.Println("Waiting for PUT Wg")
+	fmt.Println("Proxy free, goroutines running")
 	putWg.Wait()
-	fmt.Println("PUT WaitGroup waited!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
+	fmt.Println("Proxy's routines finished")
 }
 
 
@@ -206,7 +204,7 @@ type jsonKeyURL struct {
 
 func Get(Key string, proxyAddr []string, trackerAddr string){
 	time.Sleep(1 * time.Second)
-	var chunk msg
+//	var chunk msg
 	// Ask tracker for nodes
 	startGet=time.Now()
 	var err error
@@ -241,7 +239,8 @@ func Get(Key string, proxyAddr []string, trackerAddr string){
 	os.Mkdir(os.Getenv("GOPATH")+"/src/github.com/alruiz12/simpleBT/src/local",+0777)
 	os.Mkdir(os.Getenv("GOPATH")+"/src/github.com/alruiz12/simpleBT/src/local/"+Key,0777)
 
-	var currentAddr int = rand.Intn(len(chunk.NodeList))
+	//var currentAddr int = rand.Intn(len(chunk.NodeList)) @Todo
+	var currentAddr int = 0
 	// For each node ask for all their Proxy-pieces
 	for index, node := range nodeList {
 		r, w :=io.Pipe()			// create pipe
@@ -301,7 +300,6 @@ func ReturnData(w http.ResponseWriter, r *http.Request){
 //		httpVar.GetMutex.Lock()
 //		numGets++
 //		httpVar.GetMutex.Unlock()
-		fmt.Println(numGets)
 		if numGets==totalPartsNum{
 			fmt.Println("GET: ",time.Since(startGet))
 		}
@@ -317,8 +315,23 @@ and compares the new hash with the original one.
 @param path to the file we want to split
 Returns true if both hash are identic and false if not
 */
-func CheckPieces(key string ,fileName string) bool{
+func CheckPieces(key string ,fileName string, filePath string) bool{
+	 file, err := os.Open(filePath)
+                if err != nil {
+                        fmt.Println(err.Error())
+                        panic(err)
+                }
+                defer file.Close()
+                fileInfo, _ := file.Stat()
+                text := strconv.FormatInt(fileInfo.Size(), 10)        // size
+                size, _ := strconv.Atoi(text)
+                if err != nil {
+                        fmt.Println(err.Error())
+                        return false
+                }
+                totalPartsNumOriginal := int(math.Ceil(float64(size) / float64(fileChunk)))
 
+	
 	// Subfiles directory
 	path:=os.Getenv("GOPATH")+"/src/github.com/alruiz12/simpleBT/src/local/"+key+"/"
 	files, err := ioutil.ReadDir(path)
@@ -341,9 +354,10 @@ func CheckPieces(key string ,fileName string) bool{
 	// Trying to fill out the new file using subfiles (in order)
 	var inOrderCount = 0
 	var maxTimes int = 0
-	for inOrderCount<totalPartsNum {
+	var fileNameOriginal= fileName[:len(fileName)-4]
+	for inOrderCount<totalPartsNumOriginal {
 		for _, file := range files {
-			if strings.Compare(file.Name(), fileName + strconv.Itoa(inOrderCount) + "_") == 0 {
+			if strings.Compare(file.Name(), fileNameOriginal + strconv.Itoa(inOrderCount)) == 0 {
 				inOrderCount++
 
 				currentFile, err := os.Open(path + file.Name())
@@ -368,13 +382,14 @@ func CheckPieces(key string ,fileName string) bool{
 			maxTimes++
 		}
 		if maxTimes > 1 {
+			fmt.Println("maxTimes > 1 when looking for ", fileNameOriginal + strconv.Itoa(inOrderCount))
 			return false
 		}
 	}
 
 	// Compute and compare new hash
 	newHash := md5sum(os.Getenv("GOPATH") + "/src/github.com/alruiz12/simpleBT/src" + fileName)
-	fmt.Println(newHash + ", dir: ")
+	fmt.Println(newHash)
 	if strings.Compare(key, newHash) != 0 {
 		return false
 	}

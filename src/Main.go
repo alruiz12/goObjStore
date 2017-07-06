@@ -48,15 +48,15 @@ func main() {
 	var Peers =[][]string{peer1List, peer2List, peer3List/*, peer4List, peer5List*/}
 
 	// PROXY
-//	var proxy1 = IP+":8070"
-//	var proxy2 = IP+":8071"
-//	var proxy3 = IP+":8072"
+	var proxy1 = IP+":8070"
+	var proxy2 = IP+":8071"
+	var proxy3 = IP+":8072"
 	/*
 	var proxy4 = IP+":8073"
 	var proxy5 = IP+":8074"
 	*/
 
-//	var ProxyAddr=[]string{proxy1,proxy2,proxy3/*,proxy4,proxy5*/}
+	var ProxyAddr=[]string{proxy1,proxy2,proxy3/*,proxy4,proxy5*/}
 
 
 
@@ -70,9 +70,11 @@ func main() {
 
 		time.Sleep(5*time.Second)
 
-	//	httpGo.Get("0527cbea2805d89c6d5d6457b7f9f77c",ProxyAddr, trackerAddr)
-
-		fmt.Println(httpGo.CheckPieces("0527cbea2805d89c6d5d6457b7f9f77c","NEW"))
+		httpGo.Get("0527cbea2805d89c6d5d6457b7f9f77c",ProxyAddr, trackerAddr)
+		
+		time.Sleep(45*time.Second)
+		
+		fmt.Println(httpGo.CheckPieces("0527cbea2805d89c6d5d6457b7f9f77c","NEW.xml",filePath))
 
 	}()
 	go func(){http.ListenAndServe(Peer1a, routerPeer)}()
@@ -88,9 +90,9 @@ func main() {
 	go func(){http.ListenAndServe(Peer3c, routerPeer)}()
 
 
-//	go func(){http.ListenAndServe(proxy1, routerPeer)}()
-//	go func(){http.ListenAndServe(proxy2, routerPeer)}()
-//	go func(){http.ListenAndServe(proxy3, routerPeer)}()
+	go func(){http.ListenAndServe(proxy1, routerPeer)}()
+	go func(){http.ListenAndServe(proxy2, routerPeer)}()
+	go func(){http.ListenAndServe(proxy3, routerPeer)}()
 
 
 
