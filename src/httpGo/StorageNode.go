@@ -117,8 +117,8 @@ func StorageNodeListen(w http.ResponseWriter, r *http.Request){
 			if httpVar.CurrentPart == (totalPartsNum) {
 				fmt.Println("..........................................Peer0 END ....................................................", time.Since(start))
 			}
-			listenWg.Done()
-			return
+			//listenWg.Done()
+			//return
 
 			var wg sync.WaitGroup
 			wg.Add(len(chunk.NodeList)/*+1*/)
@@ -143,9 +143,9 @@ func StorageNodeListen(w http.ResponseWriter, r *http.Request){
 							}
 						}()
 						//httpVar.SendMutex.Lock()
-						httpVar.SendReady <- 1
+						httpVar.SendP2PReady <- 1
 						_, err := http.Post(peerURL, "application/json", rpipe)
-						<-httpVar.SendReady
+						<-httpVar.SendP2PReady
 						//httpVar.SendMutex.Unlock()
 						if err != nil {
 							fmt.Println("Error sending http POST p2p", err.Error())
@@ -161,7 +161,7 @@ func StorageNodeListen(w http.ResponseWriter, r *http.Request){
 				fmt.Println("..........................................Peer END ....................................................", time.Since(start))
 			}
 		}
-		//listenWg.Done()
+		listenWg.Done()
 	}()
 	listenWg.Wait()
 

@@ -136,8 +136,11 @@ func Put(filePath string, trackerAddr string, numNodes int) {
 			partBuffer = make([]byte, partSize)
 			_, err = file.Read(partBuffer)                // Get chunk
 			m := msg{NodeList:nodeList, Num:numNodes, Hash:hash, Text:partBuffer, CurrentNode:currentNum, Name: currentPart}
-			//r, w :=io.Pipe()			// create pipe
+			//r, w :=io.Pipe()
+			// create pipe
+
 			go func(m2 msg, url string) {
+				httpVar.SendReady <- 1
 				r, w := io.Pipe()
 				go func() {
 					// save buffer to object
@@ -153,6 +156,7 @@ func Put(filePath string, trackerAddr string, numNodes int) {
 					fmt.Println("Error sending http POST ", err.Error())
 				}
 				defer wg.Done()
+				<- httpVar.SendReady
 			}(m, "http://" + nodeList[currentNum][currentAdr] + "/StorageNodeListen")
 
 			currentPart++

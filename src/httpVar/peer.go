@@ -8,7 +8,7 @@ var PeerMutex = &sync.Mutex{}
 var SendMutex = &sync.Mutex{}
 var DirMutex = &sync.Mutex{}
 var GetMutex = &sync.Mutex{}
-var WFileMutex = &sync.Mutex{}
+var = &sync.Mutex{}
 
 var HashMap = make(map[string][]bool)
 
@@ -21,4 +21,5 @@ var TrackerNodeList []NodeInfo
 
 var MapKeyNodes = make(map[string][][]string)
 var ProxyAddr []string
-var SendReady = make(chan int, 4444)
+var SendP2PReady = make(chan int, 100)
+var SendReady = make(chan int, 150)
