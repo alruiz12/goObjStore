@@ -16,7 +16,7 @@ import(
 	"math/rand"
 
 )
-var path = (os.Getenv("GOPATH")+"/src/github.com/alruiz12/simpleBT")
+const path = (os.Getenv("GOPATH")+"/src/github.com/alruiz12/simpleBT")
 //var chunk msg
 var hashRecived hashMsg
 func prepNode(w http.ResponseWriter, r *http.Request){
@@ -85,8 +85,7 @@ func StorageNodeListen(w http.ResponseWriter, r *http.Request){
 			}
 		}
 
-		 var wg sync.WaitGroup
-                wg.Add(len(chunk.NodeList)/*+1*/)
+
 
 		//go func(CurrentPart int,text []byte){
 			// Save chunk to file
@@ -111,6 +110,14 @@ func StorageNodeListen(w http.ResponseWriter, r *http.Request){
 		httpVar.TrackerMutex.Lock()
 		httpVar.CurrentPart++
 		httpVar.TrackerMutex.Unlock()
+
+		if httpVar.CurrentPart == (totalPartsNum) {
+			fmt.Println("..........................................Peer0 END ....................................................", time.Since(start))
+		}
+		return
+
+		var wg sync.WaitGroup
+		wg.Add(len(chunk.NodeList)/*+1*/)
 
 		// Send chunk to peers
 			// sending only one chunk to the rest of peers once, don't need to use multiple addr per peer

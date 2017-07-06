@@ -39,131 +39,136 @@ var start time.Time
 var startGet time.Time
 var numGets int = 0
 func Put(filePath string, trackerAddr string, numNodes int) {
-	time.Sleep(1 * time.Second)
-	start = time.Now()
-	var hash string = md5sum(filePath)
-	var err error
+	var putWg sync.WaitGroup
+	putWg.Add(1)
+	go func() {
+		time.Sleep(1 * time.Second)
+		start = time.Now()
+		var hash string = md5sum(filePath)
+		var err error
 
-	// Aask tracker for nodes
-	quantityJson := `{"Quantity":"` + strconv.Itoa(numNodes) + `","Hash":"` + hash + `"}`
-	reader := strings.NewReader(quantityJson)
-	trackerURL := "http://" + trackerAddr + "/GetNodes"
-	request, err := http.NewRequest("GET", trackerURL, reader)
-	if err != nil {
-		fmt.Println("Put: error creating request: ", err.Error())
-	}
-	res, err := http.DefaultClient.Do(request)
-	if err != nil {
-		fmt.Println("Put: error sending request: ", err.Error())
-	}
-	body, err := ioutil.ReadAll(io.LimitReader(res.Body, 1048576))
-	if err != nil {
-		panic(err)
-	}
-	if err := res.Body.Close(); err != nil {
-		panic(err)
-	}
-	var nodeList [][]string		// Todo: MODIFY FROM HERE <--------------------------------------------
-	if err := json.Unmarshal(body, &nodeList); err != nil {
-		fmt.Println("Put: error unprocessable entity: ", err.Error())
-		return
-	}
-	if err != nil {
-		fmt.Println("Put: error reciving response: ", err.Error())
-	}
-	var currentPart int = 0
-	var partSize int
-	var currentNum int = 0
-	var partBuffer []byte
-	var writer *multipart.Writer
-	var buf bytes.Buffer
-	_, _ = writer, buf // avoiding declared but not used
-
-	var auxList []bool
-	var i int = 0
-	for i < numNodes {
-		auxList = append(auxList, false)
-		i++
-	}
-	httpVar.DirMutex.Lock()
-	httpVar.HashMap[hash] = auxList
-	httpVar.DirMutex.Unlock()
-	// Open file
-	file, err := os.Open(filePath)
-	if err != nil {
-		fmt.Println(err.Error())
-		panic(err)
-	}
-	defer file.Close()
-	fileInfo, _ := file.Stat()
-	text := strconv.FormatInt(fileInfo.Size(), 10)        // size
-	size, _ := strconv.Atoi(text)
-	if err != nil {
-		fmt.Println(err.Error())
-		return
-	}
-	totalPartsNum = int(math.Ceil(float64(size) / float64(fileChunk)))
-	var currentAdr int = 0
-
-	for currentNum < numNodes {
-		rpipe, wpipe :=io.Pipe()
-		mHash:=hashMsg{Hash:hash}
-		go func() {
-			// save buffer to object
-			err = json.NewEncoder(wpipe).Encode(mHash)
-			if err != nil {
-				fmt.Println("Error encoding to pipe ", err.Error())
-			}
-			defer wpipe.Close()                     // close pipe //when go routine finishes
-		}()
-
-		// Prepare node for content
-		_, err = http.Post("http://" + nodeList[currentNum][currentAdr] + "/prepNode", "application/json", rpipe)
+		// Aask tracker for nodes
+		quantityJson := `{"Quantity":"` + strconv.Itoa(numNodes) + `","Hash":"` + hash + `"}`
+		reader := strings.NewReader(quantityJson)
+		trackerURL := "http://" + trackerAddr + "/GetNodes"
+		request, err := http.NewRequest("GET", trackerURL, reader)
 		if err != nil {
-			fmt.Println("to prepNode, Error sending http POST ", err.Error())
+			fmt.Println("Put: error creating request: ", err.Error())
 		}
-		currentNum++
-	}
-	currentNum=0
-	//return
-	var wg sync.WaitGroup
-	wg.Add(totalPartsNum)
-	for currentPart<totalPartsNum{
-		partSize=int(math.Min(fileChunk, float64(size-(currentPart*fileChunk))))
-		partBuffer=make([]byte,partSize)
-		_,err = file.Read(partBuffer)		// Get chunk
-		m:=msg{NodeList:nodeList, Num:numNodes, Hash:hash, Text:partBuffer, CurrentNode:currentNum, Name: currentPart}
-		//r, w :=io.Pipe()			// create pipe
-		go func(m2 msg, url string) {
-			r, w := io.Pipe()
+		res, err := http.DefaultClient.Do(request)
+		if err != nil {
+			fmt.Println("Put: error sending request: ", err.Error())
+		}
+		body, err := ioutil.ReadAll(io.LimitReader(res.Body, 1048576))
+		if err != nil {
+			panic(err)
+		}
+		if err := res.Body.Close(); err != nil {
+			panic(err)
+		}
+		var nodeList [][]string
+		if err := json.Unmarshal(body, &nodeList); err != nil {
+			fmt.Println("Put: error unprocessable entity: ", err.Error())
+			return
+		}
+		if err != nil {
+			fmt.Println("Put: error reciving response: ", err.Error())
+		}
+		var currentPart int = 0
+		var partSize int
+		var currentNum int = 0
+		var partBuffer []byte
+		var writer *multipart.Writer
+		var buf bytes.Buffer
+		_, _ = writer, buf // avoiding declared but not used
+
+		var auxList []bool
+		var i int = 0
+		for i < numNodes {
+			auxList = append(auxList, false)
+			i++
+		}
+		httpVar.DirMutex.Lock()
+		httpVar.HashMap[hash] = auxList
+		httpVar.DirMutex.Unlock()
+		// Open file
+		file, err := os.Open(filePath)
+		if err != nil {
+			fmt.Println(err.Error())
+			panic(err)
+		}
+		defer file.Close()
+		fileInfo, _ := file.Stat()
+		text := strconv.FormatInt(fileInfo.Size(), 10)        // size
+		size, _ := strconv.Atoi(text)
+		if err != nil {
+			fmt.Println(err.Error())
+			return
+		}
+		totalPartsNum = int(math.Ceil(float64(size) / float64(fileChunk)))
+		var currentAdr int = 0
+
+		for currentNum < numNodes {
+			rpipe, wpipe := io.Pipe()
+			mHash := hashMsg{Hash:hash}
 			go func() {
 				// save buffer to object
-				err = json.NewEncoder(w).Encode(m2)
+				err = json.NewEncoder(wpipe).Encode(mHash)
 				if err != nil {
 					fmt.Println("Error encoding to pipe ", err.Error())
 				}
-				defer w.Close()			// close pipe //when go routine finishes
+				defer wpipe.Close()                     // close pipe //when go routine finishes
 			}()
-			_, err := http.Post(url, "application/json", r )
-			fmt.Println(url, " ", m2.Name)
+
+			// Prepare node for content
+			_, err = http.Post("http://" + nodeList[currentNum][currentAdr] + "/prepNode", "application/json", rpipe)
 			if err != nil {
-				fmt.Println("Error sending http POST ", err.Error())
+				fmt.Println("to prepNode, Error sending http POST ", err.Error())
 			}
-			defer wg.Done()
-		}(m, "http://"+nodeList[currentNum][currentAdr] + "/StorageNodeListen")
-
-
-		currentPart++
-		currentNum=(currentNum+1)%numNodes
-
-		// Every 'numNodes' iterations, send chunk to next address, first send to different nodes, then change address
-		if currentNum==0 {
-			currentAdr = (currentAdr+1) % len(nodeList[currentNum])
+			currentNum++
 		}
-	}
-	fmt.Println("..........................................Proxy END ....................................................")
-	wg.Wait()
-	fmt.Println("WaitGroup waited!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
+		currentNum = 0
+		//return
+		var wg sync.WaitGroup
+		wg.Add(totalPartsNum)
+		for currentPart < totalPartsNum {
+			partSize = int(math.Min(fileChunk, float64(size - (currentPart * fileChunk))))
+			partBuffer = make([]byte, partSize)
+			_, err = file.Read(partBuffer)                // Get chunk
+			m := msg{NodeList:nodeList, Num:numNodes, Hash:hash, Text:partBuffer, CurrentNode:currentNum, Name: currentPart}
+			//r, w :=io.Pipe()			// create pipe
+			go func(m2 msg, url string) {
+				r, w := io.Pipe()
+				go func() {
+					// save buffer to object
+					err = json.NewEncoder(w).Encode(m2)
+					if err != nil {
+						fmt.Println("Error encoding to pipe ", err.Error())
+					}
+					defer w.Close()                        // close pipe //when go routine finishes
+				}()
+				_, err := http.Post(url, "application/json", r)
+				fmt.Println(url, " ", m2.Name)
+				if err != nil {
+					fmt.Println("Error sending http POST ", err.Error())
+				}
+				defer wg.Done()
+			}(m, "http://" + nodeList[currentNum][currentAdr] + "/StorageNodeListen")
+
+			currentPart++
+			currentNum = (currentNum + 1) % numNodes
+
+			// Every 'numNodes' iterations, send chunk to next address, first send to different nodes, then change address
+			if currentNum == 0 {
+				currentAdr = (currentAdr + 1) % len(nodeList[currentNum])
+			}
+		}
+		fmt.Println("..........................................Proxy END ....................................................")
+		wg.Wait()
+	}()
+	fmt.Println("Waiting for PUT Wg")
+	putWg.Wait()
+	fmt.Println("PUT WaitGroup waited!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
 }
 
 

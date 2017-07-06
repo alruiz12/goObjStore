@@ -2,7 +2,46 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="8e47a50e-bf29-44c1-8c05-f500e1510716" name="Default" comment="">
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/bigFile" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/chunksToSend/DoNotDelete" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/chunksToSend/newFile_0_" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/chunksToSend/newFile_10_" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/chunksToSend/newFile_11_" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/chunksToSend/newFile_12_" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/chunksToSend/newFile_13_" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/chunksToSend/newFile_14_" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/chunksToSend/newFile_1_" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/chunksToSend/newFile_2_" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/chunksToSend/newFile_3_" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/chunksToSend/newFile_4_" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/chunksToSend/newFile_5_" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/chunksToSend/newFile_6_" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/chunksToSend/newFile_7_" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/chunksToSend/newFile_8_" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/chunksToSend/newFile_9_" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/conf/FileOp2_test.go" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/conf/FileOperations.go" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/conf/Peer_Handlers.go" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/conf/Routes.go" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/conf/Tracker_Handlers.go" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/conf/Tracker_repo.go" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/conf/announce_test.go" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/conf/conf_test.go" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/conf/fileOp_test.go" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/conf/torrent1" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/conf/uploadedFile" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/tcp/Peer2.go" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/tcp/Tracker2.go" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/uploadedFiles/torrent1" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/uploadedFiles/uploadedFile" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/vars/Announcement.go" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/vars/Peer.go" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/vars/Torrent.go" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/vars/Tracker.go" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/vars/common.go" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/vars/tcpTracker.go" afterPath="" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/httpGo/Proxy.go" afterPath="$PROJECT_DIR$/src/httpGo/Proxy.go" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/httpGo/StorageNode.go" afterPath="$PROJECT_DIR$/src/httpGo/StorageNode.go" />
     </list>
     <ignored path="$PROJECT_DIR$/out/" />
@@ -21,7 +60,7 @@
   </component>
   <component name="ExecutionTargetManager" SELECTED_TARGET="default_target" />
   <component name="FileEditorManager">
-    <splitter split-orientation="horizontal" split-proportion="0.43286574">
+    <splitter split-orientation="horizontal" split-proportion="0.49178356">
       <split-first>
         <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
           <file leaf-file-name="peer.go" pinned="false" current-in-tab="false">
@@ -37,7 +76,7 @@
           <file leaf-file-name="Main.go" pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/src/Main.go">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="1206">
+                <state relative-caret-position="561">
                   <caret line="74" column="41" lean-forward="false" selection-start-line="74" selection-start-column="41" selection-end-line="74" selection-end-column="41" />
                   <folding>
                     <element signature="e#14#101#0" expanded="true" />
@@ -52,7 +91,7 @@
                 <state relative-caret-position="2358">
                   <caret line="146" column="68" lean-forward="false" selection-start-line="146" selection-start-column="68" selection-end-line="146" selection-end-column="68" />
                   <folding>
-                    <marker date="1499189560108" expanded="true" signature="2173:2223" ph="{...}" />
+                    <marker date="1499328284688" expanded="true" signature="2173:2223" ph="{...}" />
                   </folding>
                 </state>
               </provider>
@@ -61,11 +100,21 @@
           <file leaf-file-name="Proxy.go" pinned="false" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/src/httpGo/Proxy.go">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="3403">
-                  <caret line="310" column="5" lean-forward="false" selection-start-line="310" selection-start-column="5" selection-end-line="310" selection-end-column="5" />
+                <state relative-caret-position="1054">
+                  <caret line="168" column="39" lean-forward="false" selection-start-line="168" selection-start-column="39" selection-end-line="168" selection-end-column="39" />
                   <folding>
                     <element signature="e#16#247#0" expanded="true" />
                   </folding>
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file leaf-file-name="SNodeNoP2p.go" pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/src/httpGo/SNodeNoP2p.go">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="72">
+                  <caret line="15" column="0" lean-forward="false" selection-start-line="15" selection-start-column="0" selection-end-line="15" selection-end-column="0" />
+                  <folding />
                 </state>
               </provider>
             </entry>
@@ -99,8 +148,8 @@
           <file leaf-file-name="StorageNode.go" pinned="false" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/src/httpGo/StorageNode.go">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="560">
-                  <caret line="104" column="0" lean-forward="true" selection-start-line="104" selection-start-column="0" selection-end-line="104" selection-end-column="0" />
+                <state relative-caret-position="324">
+                  <caret line="114" column="84" lean-forward="false" selection-start-line="114" selection-start-column="84" selection-end-line="114" selection-end-column="84" />
                   <folding>
                     <element signature="e#15#205#0" expanded="true" />
                   </folding>
@@ -145,6 +194,7 @@
         <option value="$PROJECT_DIR$/src/httpVar/peer.go" />
         <option value="$PROJECT_DIR$/src/httpGo/Tracker.go" />
         <option value="$PROJECT_DIR$/src/httpGo/ProxyNop2p.go" />
+        <option value="$PROJECT_DIR$/src/httpGo/SNodeNoP2p.go" />
         <option value="$PROJECT_DIR$/src/httpGo/Proxy.go" />
         <option value="$PROJECT_DIR$/src/httpGo/StorageNode.go" />
       </list>
@@ -239,29 +289,11 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="simpleBT" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="simpleBT" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="conf" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
         </subPane>
       </pane>
       <pane id="PackagesPane" />
-      <pane id="Scratches" />
       <pane id="Scope" />
+      <pane id="Scratches" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -714,7 +746,7 @@
       <workItem from="1497811447546" duration="27830000" />
       <workItem from="1498431885619" duration="2573000" />
       <workItem from="1498437368037" duration="37842000" />
-      <workItem from="1499189658683" duration="1493000" />
+      <workItem from="1499189658683" duration="11004000" />
     </task>
     <task id="LOCAL-00001" summary="EC2 from local machine">
       <created>1497808757959</created>
@@ -828,7 +860,14 @@
       <option name="project" value="LOCAL" />
       <updated>1499101558607</updated>
     </task>
-    <option name="localTasksCounter" value="17" />
+    <task id="LOCAL-00017" summary="os.Stat in for">
+      <created>1499244220215</created>
+      <option name="number" value="00017" />
+      <option name="presentableId" value="LOCAL-00017" />
+      <option name="project" value="LOCAL" />
+      <updated>1499244220215</updated>
+    </task>
+    <option name="localTasksCounter" value="18" />
     <servers />
   </component>
   <component name="TestHistory">
@@ -864,7 +903,7 @@
     </history-entry>
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="70149000" />
+    <option name="totallyTimeSpent" value="79660000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="65" y="24" width="2495" height="1056" extended-state="6" />
@@ -923,7 +962,8 @@
     <MESSAGE value="StorageNode with multiple addresses in process" />
     <MESSAGE value="StorageNode with multiple addresses in process, compiles" />
     <MESSAGE value="StorageNode with multiple addresses in process, compiles 2" />
-    <option name="LAST_COMMIT_MESSAGE" value="StorageNode with multiple addresses in process, compiles 2" />
+    <MESSAGE value="os.Stat in for" />
+    <option name="LAST_COMMIT_MESSAGE" value="os.Stat in for" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager />
@@ -953,7 +993,7 @@
         <state relative-caret-position="2358">
           <caret line="146" column="68" lean-forward="false" selection-start-line="146" selection-start-column="68" selection-end-line="146" selection-end-column="68" />
           <folding>
-            <marker date="1499189560108" expanded="true" signature="2173:2223" ph="{...}" />
+            <marker date="1499328284688" expanded="true" signature="2173:2223" ph="{...}" />
           </folding>
         </state>
       </provider>
@@ -1127,14 +1167,6 @@
     <entry file="file://$PROJECT_DIR$/src/data/0527cbea2805d89c6d5d6457b7f9f77c/1/NEW288" />
     <entry file="file://$PROJECT_DIR$/src/data/0527cbea2805d89c6d5d6457b7f9f77c/2/NEW289" />
     <entry file="file://$PROJECT_DIR$/src/data/0527cbea2805d89c6d5d6457b7f9f77c/3/NEW290" />
-    <entry file="file://$PROJECT_DIR$/src/httpGo/SNodeNoP2p.go">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/httpGo/Routes.go">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="396">
@@ -1219,7 +1251,7 @@
         <state relative-caret-position="2358">
           <caret line="146" column="68" lean-forward="false" selection-start-line="146" selection-start-column="68" selection-end-line="146" selection-end-column="68" />
           <folding>
-            <marker date="1499189560108" expanded="true" signature="2173:2223" ph="{...}" />
+            <marker date="1499328284688" expanded="true" signature="2173:2223" ph="{...}" />
           </folding>
         </state>
       </provider>
@@ -1250,19 +1282,17 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/httpGo/StorageNode.go">
+    <entry file="file://$PROJECT_DIR$/src/httpGo/SNodeNoP2p.go">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="560">
-          <caret line="104" column="0" lean-forward="true" selection-start-line="104" selection-start-column="0" selection-end-line="104" selection-end-column="0" />
-          <folding>
-            <element signature="e#15#205#0" expanded="true" />
-          </folding>
+        <state relative-caret-position="72">
+          <caret line="15" column="0" lean-forward="false" selection-start-line="15" selection-start-column="0" selection-end-line="15" selection-end-column="0" />
+          <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/Main.go">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1206">
+        <state relative-caret-position="561">
           <caret line="74" column="41" lean-forward="false" selection-start-line="74" selection-start-column="41" selection-end-line="74" selection-end-column="41" />
           <folding>
             <element signature="e#14#101#0" expanded="true" />
@@ -1272,10 +1302,20 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/httpGo/Proxy.go">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="3403">
-          <caret line="310" column="5" lean-forward="false" selection-start-line="310" selection-start-column="5" selection-end-line="310" selection-end-column="5" />
+        <state relative-caret-position="1054">
+          <caret line="168" column="39" lean-forward="false" selection-start-line="168" selection-start-column="39" selection-end-line="168" selection-end-column="39" />
           <folding>
             <element signature="e#16#247#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/httpGo/StorageNode.go">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="324">
+          <caret line="114" column="84" lean-forward="false" selection-start-line="114" selection-start-column="84" selection-end-line="114" selection-end-column="84" />
+          <folding>
+            <element signature="e#15#205#0" expanded="true" />
           </folding>
         </state>
       </provider>
