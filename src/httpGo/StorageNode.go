@@ -122,8 +122,8 @@ func StorageNodeListen(w http.ResponseWriter, r *http.Request){
 			for _, peer := range chunk.NodeList {
 				peerURL := "http://" + peer[currentAddr] + "/p2pRequest"
 
-				go func(p []string, URL string) {
-					if nodeID == int(p[0][len(p) - 1] - '0') {
+				go func(p string, URL string) {
+					if nodeID == int(p[len(p) - 1] - '0') {
 						// Don't send to itself
 
 					} else {
@@ -146,7 +146,7 @@ func StorageNodeListen(w http.ResponseWriter, r *http.Request){
 					}
 
 					defer wg.Done()
-				}(peer, peerURL)
+				}(peer[0], peerURL)
 			}
 			wg.Wait()
 			chunk=msg{}
@@ -194,26 +194,26 @@ func p2pRequest(w http.ResponseWriter, r *http.Request) {
 		// Save chunk to file
 		httpVar.DirMutex.Lock()
 
-		err = ioutil.WriteFile(path + "/src/data/"+chunk.Hash+"/"+strconv.Itoa( peerID)+ "/P2P" + strconv.Itoa(httpVar.P2pPart),chunk.Text, 0777)
+		err = ioutil.WriteFile(path + "/src/data/"+chunk.Hash+"/"+strconv.Itoa( peerID)+ "/P2P" + strconv.Itoa(chunk.Name),chunk.Text, 0777)
 		if err != nil {
 			fmt.Println("P2pRequest: Peer: error creating/writing file p2p", err.Error())
 		}
-		_, err = os.Stat(path+ "/src/data/"+chunk.Hash+"/"+strconv.Itoa( peerID)+ "/P2P" + strconv.Itoa(httpVar.P2pPart))
+		_, err = os.Stat(path+ "/src/data/"+chunk.Hash+"/"+strconv.Itoa( peerID)+ "/P2P" + strconv.Itoa(chunk.Name))
 		if err != nil {
-			err = ioutil.WriteFile(path + "/src/data/"+chunk.Hash+"/"+strconv.Itoa( peerID)+ "/P2P" + strconv.Itoa(httpVar.P2pPart), chunk.Text, 0777)
+			err = ioutil.WriteFile(path + "/src/data/"+chunk.Hash+"/"+strconv.Itoa( peerID)+ "/P2P" + strconv.Itoa(chunk.Name), chunk.Text, 0777)
                 	if err != nil {
                       		fmt.Println("P2pRequest: Peer: error creating/writing file p2p", err.Error())
                 	}
 		}
 		httpVar.DirMutex.Unlock()
-		if httpVar.P2pPart >= (totalPartsNum*(chunk.Num-1))-1 {
-			fmt.Println("p2p data ended: ",time.Since(start))
-			fmt.Println("..........................................p2p END ....................................................",httpVar.P2pPart)
-			return
-		}
+
 
 		httpVar.PeerMutex.Lock()
-		httpVar.P2pPart++
+                httpVar.P2pPart++
+
+		if httpVar.P2pPart >= (totalPartsNum*(chunk.Num-1)) {
+			fmt.Println("p2p data ended: ",time.Since(start))
+		}
 		httpVar.PeerMutex.Unlock()
 
 	}
