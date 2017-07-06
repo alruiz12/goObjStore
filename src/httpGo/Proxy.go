@@ -333,7 +333,7 @@ func CheckPieces(key string ,fileName string, filePath string) bool{
 
 	
 	// Subfiles directory
-	path:=os.Getenv("GOPATH")+"/src/github.com/alruiz12/simpleBT/src/local/"+key+"/"
+	path:=os.Getenv("GOPATH")+"/src/github.com/alruiz12/simpleBT/src/data/"+key+"/1/"
 	files, err := ioutil.ReadDir(path)
 	if err != nil {
 		fmt.Println(err)
@@ -357,7 +357,7 @@ func CheckPieces(key string ,fileName string, filePath string) bool{
 	var fileNameOriginal= fileName[:len(fileName)-4]
 	for inOrderCount<totalPartsNumOriginal {
 		for _, file := range files {
-			if strings.Compare(file.Name(), fileNameOriginal + strconv.Itoa(inOrderCount)) == 0 {
+			if strings.Compare(file.Name(), fileNameOriginal + strconv.Itoa(inOrderCount)) == 0 || strings.Compare(file.Name(), "P2P" + strconv.Itoa(inOrderCount)) == 0{
 				inOrderCount++
 
 				currentFile, err := os.Open(path + file.Name())

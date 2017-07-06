@@ -4,11 +4,7 @@
     <list default="true" id="8e47a50e-bf29-44c1-8c05-f500e1510716" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/httpGo/Proxy.go" afterPath="$PROJECT_DIR$/src/httpGo/Proxy.go" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/httpGo/StorageNode.go" afterPath="$PROJECT_DIR$/src/httpGo/StorageNode.go" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/httpVar/peer.go" afterPath="$PROJECT_DIR$/src/httpVar/peer.go" />
     </list>
-    <ignored path="$PROJECT_DIR$/out/" />
-    <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -23,14 +19,14 @@
   </component>
   <component name="ExecutionTargetManager" SELECTED_TARGET="default_target" />
   <component name="FileEditorManager">
-    <splitter split-orientation="horizontal" split-proportion="0.4773547">
+    <splitter split-orientation="horizontal" split-proportion="0.6144289">
       <split-first>
         <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-          <file leaf-file-name="peer.go" pinned="false" current-in-tab="true">
+          <file leaf-file-name="peer.go" pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/src/httpVar/peer.go">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="414">
-                  <caret line="23" column="37" lean-forward="false" selection-start-line="23" selection-start-column="37" selection-end-line="23" selection-end-column="37" />
+                <state relative-caret-position="468">
+                  <caret line="26" column="0" lean-forward="false" selection-start-line="26" selection-start-column="0" selection-end-line="26" selection-end-column="0" />
                   <folding />
                 </state>
               </provider>
@@ -39,10 +35,12 @@
           <file leaf-file-name="Main.go" pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/src/Main.go">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="561">
-                  <caret line="74" column="41" lean-forward="false" selection-start-line="74" selection-start-column="41" selection-end-line="74" selection-end-column="41" />
+                <state relative-caret-position="633">
+                  <caret line="78" column="11" lean-forward="true" selection-start-line="78" selection-start-column="11" selection-end-line="78" selection-end-column="11" />
                   <folding>
                     <element signature="e#14#101#0" expanded="true" />
+                    <marker date="1499360710079" expanded="true" signature="137:2466" ph="{...}" />
+                    <marker date="1499360710079" expanded="true" signature="2357:2410" ph="/.../" />
                   </folding>
                 </state>
               </provider>
@@ -60,13 +58,13 @@
               </provider>
             </entry>
           </file>
-          <file leaf-file-name="Proxy.go" pinned="false" current-in-tab="false">
+          <file leaf-file-name="Proxy.go" pinned="false" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/src/httpGo/Proxy.go">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="874">
-                  <caret line="158" column="52" lean-forward="false" selection-start-line="158" selection-start-column="52" selection-end-line="158" selection-end-column="52" />
+                <state relative-caret-position="-98">
+                  <caret line="335" column="88" lean-forward="false" selection-start-line="335" selection-start-column="88" selection-end-line="335" selection-end-column="88" />
                   <folding>
-                    <element signature="e#16#247#0" expanded="true" />
+                    <element signature="e#16#249#0" expanded="true" />
                   </folding>
                 </state>
               </provider>
@@ -111,8 +109,8 @@
           <file leaf-file-name="StorageNode.go" pinned="false" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/src/httpGo/StorageNode.go">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="630">
-                  <caret line="147" column="70" lean-forward="false" selection-start-line="147" selection-start-column="70" selection-end-line="147" selection-end-column="70" />
+                <state relative-caret-position="522">
+                  <caret line="155" column="0" lean-forward="false" selection-start-line="155" selection-start-column="0" selection-end-line="155" selection-end-column="0" />
                   <folding>
                     <element signature="e#15#205#0" expanded="true" />
                   </folding>
@@ -125,7 +123,9 @@
               <provider selected="true" editor-type-id="text-editor">
                 <state relative-caret-position="306">
                   <caret line="20" column="48" lean-forward="false" selection-start-line="20" selection-start-column="48" selection-end-line="20" selection-end-column="48" />
-                  <folding />
+                  <folding>
+                    <marker date="1499328284688" expanded="true" signature="260:723" ph="{...}" />
+                  </folding>
                 </state>
               </provider>
             </entry>
@@ -141,36 +141,10 @@
       </list>
     </option>
   </component>
-  <component name="FindInProjectRecents">
-    <findStrings>
-      <find>==Notes== {{reflist|35em}}</find>
-      <find>35em}}</find>
-      <find>Name</find>
-      <find>httpVar.ProxyAddr</find>
-      <find>nodeLi</find>
-    </findStrings>
-  </component>
-  <component name="Git.Settings">
-    <option name="ROOT_SYNC" value="DONT_SYNC" />
-    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
-  </component>
-  <component name="GradleLocalSettings">
-    <option name="externalProjectsViewState">
-      <projects_view />
-    </option>
-  </component>
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/src/httpGo/httpGo_test.go" />
-        <option value="$PROJECT_DIR$/src/Main.go" />
-        <option value="$PROJECT_DIR$/src/httpGo/Tracker.go" />
-        <option value="$PROJECT_DIR$/src/httpGo/ProxyNop2p.go" />
-        <option value="$PROJECT_DIR$/src/httpGo/SNodeNoP2p.go" />
-        <option value="$PROJECT_DIR$/src/httpGo/Routes.go" />
-        <option value="$PROJECT_DIR$/src/httpGo/StorageNode.go" />
         <option value="$PROJECT_DIR$/src/httpGo/Proxy.go" />
-        <option value="$PROJECT_DIR$/src/httpVar/peer.go" />
       </list>
     </option>
   </component>
@@ -269,13 +243,6 @@
       <pane id="Scope" />
       <pane id="Scratches" />
     </panes>
-  </component>
-  <component name="PropertiesComponent">
-    <property name="GO_FMT" value="false" />
-    <property name="DefaultGoTemplateProperty" value="Go File" />
-    <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="aspect.path.notification.shown" value="true" />
-    <property name="js.eslint.eslintPackage" value="" />
   </component>
   <component name="RunManager" selected="Go Application.Build Main.go and run">
     <configuration default="false" name="Build Main.go and run" type="GoApplicationRunConfiguration" factoryName="Go Application" temporary="true">
@@ -709,189 +676,10 @@
     <option name="remove_strategy" value="false" />
   </component>
   <component name="TaskManager">
-    <task active="true" id="Default" summary="Default task">
-      <changelist id="8e47a50e-bf29-44c1-8c05-f500e1510716" name="Default" comment="" />
-      <created>1497808661157</created>
-      <option name="number" value="Default" />
-      <option name="presentableId" value="Default" />
-      <updated>1497808661157</updated>
-      <workItem from="1497808666471" duration="401000" />
-      <workItem from="1497809071924" duration="10000" />
-      <workItem from="1497811447546" duration="27830000" />
-      <workItem from="1498431885619" duration="2573000" />
-      <workItem from="1498437368037" duration="37842000" />
-      <workItem from="1499189658683" duration="15208000" />
-    </task>
-    <task id="LOCAL-00001" summary="EC2 from local machine">
-      <created>1497808757959</created>
-      <option name="number" value="00001" />
-      <option name="presentableId" value="LOCAL-00001" />
-      <option name="project" value="LOCAL" />
-      <updated>1497808757959</updated>
-    </task>
-    <task id="LOCAL-00002" summary="EC2 from local machine">
-      <created>1497815411397</created>
-      <option name="number" value="00002" />
-      <option name="presentableId" value="LOCAL-00002" />
-      <option name="project" value="LOCAL" />
-      <updated>1497815411397</updated>
-    </task>
-    <task id="LOCAL-00003" summary="EC2 from local machine, trying to fix directory creation">
-      <created>1498320941857</created>
-      <option name="number" value="00003" />
-      <option name="presentableId" value="LOCAL-00003" />
-      <option name="project" value="LOCAL" />
-      <updated>1498320941874</updated>
-    </task>
-    <task id="LOCAL-00004" summary="EC2 from local machine, little refactoring before optimizing">
-      <created>1498327300900</created>
-      <option name="number" value="00004" />
-      <option name="presentableId" value="LOCAL-00004" />
-      <option name="project" value="LOCAL" />
-      <updated>1498327300900</updated>
-    </task>
-    <task id="LOCAL-00005" summary="EC2 from local machine, first optimization attempt">
-      <created>1498328810986</created>
-      <option name="number" value="00005" />
-      <option name="presentableId" value="LOCAL-00005" />
-      <option name="project" value="LOCAL" />
-      <updated>1498328811016</updated>
-    </task>
-    <task id="LOCAL-00006" summary="EC2 from local machine, second optimization attempt, prep">
-      <created>1498432957835</created>
-      <option name="number" value="00006" />
-      <option name="presentableId" value="LOCAL-00006" />
-      <option name="project" value="LOCAL" />
-      <updated>1498432957835</updated>
-    </task>
-    <task id="LOCAL-00007" summary="EC2 from local machine, third optimization attempt, each proxy iter is a goroutine, sending Name too to keep same name (same order)">
-      <created>1498437759112</created>
-      <option name="number" value="00007" />
-      <option name="presentableId" value="LOCAL-00007" />
-      <option name="project" value="LOCAL" />
-      <updated>1498437759112</updated>
-    </task>
-    <task id="LOCAL-00008" summary="EC2 from local machine,  unbuffered channel attemp">
-      <created>1498581419179</created>
-      <option name="number" value="00008" />
-      <option name="presentableId" value="LOCAL-00008" />
-      <option name="project" value="LOCAL" />
-      <updated>1498581419180</updated>
-    </task>
-    <task id="LOCAL-00009" summary="continuation 2">
-      <created>1498581999514</created>
-      <option name="number" value="00009" />
-      <option name="presentableId" value="LOCAL-00009" />
-      <option name="project" value="LOCAL" />
-      <updated>1498581999514</updated>
-    </task>
-    <task id="LOCAL-00010" summary="trying bytes.buffer instead of pipe">
-      <created>1498639997438</created>
-      <option name="number" value="00010" />
-      <option name="presentableId" value="LOCAL-00010" />
-      <option name="project" value="LOCAL" />
-      <updated>1498639997438</updated>
-    </task>
-    <task id="LOCAL-00011" summary="cancelling bytes.buffer instead of pipe">
-      <created>1498640821090</created>
-      <option name="number" value="00011" />
-      <option name="presentableId" value="LOCAL-00011" />
-      <option name="project" value="LOCAL" />
-      <updated>1498640821090</updated>
-    </task>
-    <task id="LOCAL-00012" summary="testing">
-      <created>1498666001327</created>
-      <option name="number" value="00012" />
-      <option name="presentableId" value="LOCAL-00012" />
-      <option name="project" value="LOCAL" />
-      <updated>1498666001327</updated>
-    </task>
-    <task id="LOCAL-00013" summary="testing GET, checking pieces">
-      <created>1498734365177</created>
-      <option name="number" value="00013" />
-      <option name="presentableId" value="LOCAL-00013" />
-      <option name="project" value="LOCAL" />
-      <updated>1498734365177</updated>
-    </task>
-    <task id="LOCAL-00014" summary="StorageNode with multiple addresses in process">
-      <created>1499079201944</created>
-      <option name="number" value="00014" />
-      <option name="presentableId" value="LOCAL-00014" />
-      <option name="project" value="LOCAL" />
-      <updated>1499079201944</updated>
-    </task>
-    <task id="LOCAL-00015" summary="StorageNode with multiple addresses in process, compiles">
-      <created>1499081685848</created>
-      <option name="number" value="00015" />
-      <option name="presentableId" value="LOCAL-00015" />
-      <option name="project" value="LOCAL" />
-      <updated>1499081685848</updated>
-    </task>
-    <task id="LOCAL-00016" summary="StorageNode with multiple addresses in process, compiles 2">
-      <created>1499101558565</created>
-      <option name="number" value="00016" />
-      <option name="presentableId" value="LOCAL-00016" />
-      <option name="project" value="LOCAL" />
-      <updated>1499101558607</updated>
-    </task>
-    <task id="LOCAL-00017" summary="os.Stat in for">
-      <created>1499244220215</created>
-      <option name="number" value="00017" />
-      <option name="presentableId" value="LOCAL-00017" />
-      <option name="project" value="LOCAL" />
-      <updated>1499244220215</updated>
-    </task>
-    <task id="LOCAL-00018" summary="trying to optimize RAM memory, observing until p2p">
-      <created>1499331027594</created>
-      <option name="number" value="00018" />
-      <option name="presentableId" value="LOCAL-00018" />
-      <option name="project" value="LOCAL" />
-      <updated>1499331027594</updated>
-    </task>
-    <task id="LOCAL-00019" summary="trying to optimize RAM memory, observing until p2p, goRoutine in whole StorageNodeListen">
-      <created>1499333847109</created>
-      <option name="number" value="00019" />
-      <option name="presentableId" value="LOCAL-00019" />
-      <option name="project" value="LOCAL" />
-      <updated>1499333847109</updated>
-    </task>
-    <option name="localTasksCounter" value="20" />
     <servers />
   </component>
-  <component name="TestHistory">
-    <history-entry file="TestDirecories_in_httpGo_test_go - 2017.06.28 at 17h 38m 38s.xml">
-      <configuration name="TestDirecories in httpGo_test.go" configurationId="GoTestRunConfiguration" />
-    </history-entry>
-    <history-entry file="TestDirecories_in_httpGo_test_go - 2017.06.28 at 17h 39m 30s.xml">
-      <configuration name="TestDirecories in httpGo_test.go" configurationId="GoTestRunConfiguration" />
-    </history-entry>
-    <history-entry file="TestDirecories_in_httpGo_test_go - 2017.06.28 at 17h 40m 31s.xml">
-      <configuration name="TestDirecories in httpGo_test.go" configurationId="GoTestRunConfiguration" />
-    </history-entry>
-    <history-entry file="TestDirecories_in_httpGo_test_go - 2017.06.28 at 17h 40m 33s.xml">
-      <configuration name="TestDirecories in httpGo_test.go" configurationId="GoTestRunConfiguration" />
-    </history-entry>
-    <history-entry file="TestDirecories_in_httpGo_test_go - 2017.06.28 at 17h 40m 57s.xml">
-      <configuration name="TestDirecories in httpGo_test.go" configurationId="GoTestRunConfiguration" />
-    </history-entry>
-    <history-entry file="TestDirecories_in_httpGo_test_go - 2017.06.28 at 17h 46m 21s.xml">
-      <configuration name="TestDirecories in httpGo_test.go" configurationId="GoTestRunConfiguration" />
-    </history-entry>
-    <history-entry file="TestDirecories_in_httpGo_test_go - 2017.06.28 at 17h 49m 11s.xml">
-      <configuration name="TestDirecories in httpGo_test.go" configurationId="GoTestRunConfiguration" />
-    </history-entry>
-    <history-entry file="TestDirecories_in_httpGo_test_go - 2017.06.28 at 17h 50m 21s.xml">
-      <configuration name="TestDirecories in httpGo_test.go" configurationId="GoTestRunConfiguration" />
-    </history-entry>
-    <history-entry file="TestDirecories_in_httpGo_test_go - 2017.06.28 at 17h 58m 56s.xml">
-      <configuration name="TestDirecories in httpGo_test.go" configurationId="GoTestRunConfiguration" />
-    </history-entry>
-    <history-entry file="TestDirecories_in_httpGo_test_go - 2017.06.28 at 18h 04m 00s.xml">
-      <configuration name="TestDirecories in httpGo_test.go" configurationId="GoTestRunConfiguration" />
-    </history-entry>
-  </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="83864000" />
+    <option name="totallyTimeSpent" value="886000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="65" y="24" width="2495" height="1056" extended-state="6" />
@@ -928,9 +716,6 @@
       <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
     </layout>
   </component>
-  <component name="TypeScriptGeneratedFilesManager">
-    <option name="processedProjectFiles" value="true" />
-  </component>
   <component name="VcsContentAnnotationSettings">
     <option name="myLimit" value="2678400000" />
   </component>
@@ -953,7 +738,8 @@
     <MESSAGE value="os.Stat in for" />
     <MESSAGE value="trying to optimize RAM memory, observing until p2p" />
     <MESSAGE value="trying to optimize RAM memory, observing until p2p, goRoutine in whole StorageNodeListen" />
-    <option name="LAST_COMMIT_MESSAGE" value="trying to optimize RAM memory, observing until p2p, goRoutine in whole StorageNodeListen" />
+    <MESSAGE value="trying to optimize RAM memory, SendReady for Proxy" />
+    <option name="LAST_COMMIT_MESSAGE" value="trying to optimize RAM memory, SendReady for Proxy" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager />
@@ -974,6 +760,8 @@
           <caret line="74" column="41" lean-forward="false" selection-start-line="74" selection-start-column="41" selection-end-line="74" selection-end-column="41" />
           <folding>
             <element signature="e#14#101#0" expanded="true" />
+            <marker date="1499360710079" expanded="true" signature="137:2466" ph="{...}" />
+            <marker date="1499360710079" expanded="true" signature="2357:2410" ph="/.../" />
           </folding>
         </state>
       </provider>
@@ -993,7 +781,7 @@
         <state relative-caret-position="5256">
           <caret line="310" column="5" lean-forward="false" selection-start-line="310" selection-start-column="5" selection-end-line="310" selection-end-column="5" />
           <folding>
-            <element signature="e#16#247#0" expanded="true" />
+            <element signature="e#16#249#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -1040,6 +828,8 @@
           <caret line="15" column="0" lean-forward="false" selection-start-line="15" selection-start-column="0" selection-end-line="15" selection-end-column="0" />
           <folding>
             <element signature="e#14#101#0" expanded="true" />
+            <marker date="1499360710079" expanded="true" signature="137:2466" ph="{...}" />
+            <marker date="1499360710079" expanded="true" signature="2357:2410" ph="/.../" />
           </folding>
         </state>
       </provider>
@@ -1057,7 +847,7 @@
         <state relative-caret-position="1422">
           <caret line="96" column="26" lean-forward="false" selection-start-line="96" selection-start-column="26" selection-end-line="96" selection-end-column="26" />
           <folding>
-            <element signature="e#16#247#0" expanded="true" />
+            <element signature="e#16#249#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -1099,6 +889,8 @@
           <caret line="15" column="0" lean-forward="false" selection-start-line="15" selection-start-column="0" selection-end-line="15" selection-end-column="0" />
           <folding>
             <element signature="e#14#101#0" expanded="true" />
+            <marker date="1499360710079" expanded="true" signature="137:2466" ph="{...}" />
+            <marker date="1499360710079" expanded="true" signature="2357:2410" ph="/.../" />
           </folding>
         </state>
       </provider>
@@ -1116,7 +908,7 @@
         <state relative-caret-position="0">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
-            <element signature="e#16#247#0" expanded="true" />
+            <element signature="e#16#249#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -1266,10 +1058,12 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/Main.go">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="561">
-          <caret line="74" column="41" lean-forward="false" selection-start-line="74" selection-start-column="41" selection-end-line="74" selection-end-column="41" />
+        <state relative-caret-position="633">
+          <caret line="78" column="11" lean-forward="true" selection-start-line="78" selection-start-column="11" selection-end-line="78" selection-end-column="11" />
           <folding>
             <element signature="e#14#101#0" expanded="true" />
+            <marker date="1499360710079" expanded="true" signature="137:2466" ph="{...}" />
+            <marker date="1499360710079" expanded="true" signature="2357:2410" ph="/.../" />
           </folding>
         </state>
       </provider>
@@ -1278,14 +1072,24 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="306">
           <caret line="20" column="48" lean-forward="false" selection-start-line="20" selection-start-column="48" selection-end-line="20" selection-end-column="48" />
+          <folding>
+            <marker date="1499328284688" expanded="true" signature="260:723" ph="{...}" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/httpVar/peer.go">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="468">
+          <caret line="26" column="0" lean-forward="false" selection-start-line="26" selection-start-column="0" selection-end-line="26" selection-end-column="0" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/httpGo/StorageNode.go">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="630">
-          <caret line="147" column="70" lean-forward="false" selection-start-line="147" selection-start-column="70" selection-end-line="147" selection-end-column="70" />
+        <state relative-caret-position="522">
+          <caret line="155" column="0" lean-forward="false" selection-start-line="155" selection-start-column="0" selection-end-line="155" selection-end-column="0" />
           <folding>
             <element signature="e#15#205#0" expanded="true" />
           </folding>
@@ -1294,19 +1098,11 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/httpGo/Proxy.go">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="874">
-          <caret line="158" column="52" lean-forward="false" selection-start-line="158" selection-start-column="52" selection-end-line="158" selection-end-column="52" />
+        <state relative-caret-position="-98">
+          <caret line="335" column="88" lean-forward="false" selection-start-line="335" selection-start-column="88" selection-end-line="335" selection-end-column="88" />
           <folding>
-            <element signature="e#16#247#0" expanded="true" />
+            <element signature="e#16#249#0" expanded="true" />
           </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/httpVar/peer.go">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="414">
-          <caret line="23" column="37" lean-forward="false" selection-start-line="23" selection-start-column="37" selection-end-line="23" selection-end-column="37" />
-          <folding />
         </state>
       </provider>
     </entry>
