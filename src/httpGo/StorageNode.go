@@ -14,6 +14,7 @@ import(
 	"strings"
 	"sync"
 	"math/rand"
+	"debug"
 
 )
 var path = (os.Getenv("GOPATH")+"/src/github.com/alruiz12/simpleBT")
@@ -71,6 +72,15 @@ func StorageNodeListen(w http.ResponseWriter, r *http.Request){
 
 		// Listen to tracker
 		if r.Method == http.MethodPost {
+			
+
+                        httpVar.TrackerMutex.Lock()
+                        httpVar.CurrentPart++
+                        httpVar.TrackerMutex.Unlock()
+
+                        var wg sync.WaitGroup
+
+
 
 			body, err := ioutil.ReadAll(r.Body)
 			if err != nil {
@@ -110,18 +120,7 @@ func StorageNodeListen(w http.ResponseWriter, r *http.Request){
 			//			defer wg.Done()
 			//		}(chunk.Name, chunk.Text)
 
-			httpVar.TrackerMutex.Lock()
-			httpVar.CurrentPart++
-			httpVar.TrackerMutex.Unlock()
-
-			if httpVar.CurrentPart == (totalPartsNum) {
-				fmt.Println("..........................................Peer0 END ....................................................", time.Since(start))
-			}
-			listenWg.Done()
-			return
-
-			var wg sync.WaitGroup
-			wg.Add(len(chunk.NodeList)/*+1*/)
+                        wg.Add(len(chunk.NodeList)/*+1*/)
 
 			// Send chunk to peers
 			// sending only one chunk to the rest of peers once, don't need to use multiple addr per peer
@@ -156,12 +155,14 @@ func StorageNodeListen(w http.ResponseWriter, r *http.Request){
 				}(peer, peerURL)
 			}
 			wg.Wait()
+			chunk=msg{}
+			debug.FreeOSMemory()
 			fmt.Println("SNL: ", httpVar.CurrentPart, " ", chunk.Name, " ", r.URL)
 			if httpVar.CurrentPart == (totalPartsNum) {
 				fmt.Println("..........................................Peer END ....................................................", time.Since(start))
 			}
 		}
-		//listenWg.Done()
+		listenWg.Done()
 	}()
 	listenWg.Wait()
 
