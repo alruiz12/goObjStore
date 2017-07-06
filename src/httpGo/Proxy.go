@@ -359,7 +359,7 @@ func CheckPieces(key string ,fileName string, filePath string) bool{
 		for _, file := range files {
 			if strings.Compare(file.Name(), fileNameOriginal + strconv.Itoa(inOrderCount)) == 0 || strings.Compare(file.Name(), "P2P" + strconv.Itoa(inOrderCount)) == 0{
 				inOrderCount++
-
+//				fmt.Println(file.Name())
 				currentFile, err := os.Open(path + file.Name())
 				if err != nil {
 					fmt.Println(err)
