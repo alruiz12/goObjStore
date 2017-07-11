@@ -105,7 +105,9 @@ func Put(filePath string, trackerAddr string, numNodes int) {
 			fmt.Println(err.Error())
 			return
 		}
+		httpVar.TotalNumMutex.Lock()
 		totalPartsNum = int(math.Ceil(float64(size) / float64(fileChunk)))
+		httpVar.TotalNumMutex.Unlock()
 		var currentAdr int = 0
 
 		for currentNum < numNodes {
@@ -297,12 +299,12 @@ func ReturnData(w http.ResponseWriter, r *http.Request){
 		if err != nil {
 			fmt.Println("Peer: error creating/writing file p2p", err.Error())
 		}
-		httpVar.GetMutex.Lock()
+		httpVar.TotalNumMutex.Lock()
 
 		if numGets==totalPartsNum{
 			fmt.Println("GET: ",time.Since(startGet))
 		}
-		httpVar.GetMutex.Unlock()
+		httpVar.TotalNumMutex.Unlock()
 
 
 	}

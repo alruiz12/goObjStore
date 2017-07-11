@@ -9,6 +9,7 @@ var SendMutex = &sync.Mutex{}
 var DirMutex = &sync.Mutex{}
 var GetMutex = &sync.Mutex{}
 var WFileMutex = &sync.Mutex{}
+var TotalNumMutex = &sync.Mutex{}
 
 var HashMap = make(map[string][]bool)
 
