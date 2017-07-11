@@ -331,7 +331,7 @@ func CheckPieces(key string ,fileName string, filePath string, numNodes int) boo
 	}
 	totalPartsNumOriginal := int(math.Ceil(float64(size) / float64(fileChunk)))
 
-
+	// Walking through StorageNodes data
 	// Subfiles directory
 	path:=os.Getenv("GOPATH")+"/src/github.com/alruiz12/simpleBT/src/data/"+key+"/"
 	subDir, err := ioutil.ReadDir(path)
@@ -342,7 +342,6 @@ func CheckPieces(key string ,fileName string, filePath string, numNodes int) boo
 
 	currentDir:=0
 	for currentDir<numNodes{
-
 
 		// Create new file
 		_, err = os.Create(os.Getenv("GOPATH") + "/src/github.com/alruiz12/simpleBT/src" + fileName+strconv.Itoa(currentDir))
@@ -400,12 +399,75 @@ func CheckPieces(key string ,fileName string, filePath string, numNodes int) boo
 		}
 
 
-		//return true
 
 		currentDir++
 	}
 	if currentDir==0{return false}	// Never got in loop
-	return true			// else
+
+
+	// Checking Get output (locally)
+	path=os.Getenv("GOPATH")+"/src/github.com/alruiz12/simpleBT/src/local/"+key+"/"
+	files, err := ioutil.ReadDir(path)
+	if err != nil {
+		fmt.Println(err)
+		return false
+	}
+
+	// Create new file
+	_, err = os.Create(os.Getenv("GOPATH") + "/src/github.com/alruiz12/simpleBT/src" + fileName)
+	newFile, err := os.OpenFile(os.Getenv("GOPATH") + "/src/github.com/alruiz12/simpleBT/src" + fileName, os.O_APPEND | os.O_WRONLY, 0666)
+	if err != nil {
+		fmt.Println(err)
+		return false
+	}
+	defer newFile.Close()
+
+
+
+	// Trying to fill out the new file using subfiles (in order)
+	var inOrderCount = 0
+	var maxTimes int = 0
+	var fileNameOriginal= fileName[:len(fileName)-4]
+	for inOrderCount<totalPartsNumOriginal {
+		for _, file := range files {
+			if strings.Compare(file.Name(), fileNameOriginal + strconv.Itoa(inOrderCount)) == 0 {
+				inOrderCount++
+
+				currentFile, err := os.Open(path + file.Name())
+				if err != nil {
+					fmt.Println(err)
+					return false
+				}
+
+				bytesCurrentFile, err := ioutil.ReadFile(path + file.Name())
+
+				_, err = newFile.WriteString(string(bytesCurrentFile))
+				if err != nil {
+					fmt.Println(err)
+					return false
+				}
+
+				currentFile.Close()
+			}
+
+		}
+		if inOrderCount == 0 {
+			maxTimes++
+		}
+		if maxTimes > 1 {
+			fmt.Println("maxTimes > 1 when looking for ", fileNameOriginal + strconv.Itoa(inOrderCount))
+			return false
+		}
+	}
+
+	// Compute and compare new hash
+	newHash := md5sum(os.Getenv("GOPATH") + "/src/github.com/alruiz12/simpleBT/src" + fileName)
+	fmt.Println("/src/github.com/alruiz12/simpleBT/src" + fileName ,newHash)
+	if strings.Compare(key, newHash) != 0 {
+		return false
+	}
+
+	return true
 }
 
 

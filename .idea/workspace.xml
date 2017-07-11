@@ -59,8 +59,8 @@
           <file leaf-file-name="Proxy.go" pinned="false" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/src/httpGo/Proxy.go">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="303">
-                  <caret line="356" column="72" lean-forward="true" selection-start-line="356" selection-start-column="72" selection-end-line="356" selection-end-column="72" />
+                <state relative-caret-position="-399">
+                  <caret line="407" column="40" lean-forward="false" selection-start-line="407" selection-start-column="40" selection-end-line="407" selection-end-column="40" />
                   <folding>
                     <element signature="e#16#249#0" expanded="true" />
                   </folding>
@@ -680,11 +680,18 @@
       <option name="project" value="LOCAL" />
       <updated>1499767613163</updated>
     </task>
-    <option name="localTasksCounter" value="7" />
+    <task id="LOCAL-00007" summary="trying to use checkPieces for all dirs, all dirs in data">
+      <created>1499767982445</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1499767982445</updated>
+    </task>
+    <option name="localTasksCounter" value="8" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="7442000" />
+    <option name="totallyTimeSpent" value="8073000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="65" y="52" width="1527" height="1028" extended-state="4" />
@@ -1101,8 +1108,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/httpGo/Proxy.go">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="303">
-          <caret line="356" column="72" lean-forward="true" selection-start-line="356" selection-start-column="72" selection-end-line="356" selection-end-column="72" />
+        <state relative-caret-position="-399">
+          <caret line="407" column="40" lean-forward="false" selection-start-line="407" selection-start-column="40" selection-end-line="407" selection-end-column="40" />
           <folding>
             <element signature="e#16#249#0" expanded="true" />
           </folding>
