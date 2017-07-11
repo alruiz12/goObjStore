@@ -297,12 +297,12 @@ func ReturnData(w http.ResponseWriter, r *http.Request){
 		if err != nil {
 			fmt.Println("Peer: error creating/writing file p2p", err.Error())
 		}
-//		httpVar.GetMutex.Lock()
-//		numGets++
-//		httpVar.GetMutex.Unlock()
+		httpVar.GetMutex.Lock()
+
 		if numGets==totalPartsNum{
 			fmt.Println("GET: ",time.Since(startGet))
 		}
+		httpVar.GetMutex.Unlock()
 
 
 	}
