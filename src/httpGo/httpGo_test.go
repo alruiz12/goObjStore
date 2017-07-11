@@ -144,12 +144,7 @@ func TestDirecories(t *testing.T){
 			fmt.Println("ListenAndServe error", err.Error())
 		}
 	}()
-	go func(){
-		fmt.Println("go func")
-		if err := proxy.ListenAndServe(); err!=nil{
-			fmt.Println("ListenAndServe error", err.Error())
-		}
-	}()
+
 
 	StartTracker(Peers)
 

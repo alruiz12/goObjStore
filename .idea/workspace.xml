@@ -81,8 +81,8 @@
           <file leaf-file-name="httpGo_test.go" pinned="false" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/src/httpGo/httpGo_test.go">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="2325">
-                  <caret line="164" column="20" lean-forward="false" selection-start-line="164" selection-start-column="20" selection-end-line="164" selection-end-column="20" />
+                <state relative-caret-position="316">
+                  <caret line="146" column="8" lean-forward="false" selection-start-line="146" selection-start-column="8" selection-end-line="146" selection-end-column="8" />
                   <folding>
                     <element signature="e#15#92#0" expanded="true" />
                   </folding>
@@ -97,8 +97,8 @@
           <file leaf-file-name="httpGo_test.go" pinned="false" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/src/httpGo/httpGo_test.go">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="1299">
-                  <caret line="150" column="0" lean-forward="true" selection-start-line="150" selection-start-column="0" selection-end-line="150" selection-end-column="0" />
+                <state relative-caret-position="1227">
+                  <caret line="146" column="8" lean-forward="false" selection-start-line="146" selection-start-column="8" selection-end-line="146" selection-end-column="8" />
                   <folding>
                     <element signature="e#15#92#0" expanded="true" />
                   </folding>
@@ -219,7 +219,7 @@
   <component name="PropertiesComponent">
     <property name="GO_FMT" value="false" />
   </component>
-  <component name="RunManager" selected="Go Application.Build Main.go and run">
+  <component name="RunManager" selected="Go Test.httpGo_test.go">
     <configuration default="false" name="Build Main.go and run" type="GoApplicationRunConfiguration" factoryName="Go Application" temporary="true">
       <module name="simpleBT" />
       <working_directory value="$PROJECT_DIR$" />
@@ -234,6 +234,14 @@
       <kind value="PACKAGE" />
       <package value="github.com/alruiz12/simpleBT/src/httpGo" />
       <pattern value="^TestDirecories$" />
+      <method />
+    </configuration>
+    <configuration default="false" name="httpGo_test.go" type="GoTestRunConfiguration" factoryName="Go Test" temporary="true">
+      <module name="simpleBT" />
+      <working_directory value="$PROJECT_DIR$" />
+      <framework value="gotest" />
+      <kind value="FILE" />
+      <filePath value="$PROJECT_DIR$/src/httpGo/httpGo_test.go" />
       <method />
     </configuration>
     <configuration default="true" type="#org.jetbrains.idea.devkit.run.PluginConfigurationType" factoryName="Plugin">
@@ -636,14 +644,16 @@
     <configuration default="true" type="osgi.bnd.run" factoryName="Test Launcher (JUnit)">
       <method />
     </configuration>
-    <list size="2">
+    <list size="3">
       <item index="0" class="java.lang.String" itemvalue="Go Application.Build Main.go and run" />
       <item index="1" class="java.lang.String" itemvalue="Go Test.TestDirecories in httpGo_test.go" />
+      <item index="2" class="java.lang.String" itemvalue="Go Test.httpGo_test.go" />
     </list>
     <recent_temporary>
-      <list size="2">
-        <item index="0" class="java.lang.String" itemvalue="Go Application.Build Main.go and run" />
-        <item index="1" class="java.lang.String" itemvalue="Go Test.TestDirecories in httpGo_test.go" />
+      <list size="3">
+        <item index="0" class="java.lang.String" itemvalue="Go Test.httpGo_test.go" />
+        <item index="1" class="java.lang.String" itemvalue="Go Application.Build Main.go and run" />
+        <item index="2" class="java.lang.String" itemvalue="Go Test.TestDirecories in httpGo_test.go" />
       </list>
     </recent_temporary>
   </component>
@@ -707,11 +717,26 @@
       <option name="project" value="LOCAL" />
       <updated>1499768621567</updated>
     </task>
-    <option name="localTasksCounter" value="9" />
+    <task id="LOCAL-00009" summary="testing checkpieces">
+      <created>1499770046114</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1499770046114</updated>
+    </task>
+    <option name="localTasksCounter" value="10" />
     <servers />
   </component>
+  <component name="TestHistory">
+    <history-entry file="httpGo_test_go - 2017.07.11 at 12h 50m 43s.xml">
+      <configuration name="httpGo_test.go" configurationId="GoTestRunConfiguration" />
+    </history-entry>
+    <history-entry file="httpGo_test_go - 2017.07.11 at 12h 51m 13s.xml">
+      <configuration name="httpGo_test.go" configurationId="GoTestRunConfiguration" />
+    </history-entry>
+  </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="9496000" />
+    <option name="totallyTimeSpent" value="9751000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="65" y="24" width="2495" height="1056" extended-state="6" />
@@ -726,7 +751,7 @@
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.40199006" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.40199006" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Properties" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Capture Tool" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
@@ -752,7 +777,6 @@
     <option name="myLimit" value="2678400000" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="EC2 from local machine, trying to fix directory creation" />
     <MESSAGE value="EC2 from local machine, little refactoring before optimizing" />
     <MESSAGE value="EC2 from local machine, first optimization attempt" />
     <MESSAGE value="EC2 from local machine, second optimization attempt, prep" />
@@ -777,7 +801,8 @@
     <MESSAGE value="trying to use checkPieces for all dirs, simplified" />
     <MESSAGE value="trying to use checkPieces for all dirs, all dirs in data" />
     <MESSAGE value="trying to use checkPieces for all dirs, data + local" />
-    <option name="LAST_COMMIT_MESSAGE" value="trying to use checkPieces for all dirs, data + local" />
+    <MESSAGE value="testing checkpieces" />
+    <option name="LAST_COMMIT_MESSAGE" value="testing checkpieces" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager />
@@ -1128,8 +1153,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/httpGo/httpGo_test.go">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1299">
-          <caret line="150" column="0" lean-forward="true" selection-start-line="150" selection-start-column="0" selection-end-line="150" selection-end-column="0" />
+        <state relative-caret-position="316">
+          <caret line="146" column="8" lean-forward="false" selection-start-line="146" selection-start-column="8" selection-end-line="146" selection-end-column="8" />
           <folding>
             <element signature="e#15#92#0" expanded="true" />
           </folding>
