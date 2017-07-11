@@ -315,87 +315,94 @@ and compares the new hash with the original one.
 @param path to the file we want to split
 Returns true if both hash are identic and false if not
 */
-func CheckPieces(key string ,fileName string, filePath string) bool{
+func CheckPieces(key string ,fileName string, filePath string, numNodes int) bool{
 	 file, err := os.Open(filePath)
-                if err != nil {
-                        fmt.Println(err.Error())
-                        panic(err)
-                }
-                defer file.Close()
-                fileInfo, _ := file.Stat()
-                text := strconv.FormatInt(fileInfo.Size(), 10)        // size
-                size, _ := strconv.Atoi(text)
-                if err != nil {
-                        fmt.Println(err.Error())
-                        return false
-                }
-                totalPartsNumOriginal := int(math.Ceil(float64(size) / float64(fileChunk)))
+	if err != nil {
+		fmt.Println(err.Error())
+		panic(err)
+	}
+	defer file.Close()
+	fileInfo, _ := file.Stat()
+	text := strconv.FormatInt(fileInfo.Size(), 10)        // size
+	size, _ := strconv.Atoi(text)
+	if err != nil {
+		fmt.Println(err.Error())
+		return false
+	}
+	totalPartsNumOriginal := int(math.Ceil(float64(size) / float64(fileChunk)))
 
-	
+
 	// Subfiles directory
-	path:=os.Getenv("GOPATH")+"/src/github.com/alruiz12/simpleBT/src/data/"+key+"/1/"
-	files, err := ioutil.ReadDir(path)
+	path:=os.Getenv("GOPATH")+"/src/github.com/alruiz12/simpleBT/src/data/"+key+"/"
+	subDir, err := ioutil.ReadDir(path)
 	if err != nil {
 		fmt.Println(err)
 		return false
 	}
 
-	// Create new file
-	_, err = os.Create(os.Getenv("GOPATH") + "/src/github.com/alruiz12/simpleBT/src" + fileName)
-	newFile, err := os.OpenFile(os.Getenv("GOPATH") + "/src/github.com/alruiz12/simpleBT/src" + fileName, os.O_APPEND | os.O_WRONLY, 0666)
-	if err != nil {
-		fmt.Println(err)
-		return false
-	}
-	defer newFile.Close()
+	currentDir:=0
+	for currentDir<numNodes{
 
 
-
-	// Trying to fill out the new file using subfiles (in order)
-	var inOrderCount = 0
-	var maxTimes int = 0
-	var fileNameOriginal= fileName[:len(fileName)-4]
-	for inOrderCount<totalPartsNumOriginal {
-		for _, file := range files {
-			if strings.Compare(file.Name(), fileNameOriginal + strconv.Itoa(inOrderCount)) == 0 || strings.Compare(file.Name(), "P2P" + strconv.Itoa(inOrderCount)) == 0{
-				inOrderCount++
-//				fmt.Println(file.Name())
-				currentFile, err := os.Open(path + file.Name())
-				if err != nil {
-					fmt.Println(err)
-					return false
-				}
-
-				bytesCurrentFile, err := ioutil.ReadFile(path + file.Name())
-
-				_, err = newFile.WriteString(string(bytesCurrentFile))
-				if err != nil {
-					fmt.Println(err)
-					return false
-				}
-
-				currentFile.Close()
-			}
-
-		}
-		if inOrderCount == 0 {
-			maxTimes++
-		}
-		if maxTimes > 1 {
-			fmt.Println("maxTimes > 1 when looking for ", fileNameOriginal + strconv.Itoa(inOrderCount))
+		// Create new file
+		_, err = os.Create(os.Getenv("GOPATH") + "/src/github.com/alruiz12/simpleBT/src" + fileName+strconv.Itoa(currentDir))
+		newFile, err := os.OpenFile(os.Getenv("GOPATH") + "/src/github.com/alruiz12/simpleBT/src" + fileName+strconv.Itoa(currentDir), os.O_APPEND | os.O_WRONLY, 0666)
+		if err != nil {
+			fmt.Println(err)
 			return false
 		}
+		defer newFile.Close()
+
+		files, err := ioutil.ReadDir(path+subDir[currentDir].Name() )
+		fmt.Println("Entering ", path+subDir[currentDir].Name())
+		// Trying to fill out the new file using subfiles (in order)
+		var inOrderCount = 0
+		var maxTimes int = 0
+		var fileNameOriginal= fileName[:len(fileName)-4]
+		for inOrderCount<totalPartsNumOriginal {
+			for _, file := range files {
+				if strings.Compare(file.Name(), fileNameOriginal + strconv.Itoa(inOrderCount)) == 0 || strings.Compare(file.Name(), "P2P" + strconv.Itoa(inOrderCount)) == 0{
+					inOrderCount++
+					//				fmt.Println(file.Name())
+					currentFile, err := os.Open(path + file.Name())
+					if err != nil {
+						fmt.Println(err)
+						return false
+					}
+
+					bytesCurrentFile, err := ioutil.ReadFile(path + file.Name())
+
+					_, err = newFile.WriteString(string(bytesCurrentFile))
+					if err != nil {
+						fmt.Println(err)
+						return false
+					}
+
+					currentFile.Close()
+				}
+
+			}
+			if inOrderCount == 0 {
+				maxTimes++
+			}
+			if maxTimes > 1 {
+				fmt.Println("maxTimes > 1 when looking for ", fileNameOriginal + strconv.Itoa(inOrderCount))
+				return false
+			}
+		}
+
+		// Compute and compare new hash
+		newHash := md5sum(os.Getenv("GOPATH") + "/src/github.com/alruiz12/simpleBT/src" + fileName)
+		fmt.Println(newHash)
+		if strings.Compare(key, newHash) != 0 {
+			return false
+		}
+
+
+		return true
+
+
 	}
-
-	// Compute and compare new hash
-	newHash := md5sum(os.Getenv("GOPATH") + "/src/github.com/alruiz12/simpleBT/src" + fileName)
-	fmt.Println(newHash)
-	if strings.Compare(key, newHash) != 0 {
-		return false
-	}
-
-
-	return true
 }
 
 

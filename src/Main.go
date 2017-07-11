@@ -74,7 +74,7 @@ func main() {
 		
 		time.Sleep(45*time.Second)
 		
-		fmt.Println(httpGo.CheckPieces("0527cbea2805d89c6d5d6457b7f9f77c","NEW.xml",filePath))
+		fmt.Println(httpGo.CheckPieces("0527cbea2805d89c6d5d6457b7f9f77c","NEW.xml",filePath, 3))
 
 	}()
 	go func(){http.ListenAndServe(Peer1a, routerPeer)}()
