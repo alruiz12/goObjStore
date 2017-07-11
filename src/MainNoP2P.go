@@ -8,7 +8,7 @@ import (
 
 )
 
-func main() {
+func main2() {
 
 
 	//var filePath2 = os.Getenv("GOPATH")+"/src/github.com/alruiz12/simpleBT/src/bigFile"
@@ -35,7 +35,7 @@ func main() {
 
 	var ProxyAddr=[]string{proxy1,proxy2,proxy3,proxy4,proxy5}
 
-	httpGo.StartTracker(Peers, ProxyAddr)
+	httpGo.StartTracker(Peers)
 
 
 
