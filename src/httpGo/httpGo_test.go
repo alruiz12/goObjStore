@@ -11,8 +11,9 @@ func TestDirecories(t *testing.T){
 	router :=MyNewRouter()
 	const IP = "127.0.0.1"
 
+	var filePath = os.Getenv("GOPATH")+"/src/github.com/alruiz12/simpleBT/src/bigFile"
 
-	var filePath = os.Getenv("GOPATH")+"/src/github.com/alruiz12/simpleBT/dataset.xml"
+	//var filePath = os.Getenv("GOPATH")+"/src/github.com/alruiz12/simpleBT/dataset.xml"
 
 	// TRACKER
 	var trackerAddr = IP+":8000"
@@ -153,11 +154,11 @@ func TestDirecories(t *testing.T){
 
 		time.Sleep(5*time.Second)
 
-		Get("0527cbea2805d89c6d5d6457b7f9f77c",ProxyAddr, trackerAddr)
+		Get("cdb95ea6b9a5c86c3fd0d1952c1f8c53",ProxyAddr, trackerAddr)
 
 		time.Sleep(45*time.Second)
 
-		if (CheckPieces("0527cbea2805d89c6d5d6457b7f9f77c","NEW.xml",filePath, 3)) == false {
+		if (CheckPieces("cdb95ea6b9a5c86c3fd0d1952c1f8c53","NEW.xml",filePath, 3)) == false {
 			t.Error("True expected")
 		}
 	}()
