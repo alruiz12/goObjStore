@@ -365,13 +365,13 @@ func CheckPieces(key string ,fileName string, filePath string, numNodes int) boo
 				if strings.Compare(file.Name(), fileNameOriginal + strconv.Itoa(inOrderCount)) == 0 || strings.Compare(file.Name(), "P2P" + strconv.Itoa(inOrderCount)) == 0{
 					inOrderCount++
 					//				fmt.Println(file.Name())
-					currentFile, err := os.Open(path + subDir[currentDir].Name() + file.Name())
+					currentFile, err := os.Open(path + subDir[currentDir].Name() +"/"+ file.Name())
 					if err != nil {
 						fmt.Println(err)
 						return false
 					}
 
-					bytesCurrentFile, err := ioutil.ReadFile(path + subDir[currentDir].Name() +file.Name())
+					bytesCurrentFile, err := ioutil.ReadFile(path + subDir[currentDir].Name()+"/" +file.Name())
 
 					_, err = newFile.WriteString(string(bytesCurrentFile))
 					if err != nil {
