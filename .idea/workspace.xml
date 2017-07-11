@@ -3,7 +3,6 @@
   <component name="ChangeListManager">
     <list default="true" id="8e47a50e-bf29-44c1-8c05-f500e1510716" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/Main.go" afterPath="$PROJECT_DIR$/src/Main.go" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/httpGo/Proxy.go" afterPath="$PROJECT_DIR$/src/httpGo/Proxy.go" />
     </list>
     <option name="TRACKING_ENABLED" value="true" />
@@ -33,11 +32,11 @@
               </provider>
             </entry>
           </file>
-          <file leaf-file-name="Main.go" pinned="false" current-in-tab="true">
+          <file leaf-file-name="Main.go" pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/src/Main.go">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="227">
-                  <caret line="68" column="52" lean-forward="true" selection-start-line="68" selection-start-column="52" selection-end-line="68" selection-end-column="52" />
+                <state relative-caret-position="137">
+                  <caret line="63" column="0" lean-forward="true" selection-start-line="63" selection-start-column="0" selection-end-line="63" selection-end-column="0" />
                   <folding>
                     <element signature="e#14#101#0" expanded="true" />
                   </folding>
@@ -57,11 +56,11 @@
               </provider>
             </entry>
           </file>
-          <file leaf-file-name="Proxy.go" pinned="false" current-in-tab="false">
+          <file leaf-file-name="Proxy.go" pinned="false" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/src/httpGo/Proxy.go">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="141">
-                  <caret line="360" column="64" lean-forward="false" selection-start-line="360" selection-start-column="64" selection-end-line="360" selection-end-column="64" />
+                <state relative-caret-position="33">
+                  <caret line="336" column="43" lean-forward="true" selection-start-line="336" selection-start-column="43" selection-end-line="336" selection-end-column="43" />
                   <folding>
                     <element signature="e#16#249#0" expanded="true" />
                   </folding>
@@ -153,7 +152,7 @@
   <component name="ProjectFrameBounds">
     <option name="x" value="65" />
     <option name="y" value="52" />
-    <option name="width" value="1559" />
+    <option name="width" value="1404" />
     <option name="height" value="1028" />
   </component>
   <component name="ProjectView">
@@ -660,14 +659,21 @@
       <option name="project" value="LOCAL" />
       <updated>1499368651081</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="trying to use checkPieces for all dirs">
+      <created>1499765684294</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1499765684294</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="5139000" />
+    <option name="totallyTimeSpent" value="5835000" />
   </component>
   <component name="ToolWindowManager">
-    <frame x="65" y="52" width="1559" height="1028" extended-state="4" />
+    <frame x="65" y="52" width="1404" height="1028" extended-state="4" />
     <editor active="true" />
     <layout>
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
@@ -727,7 +733,8 @@
     <MESSAGE value="trying to use checkPieces for data/?" />
     <MESSAGE value="trying to use checkPieces for data/? + Main.go" />
     <MESSAGE value="trying to use checkPieces for data/? + Main.go full" />
-    <option name="LAST_COMMIT_MESSAGE" value="trying to use checkPieces for data/? + Main.go full" />
+    <MESSAGE value="trying to use checkPieces for all dirs" />
+    <option name="LAST_COMMIT_MESSAGE" value="trying to use checkPieces for all dirs" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager />
@@ -1066,22 +1073,22 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/httpGo/Proxy.go">
+    <entry file="file://$PROJECT_DIR$/src/Main.go">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="141">
-          <caret line="360" column="64" lean-forward="false" selection-start-line="360" selection-start-column="64" selection-end-line="360" selection-end-column="64" />
+        <state relative-caret-position="137">
+          <caret line="63" column="0" lean-forward="true" selection-start-line="63" selection-start-column="0" selection-end-line="63" selection-end-column="0" />
           <folding>
-            <element signature="e#16#249#0" expanded="true" />
+            <element signature="e#14#101#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/Main.go">
+    <entry file="file://$PROJECT_DIR$/src/httpGo/Proxy.go">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="227">
-          <caret line="68" column="52" lean-forward="true" selection-start-line="68" selection-start-column="52" selection-end-line="68" selection-end-column="52" />
+        <state relative-caret-position="33">
+          <caret line="336" column="43" lean-forward="true" selection-start-line="336" selection-start-column="43" selection-end-line="336" selection-end-column="43" />
           <folding>
-            <element signature="e#14#101#0" expanded="true" />
+            <element signature="e#16#249#0" expanded="true" />
           </folding>
         </state>
       </provider>

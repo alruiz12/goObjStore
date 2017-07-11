@@ -330,7 +330,7 @@ func CheckPieces(key string ,fileName string, filePath string, numNodes int) boo
 		return false
 	}
 	totalPartsNumOriginal := int(math.Ceil(float64(size) / float64(fileChunk)))
-
+	fmt.Println(totalPartsNumOriginal)
 
 	// Subfiles directory
 	path:=os.Getenv("GOPATH")+"/src/github.com/alruiz12/simpleBT/src/data/"+key+"/"
@@ -353,12 +353,15 @@ func CheckPieces(key string ,fileName string, filePath string, numNodes int) boo
 		}
 		defer newFile.Close()
 
-		files, err := ioutil.ReadDir(path+subDir[currentDir].Name() )
+		//files, err := ioutil.ReadDir(path+subDir[currentDir].Name() )
 		fmt.Println("Entering ", path+subDir[currentDir].Name())
 		// Trying to fill out the new file using subfiles (in order)
+		/*
 		var inOrderCount = 0
 		var maxTimes int = 0
 		var fileNameOriginal= fileName[:len(fileName)-4]
+
+
 		for inOrderCount<totalPartsNumOriginal {
 			for _, file := range files {
 				if strings.Compare(file.Name(), fileNameOriginal + strconv.Itoa(inOrderCount)) == 0 || strings.Compare(file.Name(), "P2P" + strconv.Itoa(inOrderCount)) == 0{
@@ -390,7 +393,7 @@ func CheckPieces(key string ,fileName string, filePath string, numNodes int) boo
 				return false
 			}
 		}
-
+		*/
 		// Compute and compare new hash
 		newHash := md5sum(os.Getenv("GOPATH") + "/src/github.com/alruiz12/simpleBT/src" + fileName)
 		fmt.Println(newHash)
@@ -399,10 +402,11 @@ func CheckPieces(key string ,fileName string, filePath string, numNodes int) boo
 		}
 
 
-		return true
+		//return true
 
 
 	}
+	return false
 }
 
 
