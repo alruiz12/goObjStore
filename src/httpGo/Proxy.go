@@ -330,7 +330,7 @@ func CheckPieces(key string ,fileName string, filePath string, numNodes int) boo
 		return false
 	}
 	totalPartsNumOriginal := int(math.Ceil(float64(size) / float64(fileChunk)))
-	fmt.Println(totalPartsNumOriginal)
+
 
 	// Subfiles directory
 	path:=os.Getenv("GOPATH")+"/src/github.com/alruiz12/simpleBT/src/data/"+key+"/"
@@ -353,27 +353,25 @@ func CheckPieces(key string ,fileName string, filePath string, numNodes int) boo
 		}
 		defer newFile.Close()
 
-		//files, err := ioutil.ReadDir(path+subDir[currentDir].Name() )
+		files, err := ioutil.ReadDir(path+subDir[currentDir].Name() )
 		fmt.Println("Entering ", path+subDir[currentDir].Name())
 		// Trying to fill out the new file using subfiles (in order)
-		/*
 		var inOrderCount = 0
 		var maxTimes int = 0
 		var fileNameOriginal= fileName[:len(fileName)-4]
-
 
 		for inOrderCount<totalPartsNumOriginal {
 			for _, file := range files {
 				if strings.Compare(file.Name(), fileNameOriginal + strconv.Itoa(inOrderCount)) == 0 || strings.Compare(file.Name(), "P2P" + strconv.Itoa(inOrderCount)) == 0{
 					inOrderCount++
 					//				fmt.Println(file.Name())
-					currentFile, err := os.Open(path + file.Name())
+					currentFile, err := os.Open(path + subDir[currentDir].Name() + file.Name())
 					if err != nil {
 						fmt.Println(err)
 						return false
 					}
 
-					bytesCurrentFile, err := ioutil.ReadFile(path + file.Name())
+					bytesCurrentFile, err := ioutil.ReadFile(path + subDir[currentDir].Name() +file.Name())
 
 					_, err = newFile.WriteString(string(bytesCurrentFile))
 					if err != nil {
@@ -393,10 +391,10 @@ func CheckPieces(key string ,fileName string, filePath string, numNodes int) boo
 				return false
 			}
 		}
-		*/
+
 		// Compute and compare new hash
-		newHash := md5sum(os.Getenv("GOPATH") + "/src/github.com/alruiz12/simpleBT/src" + fileName)
-		fmt.Println(newHash)
+		newHash := md5sum(os.Getenv("GOPATH") + "/src/github.com/alruiz12/simpleBT/src" + fileName+strconv.Itoa(currentDir))
+		fmt.Println("/src/github.com/alruiz12/simpleBT/src" + fileName+strconv.Itoa(currentDir) , newHash)
 		if strings.Compare(key, newHash) != 0 {
 			return false
 		}
@@ -404,9 +402,10 @@ func CheckPieces(key string ,fileName string, filePath string, numNodes int) boo
 
 		//return true
 
-
+		currentDir++
 	}
-	return false
+	if currentDir==0{return false}	// Never got in loop
+	return true			// else
 }
 
 
