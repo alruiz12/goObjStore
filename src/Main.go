@@ -4,7 +4,7 @@ import (
 	"time"
 	"github.com/alruiz12/simpleBT/src/httpGo"
 	"net/http"
-	"fmt"
+	//"fmt"
 	"github.com/alruiz12/simpleBT/src/conf"
 
 )
@@ -17,15 +17,15 @@ func main() {
 	routerPeer := httpGo.MyNewRouter()
 
 	go func(){
-		httpGo.Put( conf.FilePath, conf.TrackerAddr, 3)
+		//httpGo.Put( conf.FilePath, conf.TrackerAddr, 3)
 
 		time.Sleep(5*time.Second)
 
-		httpGo.Get(conf.KeyExample ,conf.ProxyAddr, conf.TrackerAddr)
+		//httpGo.Get(conf.KeyExample ,conf.ProxyAddr, conf.TrackerAddr)
 		
 		time.Sleep(45*time.Second)
 		
-		fmt.Println(httpGo.CheckPieces(conf.KeyExample ,"NEW.xml",conf.FilePath, conf.NumNodes))
+		//fmt.Println(httpGo.CheckPieces(conf.KeyExample ,"NEW.xml",conf.FilePath, conf.NumNodes))
 
 	}()
 	go func(){http.ListenAndServe(conf.Peer1a, routerPeer)}()

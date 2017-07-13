@@ -151,6 +151,7 @@ func Put(filePath string, trackerAddr string, numNodes int) {
 					defer w.Close()                        // close pipe //when go routine finishes
 				}()
 				_, err := http.Post(url, "application/json", r)
+				return
 				if err != nil {
 					fmt.Println("Error sending http POST ", err.Error())
 				}

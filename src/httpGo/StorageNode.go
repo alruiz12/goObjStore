@@ -71,7 +71,9 @@ func StorageNodeListen(w http.ResponseWriter, r *http.Request){
 
 		// Listen to tracker
 		if r.Method == http.MethodPost {
-			
+			fmt.Println(r.Header, "||||||||||||||||", r.Body )
+			fmt.Println(r )
+			fmt.Println("-----------------------------")
                         var wg sync.WaitGroup
 
 
