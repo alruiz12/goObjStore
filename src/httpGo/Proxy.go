@@ -419,7 +419,7 @@ func CheckPieces(key string ,fileName string, filePath string, numNodes int) boo
 		currentDir++
 	}
 	if currentDir==0{return false}	// Never got in loop
-
+	return true
 
 	// Checking Get output (locally)
 	path=os.Getenv("GOPATH")+"/src/github.com/alruiz12/simpleBT/src/local/"+key+"/"

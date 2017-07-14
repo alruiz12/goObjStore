@@ -32,17 +32,17 @@ func PUT(w http.ResponseWriter, r *http.Request){
 		go Put(os.Getenv("GOPATH") + "/src/github.com/alruiz12/simpleBT/src/" + name, conf.TrackerAddr, conf.NumNodes, putOK)
 		success := <-putOK
 		if success == true {
-			fmt.Print("put success ")
+			fmt.Println("put success ", time.Since(startPUT))
 			w.WriteHeader(http.StatusCreated)
 		} else {
-			fmt.Print("put fail")
+			fmt.Println("put fail")
 			w.WriteHeader(http.StatusUnprocessableEntity)
 		}
 		currentKey := md5sum(os.Getenv("GOPATH") + "/src/github.com/alruiz12/simpleBT/src/" + name)
 		fmt.Println(CheckPieces(currentKey, "NEW.xml", conf.FilePath, conf.NumNodes))
 	}()
 	wg.Wait()
-	fmt.Println(time.Since(startPUT))
+	fmt.Println("API: ",time.Since(startPUT))
 }
 
 
