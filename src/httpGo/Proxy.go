@@ -38,7 +38,7 @@ var totalPartsNum int
 var start time.Time
 var startGet time.Time
 var numGets int = 0
-func Put(filePath string, trackerAddr string, numNodes int) {
+func Put(filePath string, trackerAddr string, numNodes int, putDone chan int) {
 	var putWg sync.WaitGroup
 	putWg.Add(1)
 	go func() {
@@ -172,6 +172,7 @@ func Put(filePath string, trackerAddr string, numNodes int) {
 	}()
 	fmt.Println("Proxy free, goroutines running")
 	putWg.Wait()
+	putDone <- 1
 	fmt.Println("Proxy's routines finished")
 }
 
