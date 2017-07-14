@@ -20,8 +20,8 @@ import (
 //	"math/rand"
 )
 
-const fileChunk = 1*(1<<10) // 1 KB
-//const fileChunk = 8*(1<<20) // 8 MB
+//const fileChunk = 1*(1<<10) // 1 KB
+const fileChunk = 8*(1<<20) // 8 MB
 
 type msg struct {
 	NodeList [][]string
