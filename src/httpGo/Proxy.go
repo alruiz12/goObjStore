@@ -91,7 +91,7 @@ func Put(filePath string, trackerAddr string, numNodes int, putOK chan bool) {
 
 	var auxList []bool
 	var i int = 0
-	for i < numNodes {
+	for i < len(nodeList) {
 		auxList = append(auxList, false)
 		i++
 	}
@@ -119,7 +119,7 @@ func Put(filePath string, trackerAddr string, numNodes int, putOK chan bool) {
 	httpVar.TotalNumMutex.Unlock()
 	var currentAdr int = 0
 
-	for currentNum < numNodes {
+	for currentNum < len(nodeList) {
 		rpipe, wpipe := io.Pipe()
 		mHash := hashMsg{Hash:hash}
 		go func() {
@@ -150,7 +150,7 @@ func Put(filePath string, trackerAddr string, numNodes int, putOK chan bool) {
 		partSize = int(math.Min(fileChunk, float64(size - (currentPart * fileChunk))))
 		partBuffer = make([]byte, partSize)
 		_, err = file.Read(partBuffer)                // Get chunk
-		m := msg{NodeList:nodeList, Num:numNodes, Hash:hash, Text:partBuffer, CurrentNode:currentNum, Name: currentPart}
+		m := msg{NodeList:nodeList, Num:len(nodeList), Hash:hash, Text:partBuffer, CurrentNode:currentNum, Name: currentPart}
 		//r, w :=io.Pipe()			// create pipe
 		go func(m2 msg, url string) {
 			 httpVar.SendReady <- 1
@@ -176,7 +176,7 @@ func Put(filePath string, trackerAddr string, numNodes int, putOK chan bool) {
 		}(m, "http://" + nodeList[currentNum][currentAdr] + "/StorageNodeListen")
 
 		currentPart++
-		currentNum = (currentNum + 1) % numNodes
+		currentNum = (currentNum + 1) % len(nodeList)
 
 		// Every 'numNodes' iterations, send chunk to next address, first send to different nodes, then change address
 		if currentNum == 0 {

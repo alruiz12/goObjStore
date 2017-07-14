@@ -85,11 +85,6 @@ func chooseNodes(num int)[][]string{
 	var response [][]string
 	var busies [][]string
 	for i<num{
-		if i==len(httpVar.TrackerNodeList){
-			fmt.Println("There is not enough free nodes, adding bussies")
-			chooseBusyNodes(num,busies, &response)
-			return response
-		}
 		if httpVar.TrackerNodeList[i].Busy==false {
 			response = append(response, httpVar.TrackerNodeList[i].Url )
 			httpVar.TrackerNodeList[i].Busy=true
@@ -99,17 +94,23 @@ func chooseNodes(num int)[][]string{
 		i++
 
 	}
+	if len(response)<num{
+		fmt.Println("There is not enough free nodes, adding bussies")
+		busyResponse:= chooseBusyNodes(num,busies, response)
+		return busyResponse
+	}
 	return response
 }
 
-func chooseBusyNodes(num int, busies [][]string, response *[][]string){
+func chooseBusyNodes(num int, busies [][]string, response [][]string) [][]string{
 	j:=0 // iterates through bussies
-	for len(*response)<num && j<len(busies){
-		*response=append(*response, busies[j])
+	for len(response)<num && j<len(busies){
+		response=append(response, busies[j])
 		j++
 	}
-	if j==len(busies){fmt.Println(" total number of nodes less than proxy asked ")}
+	if num>len(response){fmt.Println(" total number of nodes less than proxy asked ")}
 		// proxy will receive less nodes than expected
+	return response
 
 
 }
