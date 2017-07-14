@@ -7,9 +7,12 @@ import(
 	"crypto/md5"
 	"encoding/hex"
 	"github.com/alruiz12/simpleBT/src/conf"
+	"time"
 )
 
 func PUT(w http.ResponseWriter, r *http.Request){
+	var startPUT time.Time
+	startPUT=time.Now()
 	name:=md5String(r.URL.Path)
 	file, err := os.Create(os.Getenv("GOPATH") + "/src/github.com/alruiz12/simpleBT/src/"+name )
 	if err != nil {
@@ -20,9 +23,17 @@ func PUT(w http.ResponseWriter, r *http.Request){
 		fmt.Println(err)
 	}
 	file.Close()
-	putDone := make(chan int)
-	go Put(os.Getenv("GOPATH") + "/src/github.com/alruiz12/simpleBT/src/"+name, conf.TrackerAddr, conf.NumNodes, putDone)
-	<-putDone
+	putOK := make(chan bool)
+	go Put(os.Getenv("GOPATH") + "/src/github.com/alruiz12/simpleBT/src/"+name, conf.TrackerAddr, conf.NumNodes, putOK)
+	success:= <-putOK
+	if success == true {
+		fmt.Println("put success ",time.Since(startPUT))
+		w.WriteHeader(http.StatusCreated )
+	}else{	fmt.Println("put fail")
+		w.WriteHeader(http.StatusUnprocessableEntity)}
+	currentKey:=md5sum(os.Getenv("GOPATH") + "/src/github.com/alruiz12/simpleBT/src/"+name)
+	fmt.Println(CheckPieces(currentKey ,"NEW.xml",conf.FilePath, conf.NumNodes))
+
 
 }
 

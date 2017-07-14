@@ -16,7 +16,7 @@ import (
 	"strings"
 	"math/rand"
 )
-
+var start time.Time
 func PutNoP2P(filePath string, addr string, trackerAddr string, numNodes int){
 	time.Sleep(1 * time.Second)
 	start=time.Now()

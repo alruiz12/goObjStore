@@ -7,8 +7,8 @@ var NumNodes int = 3
 
 const IP = "127.0.0.1"
 
-//var FilePath2 = os.Getenv("GOPATH")+"/src/github.com/alruiz12/simpleBT/src/bigFile"
-var FilePath = os.Getenv("GOPATH")+"/src/github.com/alruiz12/simpleBT/dataset.xml"
+var FilePath = os.Getenv("GOPATH")+"/src/github.com/alruiz12/simpleBT/src/bigFile"
+//var FilePath = os.Getenv("GOPATH")+"/src/github.com/alruiz12/simpleBT/dataset.xml"
 // TRACKER
 var TrackerAddr = IP+":8000"
 

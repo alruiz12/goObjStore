@@ -9,7 +9,7 @@ import(
 	"encoding/json"
 	"github.com/alruiz12/simpleBT/src/httpVar"
 	"strconv"
-	"time"
+	//"time"
 	"path/filepath"
 	"strings"
 	"sync"
@@ -71,9 +71,6 @@ func StorageNodeListen(w http.ResponseWriter, r *http.Request){
 
 		// Listen to tracker
 		if r.Method == http.MethodPost {
-			fmt.Println(r.Header, "||||||||||||||||", r.Body )
-			fmt.Println(r )
-			fmt.Println("-----------------------------")
                         var wg sync.WaitGroup
 
 
@@ -156,7 +153,7 @@ func StorageNodeListen(w http.ResponseWriter, r *http.Request){
                         httpVar.CurrentPart++
 
 			if httpVar.CurrentPart == (totalPartsNum) {
-				fmt.Println("Proxy data ended ...", time.Since(start), " currentPart= ",httpVar.CurrentPart)
+				//fmt.Println("Proxy data ended ...", time.Since(start), " currentPart= ",httpVar.CurrentPart)
 			}
                         httpVar.TrackerMutex.Unlock()
 		}
@@ -214,7 +211,7 @@ func p2pRequest(w http.ResponseWriter, r *http.Request) {
                 httpVar.P2pPart++
 
 		if httpVar.P2pPart >= (totalPartsNum*(chunk.Num-1)) {
-			fmt.Println("p2p data ended: ",time.Since(start))
+			//fmt.Println("p2p data ended: ",time.Since(start))
 		}
 		httpVar.PeerMutex.Unlock()
 
