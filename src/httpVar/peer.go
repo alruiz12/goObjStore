@@ -1,6 +1,8 @@
 package httpVar
 
-import "sync"
+import (
+	"sync"
+)
 var CurrentPart = 0
 var P2pPart = 0
 var TrackerMutex = &sync.Mutex{}
@@ -25,3 +27,5 @@ var ProxyAddr []string
 var SendReady = make(chan int, 180)
 var SendP2PReady = make(chan int, 20)
 
+//var Accounts = make(map[string]httpGo.Account)
+//var AccountMutex
