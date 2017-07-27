@@ -20,7 +20,7 @@ func main() {
 		//httpGo.Put( conf.FilePath, conf.TrackerAddr, 3)
 
 		time.Sleep(5*time.Second)
-		httpGo.CreateAccount("alvaro")
+		//httpGo.CreateAccount("alvaro")
 		//httpGo.Get(conf.KeyExample ,conf.ProxyAddr, conf.TrackerAddr)
 		
 		time.Sleep(45*time.Second)

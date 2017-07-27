@@ -8,7 +8,7 @@ var Accounts = struct{
 	m map[string]Account
 	sync.Mutex
 }{m: make(map[string]Account) }
-func CreateAccount(name string){
+func CreateAccount2 (name string){
 	Accounts.Lock()
 	_, exists := Accounts.m[name]
 	if !exists {

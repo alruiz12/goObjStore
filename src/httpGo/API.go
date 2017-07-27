@@ -54,3 +54,29 @@ func md5String(str string) string{
 	}
 	return hex.EncodeToString(hasher.Sum(nil))
 }
+
+func CreateAccountAPI(w http.ResponseWriter, r *http.Request){
+	var wg sync.WaitGroup
+	wg.Add(1)
+	go func() {
+		defer wg.Done()
+		accountName:=r.Header["Name"][0]
+		createOK := make(chan bool)
+		go CreateAccountProxy(accountName, createOK)
+
+
+		//go Put(os.Getenv("GOPATH") + "/src/github.com/alruiz12/simpleBT/src/" + name, conf.TrackerAddr, conf.NumNodes, putOK)
+		success := <-createOK
+		if success == true {
+			fmt.Println("put success ")
+			w.WriteHeader(http.StatusCreated)
+		} else {
+			fmt.Println("put fail")
+			w.WriteHeader(http.StatusUnprocessableEntity)
+		}
+	}()
+	wg.Wait()
+}
+
+
+

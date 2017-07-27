@@ -486,6 +486,41 @@ func CheckPieces(key string ,fileName string, filePath string, numNodes int) boo
 	return true
 }
 
+type AccInfo struct {
+	NodeList [][]string
+	Num int
+	CurrentNode int
+	Name string
+}
+
+func CreateAccountProxy(name string, createOK chan bool){
+	m := msg{NodeList:nodeList, Num:len(nodeList), Hash:hash, Text:partBuffer, CurrentNode:currentNum, Name: currentPart}
+	r, w := io.Pipe()
+	go func() {
+		// save buffer to object
+		err = json.NewEncoder(w).Encode(m2)
+		if err != nil {
+			fmt.Println("Error encoding to pipe ", err.Error())
+			createOK <- false
+			return
+		}
+		defer w.Close()                        // close pipe //when go routine finishes
+	}()
+	_, err := http.Post(url, "application/json", r)
+	if err != nil {
+		fmt.Println("Error sending http POST ", err.Error())
+		createOK <- false
+		return
+	}
+
+	(m, "http://" + nodeList[currentNum][currentAdr] + "/StorageNodeListen")
+
+	createOK <- true
+}
+
+
+
+
 
 
 
