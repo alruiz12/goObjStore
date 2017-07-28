@@ -493,7 +493,7 @@ type AccInfo struct {
 	Name string
 }
 
-func CreateAccountProxy(name string, createOK chan bool){
+func CreateAccountProxy(name string, createOK chan bool){/*
 	m := msg{NodeList:nodeList, Num:len(nodeList), Hash:hash, Text:partBuffer, CurrentNode:currentNum, Name: currentPart}
 	r, w := io.Pipe()
 	go func() {
@@ -516,6 +516,7 @@ func CreateAccountProxy(name string, createOK chan bool){
 	(m, "http://" + nodeList[currentNum][currentAdr] + "/StorageNodeListen")
 
 	createOK <- true
+	*/
 }
 
 
