@@ -3,7 +3,8 @@
   <component name="ChangeListManager">
     <list default="true" id="8e47a50e-bf29-44c1-8c05-f500e1510716" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/httpGo/Proxy.go" afterPath="$PROJECT_DIR$/src/httpGo/Proxy.go" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/httpGo/ProxyNop2p.go" afterPath="$PROJECT_DIR$/src/httpGo/ProxyNop2p.go" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/httpGo/SNodeNoP2p.go" afterPath="$PROJECT_DIR$/src/httpGo/SNodeNoP2p.go" />
     </list>
     <ignored path="$PROJECT_DIR$/out/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -59,7 +60,7 @@
               </provider>
             </entry>
           </file>
-          <file leaf-file-name="Proxy.go" pinned="false" current-in-tab="true">
+          <file leaf-file-name="Proxy.go" pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/src/httpGo/Proxy.go">
               <provider selected="true" editor-type-id="text-editor">
                 <state relative-caret-position="482">
@@ -71,6 +72,26 @@
                     <element signature="n#!!block;n#Get#0" expanded="false" />
                     <element signature="n#!!block;n#ReturnData#0" expanded="false" />
                   </folding>
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file leaf-file-name="ProxyNop2p.go" pinned="false" current-in-tab="true">
+            <entry file="file://$PROJECT_DIR$/src/httpGo/ProxyNop2p.go">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="-3214">
+                  <caret line="16" column="17" lean-forward="true" selection-start-line="16" selection-start-column="17" selection-end-line="16" selection-end-column="17" />
+                  <folding />
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file leaf-file-name="SNodeNoP2p.go" pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/src/httpGo/SNodeNoP2p.go">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="216">
+                  <caret line="12" column="2" lean-forward="false" selection-start-line="12" selection-start-column="2" selection-end-line="12" selection-end-column="2" />
+                  <folding />
                 </state>
               </provider>
             </entry>
@@ -230,7 +251,6 @@
     <option name="CHANGED_PATHS">
       <list>
         <option value="$PROJECT_DIR$/src/MainNoP2P.go" />
-        <option value="$PROJECT_DIR$/src/httpGo/ProxyNop2p.go" />
         <option value="$PROJECT_DIR$/src/httpGo/StorageNode.go" />
         <option value="$PROJECT_DIR$/src/conf/configuration.go" />
         <option value="$PROJECT_DIR$/src/httpGo/Tracker.go" />
@@ -243,6 +263,8 @@
         <option value="$PROJECT_DIR$/src/test.sh" />
         <option value="$PROJECT_DIR$/src/httpGo/httpGo_test.go" />
         <option value="$PROJECT_DIR$/src/httpGo/Proxy.go" />
+        <option value="$PROJECT_DIR$/src/httpGo/SNodeNoP2p.go" />
+        <option value="$PROJECT_DIR$/src/httpGo/ProxyNop2p.go" />
       </list>
     </option>
   </component>
@@ -936,7 +958,7 @@
       <workItem from="1500393462214" duration="1412000" />
       <workItem from="1500480634439" duration="605000" />
       <workItem from="1501093634925" duration="3577000" />
-      <workItem from="1501263184433" duration="3265000" />
+      <workItem from="1501263184433" duration="3753000" />
     </task>
     <task id="LOCAL-00017" summary="api PUT creation">
       <created>1499940068525</created>
@@ -1015,7 +1037,14 @@
       <option name="project" value="LOCAL" />
       <updated>1501339612013</updated>
     </task>
-    <option name="localTasksCounter" value="28" />
+    <task id="LOCAL-00028" summary="fixing test">
+      <created>1501340050237</created>
+      <option name="number" value="00028" />
+      <option name="presentableId" value="LOCAL-00028" />
+      <option name="project" value="LOCAL" />
+      <updated>1501340050237</updated>
+    </task>
+    <option name="localTasksCounter" value="29" />
     <servers />
   </component>
   <component name="TestHistory">
@@ -1051,11 +1080,11 @@
     </history-entry>
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="58701000" />
+    <option name="totallyTimeSpent" value="59189000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="65" y="24" width="2495" height="1056" extended-state="6" />
-    <editor active="false" />
+    <editor active="true" />
     <layout>
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
@@ -1066,7 +1095,7 @@
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.21393035" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.21393035" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Properties" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Capture Tool" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
@@ -1098,7 +1127,6 @@
     <option name="myLimit" value="2678400000" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="StorageNode with multiple addresses in process, compiles" />
     <MESSAGE value="StorageNode with multiple addresses in process, compiles 2" />
     <MESSAGE value="os.Stat in for" />
     <MESSAGE value="trying to optimize RAM memory, observing until p2p" />
@@ -1123,7 +1151,8 @@
     <MESSAGE value="createAccount creation, about to external API" />
     <MESSAGE value="createAccount API completed, working on CreateAccountProxy" />
     <MESSAGE value="trying to fix build" />
-    <option name="LAST_COMMIT_MESSAGE" value="trying to fix build" />
+    <MESSAGE value="fixing test" />
+    <option name="LAST_COMMIT_MESSAGE" value="fixing test" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager />
@@ -1287,13 +1316,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/httpGo/ProxyNop2p.go">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="18">
-          <caret line="1" column="0" lean-forward="false" selection-start-line="1" selection-start-column="0" selection-end-line="1" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/httpGo/Tracker.go">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="1188">
@@ -1301,13 +1323,6 @@
           <folding>
             <element signature="e#15#134#0" expanded="true" />
           </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/httpGo/SNodeNoP2p.go">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="853">
-          <caret line="79" column="0" lean-forward="true" selection-start-line="79" selection-start-column="0" selection-end-line="79" selection-end-column="0" />
         </state>
       </provider>
     </entry>
@@ -1427,6 +1442,22 @@
             <element signature="n#!!block;n#Get#0" expanded="false" />
             <element signature="n#!!block;n#ReturnData#0" expanded="false" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/httpGo/SNodeNoP2p.go">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="216">
+          <caret line="12" column="2" lean-forward="false" selection-start-line="12" selection-start-column="2" selection-end-line="12" selection-end-column="2" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/httpGo/ProxyNop2p.go">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-3214">
+          <caret line="16" column="17" lean-forward="true" selection-start-line="16" selection-start-column="17" selection-end-line="16" selection-end-column="17" />
+          <folding />
         </state>
       </provider>
     </entry>

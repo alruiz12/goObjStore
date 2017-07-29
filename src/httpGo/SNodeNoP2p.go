@@ -1,6 +1,7 @@
 package httpGo
 import(
 	"net/http"
+	/*
 	"fmt"
 	"io/ioutil"
 	"log"
@@ -9,9 +10,10 @@ import(
 	"github.com/alruiz12/simpleBT/src/httpVar"
 	"strconv"
 	"time"
-
+*/
 )
 func SNodeListenNoP2P(w http.ResponseWriter, r *http.Request){
+	/*
 	var chunk msg
 	// Get node ID
 	var nodeID int =int(r.Host[len(r.Host)-1]-'0')
@@ -75,5 +77,5 @@ func SNodeListenNoP2P(w http.ResponseWriter, r *http.Request){
 	}
 
 
-
+*/
 }

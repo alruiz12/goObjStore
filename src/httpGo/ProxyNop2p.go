@@ -1,6 +1,7 @@
 package httpGo
 
 import (
+	/*
 	"os"
 	"fmt"
 	"strconv"
@@ -15,9 +16,12 @@ import (
 	"github.com/alruiz12/simpleBT/src/httpVar"
 	"strings"
 	"math/rand"
+	*/
+
 )
-var start time.Time
+//var start time.Time
 func PutNoP2P(filePath string, addr string, trackerAddr string, numNodes int){
+	/*
 	time.Sleep(1 * time.Second)
 	start=time.Now()
 	var hash string = md5sum(filePath)
@@ -155,11 +159,13 @@ func PutNoP2P(filePath string, addr string, trackerAddr string, numNodes int){
 		currentNum=(currentNum+1)%numNodes
 	}
 	fmt.Println("End of PutNoP2P!")
+	*/
 }
 
 
 
 func GetNoP2P(Key string, proxyAddr []string, trackerAddr string){
+	/*
 	time.Sleep(1 * time.Second)
 
 	// Ask tracker for nodes
@@ -217,7 +223,7 @@ func GetNoP2P(Key string, proxyAddr []string, trackerAddr string){
 	//fmt.Println("statusCode: ",res.StatusCode )
 	if err := res.Body.Close(); err != nil {
 		fmt.Println(err)
-	}
+	}*/
 }
 
 
