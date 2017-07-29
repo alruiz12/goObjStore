@@ -147,17 +147,20 @@ func TestDirecories(t *testing.T){
 
 	go func(){
 		putOK := make(chan bool)
-		Put(filePath, trackerAddr, 3, putOK)
+		go Put(filePath, trackerAddr, 3, putOK)
+		success := <-putOK
+		if success != true {
+			t.Error("True expected")
+		}
 
-		time.Sleep(5*time.Second)
 
 		Get("cdb95ea6b9a5c86c3fd0d1952c1f8c53",ProxyAddr, trackerAddr)
-		fmt.Println("between get and sleep")
-		time.Sleep(45*time.Second)
+
 
 		if (CheckPieces("cdb95ea6b9a5c86c3fd0d1952c1f8c53","NEW.xml",filePath, 3)) == false {
 			t.Error("True expected")
 		}
+		fmt.Println("check pieces success ")
 	}()
 
 	time.AfterFunc(600 * time.Second, func(){
@@ -207,6 +210,6 @@ func TestDirecories(t *testing.T){
 		}
 
 	})
-	time.Sleep(60*time.Second)
+	time.Sleep(40*time.Second)
 
 }
