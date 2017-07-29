@@ -122,25 +122,21 @@ func TestDirecories(t *testing.T){
 	}()
 
 	go func(){
-		fmt.Println("go func")
 		if err := proxy1run.ListenAndServe(); err!=nil{
 			fmt.Println("ListenAndServe error", err.Error())
 		}
 	}()
 	go func(){
-		fmt.Println("go func")
 		if err := proxy2run.ListenAndServe(); err!=nil{
 			fmt.Println("ListenAndServe error", err.Error())
 		}
 	}()
 	go func(){
-		fmt.Println("go func")
 		if err := proxy3run.ListenAndServe(); err!=nil{
 			fmt.Println("ListenAndServe error", err.Error())
 		}
 	}()
 	go func(){
-		fmt.Println("go func")
 		if err := tracker.ListenAndServe(); err!=nil{
 			fmt.Println("ListenAndServe error", err.Error())
 		}
@@ -150,12 +146,13 @@ func TestDirecories(t *testing.T){
 	StartTracker(Peers)
 
 	go func(){
-		Put(filePath, trackerAddr, 3)
+		putOK := make(chan bool)
+		Put(filePath, trackerAddr, 3, putOK)
 
 		time.Sleep(5*time.Second)
 
 		Get("cdb95ea6b9a5c86c3fd0d1952c1f8c53",ProxyAddr, trackerAddr)
-
+		fmt.Println("between get and sleep")
 		time.Sleep(45*time.Second)
 
 		if (CheckPieces("cdb95ea6b9a5c86c3fd0d1952c1f8c53","NEW.xml",filePath, 3)) == false {
@@ -210,6 +207,6 @@ func TestDirecories(t *testing.T){
 		}
 
 	})
-	time.Sleep(180*time.Second)
+	time.Sleep(60*time.Second)
 
 }
