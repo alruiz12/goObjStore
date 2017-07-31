@@ -119,7 +119,7 @@ func SNPutObj(w http.ResponseWriter, r *http.Request){
 			// sending only one chunk to the rest of peers once, don't need to use multiple addr per peer
 			var currentAddr int = rand.Intn(len(chunk.NodeList))
 			for _, peer := range chunk.NodeList {
-				peerURL := "http://" + peer[currentAddr] + "/p2pRequest"
+				peerURL := "http://" + peer[currentAddr] + "/SNPutObjP2PRequest"
 
 				go func(p string, URL string) {
 					if nodeID == int(p[len(p) - 1] - '0') {
