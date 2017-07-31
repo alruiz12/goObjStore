@@ -7,6 +7,7 @@
       <root url="file://$PROJECT_DIR$/../../../2example" />
       <root url="file://$PROJECT_DIR$/../.." />
       <root url="file://$PROJECT_DIR$/../../../golang.org" />
+      <root url="file://$PROJECT_DIR$/../../../msgp-demo" />
     </CLASSES>
     <JAVADOC />
     <SOURCES>
@@ -16,6 +17,7 @@
       <root url="file://$PROJECT_DIR$/../../../2example" />
       <root url="file://$PROJECT_DIR$/../.." />
       <root url="file://$PROJECT_DIR$/../../../golang.org" />
+      <root url="file://$PROJECT_DIR$/../../../msgp-demo" />
     </SOURCES>
     <excluded>
       <root url="file://$PROJECT_DIR$" />

@@ -17,7 +17,8 @@ import (
 	"github.com/alruiz12/simpleBT/src/httpVar"
 	"strings"
 	"sync"
-//	"math/rand"
+	"math/rand"
+	"github.com/alruiz12/simpleBT/src/conf"
 )
 
 const fileChunk = 1*(1<<10) // 1 KB
@@ -44,8 +45,8 @@ func Put(filePath string, trackerAddr string, numNodes int, putOK chan bool) {
 	var err error
 
 	// Aask tracker for nodes
-	quantityJson := `{"Quantity":"` + strconv.Itoa(numNodes) + `","Hash":"` + hash + `"}`
-	reader := strings.NewReader(quantityJson)
+	requestJson := `{"Quantity":"` + strconv.Itoa(numNodes) + `","ID":"` + hash + `","Type":"object"}`
+	reader := strings.NewReader(requestJson)
 	trackerURL := "http://" + trackerAddr + "/GetNodes"
 	request, err := http.NewRequest("GET", trackerURL, reader)
 	if err != nil {
@@ -77,7 +78,7 @@ func Put(filePath string, trackerAddr string, numNodes int, putOK chan bool) {
 		return
 	}
 	if err != nil {
-		fmt.Println("Put: error reciving response: ", err.Error())
+		fmt.Println("Put: error receiving response: ", err.Error())
 		putOK <- false
 		return
 	}
@@ -98,6 +99,9 @@ func Put(filePath string, trackerAddr string, numNodes int, putOK chan bool) {
 	httpVar.DirMutex.Lock()
 	httpVar.HashMap[hash] = auxList
 	httpVar.DirMutex.Unlock()
+
+
+
 	// Open file
 	file, err := os.Open(filePath)
 	if err != nil {
@@ -225,8 +229,8 @@ func Get(Key string, proxyAddr []string, trackerAddr string){
 	startGet=time.Now()
 	var err error
 	// ask tracker for nodes for a given key
-	keyJson := `{"Key":"`+Key+`"}`
-	reader := strings.NewReader(keyJson)
+	requestJson := `{"ID":"`+Key+`","Type":"object"}`
+	reader := strings.NewReader(requestJson)
 	trackerURL:="http://"+trackerAddr+"/GetNodesForKey"
 	request, err := http.NewRequest("GET", trackerURL, reader)
 	if err != nil {
@@ -493,12 +497,56 @@ type AccInfo struct {
 	Name string
 }
 
-func CreateAccountProxy(name string, createOK chan bool){/*
-	m := msg{NodeList:nodeList, Num:len(nodeList), Hash:hash, Text:partBuffer, CurrentNode:currentNum, Name: currentPart}
+func CreateAccountProxy(name string, createOK chan bool){
+	var nodeList [][]string
+	var err error
+
+	// Aask tracker for nodes
+	requestJson := `{"Quantity":"` + strconv.Itoa(conf.NumNodes) + `","ID":"` + name + `","Type":"account"}`
+	reader := strings.NewReader(requestJson)
+	trackerURL := "http://" + conf.TrackerAddr + "/GetNodes"
+	request, err := http.NewRequest("GET", trackerURL, reader)
+	if err != nil {
+		fmt.Println("Put: error creating request: ", err.Error())
+		createOK <- false
+		return
+	}
+	res, err := http.DefaultClient.Do(request)
+	if err != nil {
+		fmt.Println("Put: error sending request: ", err.Error())
+		createOK <- false
+		return
+	}
+	body, err := ioutil.ReadAll(io.LimitReader(res.Body, 1048576))
+	if err != nil {
+		fmt.Println(err)
+		createOK <- false
+		return
+	}
+	if err := res.Body.Close(); err != nil {
+		fmt.Println(err)
+		createOK <- false
+		return
+	}
+	if err := json.Unmarshal(body, &nodeList); err != nil {
+		fmt.Println("Put: error unprocessable entity: ", err.Error())
+		createOK <- false
+		return
+	}
+	if err != nil {
+		fmt.Println("Put: error receiving response: ", err.Error())
+		createOK <- false
+		return
+	}
+
+	currentPeer:= rand.Intn(len(nodeList))
+	currentPeerAddr := rand.Intn(len(nodeList))
+	acc := AccInfo{NodeList:nodeList, Num:len(nodeList), CurrentNode:currentPeer, Name:name }
+
 	r, w := io.Pipe()
 	go func() {
 		// save buffer to object
-		err = json.NewEncoder(w).Encode(m2)
+		err = json.NewEncoder(w).Encode(acc)
 		if err != nil {
 			fmt.Println("Error encoding to pipe ", err.Error())
 			createOK <- false
@@ -506,17 +554,16 @@ func CreateAccountProxy(name string, createOK chan bool){/*
 		}
 		defer w.Close()                        // close pipe //when go routine finishes
 	}()
-	_, err := http.Post(url, "application/json", r)
+	fmt.Println(nodeList[currentPeer][currentPeerAddr])
+	_, err = http.Post("http://" + nodeList[currentPeer][currentPeerAddr] + "/createAccListen", "application/json", r)
 	if err != nil {
 		fmt.Println("Error sending http POST ", err.Error())
 		createOK <- false
 		return
 	}
 
-	(m, "http://" + nodeList[currentNum][currentAdr] + "/StorageNodeListen")
-
 	createOK <- true
-	*/
+
 }
 
 

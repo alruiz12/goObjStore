@@ -6,6 +6,7 @@ import (
 	"net/http"
 	"time"
 	"os"
+	"os/exec"
 )
 func TestDirecories(t *testing.T){
 	router :=MyNewRouter()
@@ -161,6 +162,25 @@ func TestDirecories(t *testing.T){
 			t.Error("True expected")
 		}
 		fmt.Println("check pieces success ")
+		var (
+			cmdOut []byte
+			err    error
+		)
+		cmdName := "curl"
+		//fmt.Println("m"+string('"')+"Name:account1"+string('"')+"m")
+		header:=string('"')+"Name:account1"+string('"')
+		cmdArgs := []string{"http://localhost:8000/createAccount", "-X", "POST","-H", header/*, "-w", "%{http_code}"*/}
+		fmt.Println(cmdArgs)
+		cmdArgsString:= "http://localhost:8000/createAccount -H "+header
+		fmt.Println(cmdArgsString)
+		// "curl http://localhost:8000/createAccount -H "+string('"')+"Name:account1"+string('"')+" -w %{http_code}"
+		if cmdOut, err = exec.Command(cmdName, cmdArgs...).Output(); err != nil {
+			fmt.Fprintln(os.Stderr, "There was an error running command: ", err)
+			os.Exit(1)
+		}
+		resp := string(cmdOut)
+		fmt.Println("curl response ", resp)
+
 	}()
 
 	time.AfterFunc(600 * time.Second, func(){

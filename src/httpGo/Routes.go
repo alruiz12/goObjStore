@@ -26,6 +26,7 @@ func MyNewRouter() *mux.Router {
 	router.HandleFunc("/prepNode",prepNode)
 	router.HandleFunc("/PUT/abc/de", PUT)	// Todo: account/container/object
 	router.HandleFunc("/createAccount", CreateAccountAPI)
+	router.HandleFunc("/createAccListen", CreateAccListen)
 	for _, route := range routes {
 		router.
 			Methods(route.Method).

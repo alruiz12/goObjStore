@@ -56,6 +56,7 @@ func md5String(str string) string{
 }
 
 func CreateAccountAPI(w http.ResponseWriter, r *http.Request){
+	fmt.Println("createAccountAPI")
 	var wg sync.WaitGroup
 	wg.Add(1)
 	go func() {
@@ -68,10 +69,10 @@ func CreateAccountAPI(w http.ResponseWriter, r *http.Request){
 		//go Put(os.Getenv("GOPATH") + "/src/github.com/alruiz12/simpleBT/src/" + name, conf.TrackerAddr, conf.NumNodes, putOK)
 		success := <-createOK
 		if success == true {
-			fmt.Println("put success ")
+			fmt.Println("create success ")
 			w.WriteHeader(http.StatusCreated)
 		} else {
-			fmt.Println("put fail")
+			fmt.Println("create fail")
 			w.WriteHeader(http.StatusUnprocessableEntity)
 		}
 	}()

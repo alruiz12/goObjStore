@@ -295,3 +295,25 @@ func sendChunksToProxy(nodeID string, key string, URL string){
 	})
 	
 }
+
+func CreateAccListen(w http.ResponseWriter, r *http.Request){
+	if r.Method == http.MethodPost {
+		var acc AccInfo
+		body, err := ioutil.ReadAll(r.Body)
+		if err != nil {
+			fmt.Println("error reading ", err)
+		}
+		if err := r.Body.Close(); err != nil {
+			fmt.Println("error body ", err)
+		}
+		if err := json.Unmarshal(body, &acc); err != nil {
+			w.Header().Set("Content-Type", "application/json; charset=UTF-8")
+			w.WriteHeader(422) // unprocessable entity
+			log.Println(err)
+			if err := json.NewEncoder(w).Encode(err); err != nil {
+				fmt.Println("error unmarshalling ", err)
+			}
+		}
+		fmt.Println("Storage Node: ",acc)
+	}
+}
