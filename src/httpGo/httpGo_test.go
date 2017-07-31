@@ -163,6 +163,9 @@ func TestDirecories(t *testing.T){
 			t.Error("True expected")
 		}
 		fmt.Println("check pieces success ")
+
+
+		// Create Account
 		var (
 			cmdOut []byte
 			err    error
@@ -187,6 +190,45 @@ func TestDirecories(t *testing.T){
 		if strings.Compare(resp,"400")==0 {
 			fmt.Println(resp+" bad request as expected")
 		}else{t.Error("expecting bad request 400")}
+
+
+
+		req, err := http.NewRequest("POST", "http://localhost:8000/createAccount", nil)
+		if err != nil {
+			t.Error(" error creating post request to http://localhost:8000/createAccount")
+		}
+		req.Header.Set("Name", "account2")
+		response , err := http.DefaultClient.Do(req)
+		if err != nil {
+			t.Error("Error doing request")
+		}
+		fmt.Println("response: ",response.StatusCode )
+		if response.StatusCode == 201 {
+			fmt.Println(response.StatusCode," created")
+		} else{
+			t.Error("Account not created")
+		}
+
+
+		req, err = http.NewRequest("POST", "http://localhost:8000/createAccount", nil)
+		if err != nil {
+			t.Error(" error creating post request to http://localhost:8000/createAccount")
+		}
+		req.Header.Set("Nme", "account2")
+		response , err = http.DefaultClient.Do(req)
+		if err != nil {
+			t.Error("Error doing request")
+		}
+		fmt.Println("response: ",response.StatusCode )
+		if response.StatusCode == 400 {
+			fmt.Println(response.StatusCode," bad request as expected")
+		} else{
+			t.Error("expecting bad request 400")
+		}
+
+
+
+
 	}()
 
 	time.AfterFunc(600 * time.Second, func(){

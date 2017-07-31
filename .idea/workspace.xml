@@ -2,10 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="8e47a50e-bf29-44c1-8c05-f500e1510716" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/shellScriptsTests/curlCreateAccFail.sh" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/shellScriptsTests/curlCreateAccSuccess.sh" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/httpGo/API.go" afterPath="$PROJECT_DIR$/src/httpGo/API.go" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/httpGo/httpGo_test.go" afterPath="$PROJECT_DIR$/src/httpGo/httpGo_test.go" />
     </list>
     <ignored path="$PROJECT_DIR$/out/" />
@@ -18,7 +15,7 @@
   </component>
   <component name="CoverageDataManager">
     <SUITE FILE_PATH="coverage/simpleBT$TestDirecories_in_httpGo_test_go.coverage" NAME="TestDirecories in httpGo_test.go Coverage Results" MODIFIED="1498664418247" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="GoCoverage" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" />
-    <SUITE FILE_PATH="coverage/simpleBT$httpGo_test_go.coverage" NAME="httpGo_test.go Coverage Results" MODIFIED="1499774538114" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="GoCoverage" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" />
+    <SUITE FILE_PATH="coverage/simpleBT$httpGo_test_go.coverage" NAME="httpGo_test.go Coverage Results" MODIFIED="1501522401687" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="GoCoverage" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" />
   </component>
   <component name="CreatePatchCommitExecutor">
     <option name="PATCH_PATH" value="" />
@@ -50,11 +47,11 @@
               </provider>
             </entry>
           </file>
-          <file leaf-file-name="Proxy.go" pinned="false" current-in-tab="false">
+          <file leaf-file-name="Proxy.go" pinned="false" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/src/httpGo/Proxy.go">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="1035">
-                  <caret line="557" column="8" lean-forward="false" selection-start-line="557" selection-start-column="8" selection-end-line="557" selection-end-column="8" />
+                <state relative-caret-position="243">
+                  <caret line="513" column="38" lean-forward="false" selection-start-line="513" selection-start-column="25" selection-end-line="513" selection-end-column="38" />
                   <folding>
                     <element signature="e#16#288#0" expanded="true" />
                     <element signature="n#!!block;n#md5sum#0" expanded="false" />
@@ -67,7 +64,7 @@
               </provider>
             </entry>
           </file>
-          <file leaf-file-name="API.go" pinned="false" current-in-tab="true">
+          <file leaf-file-name="API.go" pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/src/httpGo/API.go">
               <provider selected="true" editor-type-id="text-editor">
                 <state relative-caret-position="385">
@@ -84,6 +81,16 @@
               <provider selected="true" editor-type-id="text-editor">
                 <state relative-caret-position="235">
                   <caret line="158" column="8" lean-forward="false" selection-start-line="158" selection-start-column="8" selection-end-line="158" selection-end-column="8" />
+                  <folding />
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file leaf-file-name="curlCreateAccSuccess.sh" pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/src/shellScriptsTests/curlCreateAccSuccess.sh">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="18">
+                  <caret line="1" column="40" lean-forward="false" selection-start-line="1" selection-start-column="5" selection-end-line="1" selection-end-column="40" />
                   <folding />
                 </state>
               </provider>
@@ -159,31 +166,11 @@
           <file leaf-file-name="httpGo_test.go" pinned="false" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/src/httpGo/httpGo_test.go">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="314">
-                  <caret line="176" column="44" lean-forward="false" selection-start-line="176" selection-start-column="44" selection-end-line="176" selection-end-column="44" />
+                <state relative-caret-position="397">
+                  <caret line="223" column="56" lean-forward="false" selection-start-line="223" selection-start-column="56" selection-end-line="223" selection-end-column="56" />
                   <folding>
                     <element signature="e#15#114#0" expanded="true" />
                   </folding>
-                </state>
-              </provider>
-            </entry>
-          </file>
-          <file leaf-file-name="curlCreateAccFail.sh" pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/src/shellScriptsTests/curlCreateAccFail.sh">
-              <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="18">
-                  <caret line="1" column="0" lean-forward="false" selection-start-line="1" selection-start-column="0" selection-end-line="1" selection-end-column="0" />
-                  <folding />
-                </state>
-              </provider>
-            </entry>
-          </file>
-          <file leaf-file-name="curlCreateAccSuccess.sh" pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/src/shellScriptsTests/curlCreateAccSuccess.sh">
-              <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="36">
-                  <caret line="2" column="0" lean-forward="false" selection-start-line="2" selection-start-column="0" selection-end-line="2" selection-end-column="0" />
-                  <folding />
                 </state>
               </provider>
             </entry>
@@ -193,6 +180,16 @@
               <provider selected="true" editor-type-id="text-editor">
                 <state relative-caret-position="2106">
                   <caret line="129" column="5" lean-forward="false" selection-start-line="129" selection-start-column="5" selection-end-line="129" selection-end-column="5" />
+                  <folding />
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file leaf-file-name="curlCreateAccFail.sh" pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/src/shellScriptsTests/curlCreateAccFail.sh">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="18">
+                  <caret line="1" column="0" lean-forward="false" selection-start-line="1" selection-start-column="0" selection-end-line="1" selection-end-column="0" />
                   <folding />
                 </state>
               </provider>
@@ -942,7 +939,7 @@
       <workItem from="1501093634925" duration="3577000" />
       <workItem from="1501263184433" duration="4050000" />
       <workItem from="1501353427997" duration="10660000" />
-      <workItem from="1501518735830" duration="3205000" />
+      <workItem from="1501518735830" duration="4590000" />
     </task>
     <task id="LOCAL-00017" summary="api PUT creation">
       <created>1499940068525</created>
@@ -1035,43 +1032,50 @@
       <option name="project" value="LOCAL" />
       <updated>1501340529036</updated>
     </task>
-    <option name="localTasksCounter" value="30" />
+    <task id="LOCAL-00030" summary="create account tested">
+      <created>1501521967468</created>
+      <option name="number" value="00030" />
+      <option name="presentableId" value="LOCAL-00030" />
+      <option name="project" value="LOCAL" />
+      <updated>1501521967468</updated>
+    </task>
+    <option name="localTasksCounter" value="31" />
     <servers />
   </component>
   <component name="TestHistory">
-    <history-entry file="httpGo_test_go - 2017.07.31 at 19h 00m 06s.xml">
-      <configuration name="httpGo_test.go" configurationId="GoTestRunConfiguration" />
-    </history-entry>
-    <history-entry file="httpGo_test_go - 2017.07.31 at 19h 07m 19s.xml">
-      <configuration name="httpGo_test.go" configurationId="GoTestRunConfiguration" />
-    </history-entry>
-    <history-entry file="httpGo_test_go - 2017.07.31 at 19h 08m 27s.xml">
-      <configuration name="httpGo_test.go" configurationId="GoTestRunConfiguration" />
-    </history-entry>
-    <history-entry file="httpGo_test_go - 2017.07.31 at 19h 09m 44s.xml">
-      <configuration name="httpGo_test.go" configurationId="GoTestRunConfiguration" />
-    </history-entry>
-    <history-entry file="httpGo_test_go - 2017.07.31 at 19h 14m 14s.xml">
-      <configuration name="httpGo_test.go" configurationId="GoTestRunConfiguration" />
-    </history-entry>
-    <history-entry file="httpGo_test_go - 2017.07.31 at 19h 15m 06s.xml">
-      <configuration name="httpGo_test.go" configurationId="GoTestRunConfiguration" />
-    </history-entry>
-    <history-entry file="httpGo_test_go - 2017.07.31 at 19h 22m 09s.xml">
-      <configuration name="httpGo_test.go" configurationId="GoTestRunConfiguration" />
-    </history-entry>
-    <history-entry file="httpGo_test_go - 2017.07.31 at 19h 23m 12s.xml">
-      <configuration name="httpGo_test.go" configurationId="GoTestRunConfiguration" />
-    </history-entry>
-    <history-entry file="httpGo_test_go - 2017.07.31 at 19h 24m 41s.xml">
-      <configuration name="httpGo_test.go" configurationId="GoTestRunConfiguration" />
-    </history-entry>
     <history-entry file="httpGo_test_go - 2017.07.31 at 19h 25m 24s.xml">
+      <configuration name="httpGo_test.go" configurationId="GoTestRunConfiguration" />
+    </history-entry>
+    <history-entry file="httpGo_test_go - 2017.07.31 at 19h 34m 17s.xml">
+      <configuration name="httpGo_test.go" configurationId="GoTestRunConfiguration" />
+    </history-entry>
+    <history-entry file="httpGo_test_go - 2017.07.31 at 19h 41m 11s.xml">
+      <configuration name="httpGo_test.go" configurationId="GoTestRunConfiguration" />
+    </history-entry>
+    <history-entry file="httpGo_test_go - 2017.07.31 at 19h 43m 08s.xml">
+      <configuration name="httpGo_test.go" configurationId="GoTestRunConfiguration" />
+    </history-entry>
+    <history-entry file="httpGo_test_go - 2017.07.31 at 19h 43m 52s.xml">
+      <configuration name="httpGo_test.go" configurationId="GoTestRunConfiguration" />
+    </history-entry>
+    <history-entry file="httpGo_test_go - 2017.07.31 at 19h 45m 11s.xml">
+      <configuration name="httpGo_test.go" configurationId="GoTestRunConfiguration" />
+    </history-entry>
+    <history-entry file="httpGo_test_go - 2017.07.31 at 19h 46m 25s.xml">
+      <configuration name="httpGo_test.go" configurationId="GoTestRunConfiguration" />
+    </history-entry>
+    <history-entry file="httpGo_test_go - 2017.07.31 at 19h 47m 39s.xml">
+      <configuration name="httpGo_test.go" configurationId="GoTestRunConfiguration" />
+    </history-entry>
+    <history-entry file="httpGo_test_go - 2017.07.31 at 19h 47m 50s.xml">
+      <configuration name="httpGo_test.go" configurationId="GoTestRunConfiguration" />
+    </history-entry>
+    <history-entry file="httpGo_test_go - 2017.07.31 at 19h 48m 46s.xml">
       <configuration name="httpGo_test.go" configurationId="GoTestRunConfiguration" />
     </history-entry>
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="73351000" />
+    <option name="totallyTimeSpent" value="74736000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="65" y="24" width="2495" height="1056" extended-state="6" />
@@ -1087,6 +1091,7 @@
       <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Run" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.26666668" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Coverage" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32985973" sideWeight="0.5" order="4" side_tool="true" content_ui="tabs" />
       <window_info id="Properties" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Capture Tool" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
@@ -1105,7 +1110,6 @@
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
-      <window_info id="Coverage" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32987013" sideWeight="0.5" order="4" side_tool="true" content_ui="tabs" />
     </layout>
     <layout-to-restore>
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
@@ -1149,7 +1153,6 @@
     <option name="myLimit" value="2678400000" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="StorageNode with multiple addresses in process, compiles 2" />
     <MESSAGE value="os.Stat in for" />
     <MESSAGE value="trying to optimize RAM memory, observing until p2p" />
     <MESSAGE value="trying to optimize RAM memory, observing until p2p, goRoutine in whole StorageNodeListen" />
@@ -1174,7 +1177,8 @@
     <MESSAGE value="createAccount API completed, working on CreateAccountProxy" />
     <MESSAGE value="trying to fix build" />
     <MESSAGE value="fixing test" />
-    <option name="LAST_COMMIT_MESSAGE" value="fixing test" />
+    <MESSAGE value="create account tested" />
+    <option name="LAST_COMMIT_MESSAGE" value="create account tested" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager />
@@ -1307,6 +1311,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="216">
           <caret line="12" column="2" lean-forward="false" selection-start-line="12" selection-start-column="2" selection-end-line="12" selection-end-column="2" />
+          <folding />
         </state>
       </provider>
     </entry>
@@ -1314,6 +1319,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="288">
           <caret line="16" column="17" lean-forward="false" selection-start-line="16" selection-start-column="17" selection-end-line="16" selection-end-column="17" />
+          <folding />
         </state>
       </provider>
     </entry>
@@ -1418,21 +1424,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/httpGo/Proxy.go">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1035">
-          <caret line="557" column="8" lean-forward="false" selection-start-line="557" selection-start-column="8" selection-end-line="557" selection-end-column="8" />
-          <folding>
-            <element signature="e#16#288#0" expanded="true" />
-            <element signature="n#!!block;n#md5sum#0" expanded="false" />
-            <element signature="e#5252#5314#0" expanded="false" />
-            <element signature="n#!!block;n#Get#0" expanded="false" />
-            <element signature="n#!!block;n#ReturnData#0" expanded="false" />
-            <element signature="n#!!block;n#CheckPieces#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file:///usr/local/go/src/net/http/request.go">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="235">
@@ -1469,16 +1460,31 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/shellScriptsTests/curlCreateAccSuccess.sh">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="36">
-          <caret line="2" column="0" lean-forward="false" selection-start-line="2" selection-start-column="0" selection-end-line="2" selection-end-column="0" />
+        <state relative-caret-position="18">
+          <caret line="1" column="40" lean-forward="false" selection-start-line="1" selection-start-column="5" selection-end-line="1" selection-end-column="40" />
           <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/httpGo/Proxy.go">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="243">
+          <caret line="513" column="38" lean-forward="false" selection-start-line="513" selection-start-column="25" selection-end-line="513" selection-end-column="38" />
+          <folding>
+            <element signature="e#16#288#0" expanded="true" />
+            <element signature="n#!!block;n#md5sum#0" expanded="false" />
+            <element signature="e#5252#5314#0" expanded="false" />
+            <element signature="n#!!block;n#Get#0" expanded="false" />
+            <element signature="n#!!block;n#ReturnData#0" expanded="false" />
+            <element signature="n#!!block;n#CheckPieces#0" expanded="false" />
+          </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/httpGo/httpGo_test.go">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="314">
-          <caret line="176" column="44" lean-forward="false" selection-start-line="176" selection-start-column="44" selection-end-line="176" selection-end-column="44" />
+        <state relative-caret-position="397">
+          <caret line="223" column="56" lean-forward="false" selection-start-line="223" selection-start-column="56" selection-end-line="223" selection-end-column="56" />
           <folding>
             <element signature="e#15#114#0" expanded="true" />
           </folding>
