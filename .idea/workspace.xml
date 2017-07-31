@@ -3,7 +3,7 @@
   <component name="ChangeListManager">
     <list default="true" id="8e47a50e-bf29-44c1-8c05-f500e1510716" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/httpGo/Routes.go" afterPath="$PROJECT_DIR$/src/httpGo/Routes.go" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/httpGo/httpGo_test.go" afterPath="$PROJECT_DIR$/src/httpGo/httpGo_test.go" />
     </list>
     <ignored path="$PROJECT_DIR$/out/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -63,8 +63,8 @@
           <file leaf-file-name="httpGo_test.go" pinned="false" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/src/httpGo/httpGo_test.go">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="108">
-                  <caret line="39" column="63" lean-forward="false" selection-start-line="39" selection-start-column="63" selection-end-line="39" selection-end-column="63" />
+                <state relative-caret-position="813">
+                  <caret line="280" column="21" lean-forward="false" selection-start-line="280" selection-start-column="21" selection-end-line="280" selection-end-column="21" />
                   <folding>
                     <element signature="e#15#114#0" expanded="true" />
                   </folding>
@@ -220,7 +220,6 @@
         <option value="$PROJECT_DIR$/src/curlTestcreateAccSuccess.sh" />
         <option value="$PROJECT_DIR$/src/httpGo/API.go" />
         <option value="$PROJECT_DIR$/src/httpGo/Proxy.go" />
-        <option value="$PROJECT_DIR$/src/httpGo/httpGo_test.go" />
         <option value="$PROJECT_DIR$/src/shellScriptsTests/curlCreateAccFail.sh" />
         <option value="$PROJECT_DIR$/src/shellScriptsTests/curlCreateAccSuccess.sh" />
         <option value="$PROJECT_DIR$/src/httpGo/ProxyNop2p.go" />
@@ -228,6 +227,7 @@
         <option value="$PROJECT_DIR$/src/httpGo/StorageNode.go" />
         <option value="$PROJECT_DIR$/src/httpGo/Account.go" />
         <option value="$PROJECT_DIR$/src/httpGo/Routes.go" />
+        <option value="$PROJECT_DIR$/src/httpGo/httpGo_test.go" />
       </list>
     </option>
   </component>
@@ -936,7 +936,7 @@
       <workItem from="1501093634925" duration="3577000" />
       <workItem from="1501263184433" duration="4050000" />
       <workItem from="1501353427997" duration="10660000" />
-      <workItem from="1501518735830" duration="11698000" />
+      <workItem from="1501518735830" duration="12369000" />
     </task>
     <task id="LOCAL-00017" summary="api PUT creation">
       <created>1499940068525</created>
@@ -1078,7 +1078,14 @@
       <option name="project" value="LOCAL" />
       <updated>1501541123977</updated>
     </task>
-    <option name="localTasksCounter" value="37" />
+    <task id="LOCAL-00037" summary="renaming functions">
+      <created>1501541367238</created>
+      <option name="number" value="00037" />
+      <option name="presentableId" value="LOCAL-00037" />
+      <option name="project" value="LOCAL" />
+      <updated>1501541367238</updated>
+    </task>
+    <option name="localTasksCounter" value="38" />
     <servers />
   </component>
   <component name="TestHistory">
@@ -1114,7 +1121,7 @@
     </history-entry>
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="81844000" />
+    <option name="totallyTimeSpent" value="82515000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="65" y="24" width="2495" height="1056" extended-state="6" />
@@ -1511,21 +1518,21 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/httpGo/httpGo_test.go">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="108">
-          <caret line="39" column="63" lean-forward="false" selection-start-line="39" selection-start-column="63" selection-end-line="39" selection-end-column="63" />
-          <folding>
-            <element signature="e#15#114#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/httpGo/Routes.go">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="396">
           <caret line="25" column="44" lean-forward="true" selection-start-line="25" selection-start-column="44" selection-end-line="25" selection-end-column="44" />
           <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/httpGo/httpGo_test.go">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="813">
+          <caret line="280" column="21" lean-forward="false" selection-start-line="280" selection-start-column="21" selection-end-line="280" selection-end-column="21" />
+          <folding>
+            <element signature="e#15#114#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
