@@ -36,7 +36,7 @@ func PutObjAPI(w http.ResponseWriter, r *http.Request){
 			w.WriteHeader(http.StatusCreated)
 		} else {
 			fmt.Println("put fail")
-			w.WriteHeader(http.StatusUnprocessableEntity)
+			w.WriteHeader(http.StatusBadRequest)
 		}
 		currentKey := md5sum(os.Getenv("GOPATH") + "/src/github.com/alruiz12/simpleBT/src/" + name)
 		fmt.Println(CheckPiecesObj(currentKey, "NEW.xml", conf.FilePath, conf.NumNodes))

@@ -1,4 +1,5 @@
 package httpGo
+
 import (
 	"testing"
 	"fmt"
@@ -8,7 +9,8 @@ import (
 	"os/exec"
 	"strings"
 )
-func TestCreateAccountAPI(t *testing.T) {
+
+func TestPutObjAPI(t *testing.T) {
 	router :=MyNewRouter()
 	const IP = "127.0.0.1"
 	var path = os.Getenv("GOPATH")+"/src/github.com/alruiz12/simpleBT/src"
@@ -149,7 +151,7 @@ func TestCreateAccountAPI(t *testing.T) {
 		cmdOut []byte
 		err    error
 	)
-	if cmdOut, err = exec.Command(path+"/shellScriptsTests/curlCreateAccSuccess.sh").Output(); err != nil {
+	if cmdOut, err = exec.Command(path+"/shellScriptsTests/curlPutObjSuccess.sh").Output(); err != nil {
 		fmt.Fprintln(os.Stderr, "There was an error running command: ", err)
 		os.Exit(1)
 	}
@@ -157,9 +159,9 @@ func TestCreateAccountAPI(t *testing.T) {
 	fmt.Println("curl response ", resp)
 	if strings.Compare(resp,"201")==0 {
 		fmt.Println(resp+ " created")
-	}else{t.Error("Account not created")}
+	}else{t.Error("obj not created")}
 
-
+	/*
 	if cmdOut, err = exec.Command(path+"/shellScriptsTests/curlCreateAccFail.sh").Output(); err != nil {
 		fmt.Fprintln(os.Stderr, "There was an error running command: ", err)
 		os.Exit(1)
@@ -204,7 +206,7 @@ func TestCreateAccountAPI(t *testing.T) {
 	} else{
 		t.Error("expecting bad request 400")
 	}
-
+	*/
 	time.AfterFunc(600 * time.Second, func(){
 		if err:= peer1arun.Shutdown(nil); err!=nil{
 			panic(err)
@@ -252,7 +254,6 @@ func TestCreateAccountAPI(t *testing.T) {
 		}
 
 	})
-	time.Sleep(20*time.Second)
+	time.Sleep(5*time.Second)
+
 }
-
-
