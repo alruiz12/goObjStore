@@ -278,6 +278,6 @@ func TestDirecories(t *testing.T){
 		}
 
 	})
-	time.Sleep(40*time.Second)
+	time.Sleep(90*time.Second)
 
 }
