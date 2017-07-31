@@ -164,8 +164,8 @@ func PutNoP2P(filePath string, addr string, trackerAddr string, numNodes int){
 
 
 
-func GetNoP2P(Key string, proxyAddr []string, trackerAddr string){
-	/*
+func GetNoP2P(Key string, proxyAddr []string, trackerAddr string){/*
+
 	time.Sleep(1 * time.Second)
 
 	// Ask tracker for nodes

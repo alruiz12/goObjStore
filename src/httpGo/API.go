@@ -11,7 +11,7 @@ import(
 	"sync"
 )
 
-func PUT(w http.ResponseWriter, r *http.Request){
+func PutObjAPI(w http.ResponseWriter, r *http.Request){
 	var startPUT time.Time
 	startPUT = time.Now()
 	var wg sync.WaitGroup
@@ -29,7 +29,7 @@ func PUT(w http.ResponseWriter, r *http.Request){
 		}
 		file.Close()
 		putOK := make(chan bool)
-		go Put(os.Getenv("GOPATH") + "/src/github.com/alruiz12/simpleBT/src/" + name, conf.TrackerAddr, conf.NumNodes, putOK)
+		go PutObjProxy(os.Getenv("GOPATH") + "/src/github.com/alruiz12/simpleBT/src/" + name, conf.TrackerAddr, conf.NumNodes, putOK)
 		success := <-putOK
 		if success == true {
 			fmt.Println("put success ", time.Since(startPUT))
@@ -39,7 +39,7 @@ func PUT(w http.ResponseWriter, r *http.Request){
 			w.WriteHeader(http.StatusUnprocessableEntity)
 		}
 		currentKey := md5sum(os.Getenv("GOPATH") + "/src/github.com/alruiz12/simpleBT/src/" + name)
-		fmt.Println(CheckPieces(currentKey, "NEW.xml", conf.FilePath, conf.NumNodes))
+		fmt.Println(CheckPiecesObj(currentKey, "NEW.xml", conf.FilePath, conf.NumNodes))
 	}()
 	wg.Wait()
 	fmt.Println("API: ",time.Since(startPUT))
@@ -55,7 +55,7 @@ func md5String(str string) string{
 	return hex.EncodeToString(hasher.Sum(nil))
 }
 
-func CreateAccountAPI(w http.ResponseWriter, r *http.Request){
+func PutAccAPI(w http.ResponseWriter, r *http.Request){
 	fmt.Println("createAccountAPI")
 	var wg sync.WaitGroup
 	wg.Add(1)

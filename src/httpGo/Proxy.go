@@ -38,7 +38,7 @@ type hashMsg struct {
 var totalPartsNum int
 var startGet time.Time
 var numGets int = 0
-func Put(filePath string, trackerAddr string, numNodes int, putOK chan bool) {
+func PutObjProxy(filePath string, trackerAddr string, numNodes int, putOK chan bool) {
 
 	time.Sleep(1 * time.Second)
 	var hash string = md5sum(filePath)
@@ -138,9 +138,9 @@ func Put(filePath string, trackerAddr string, numNodes int, putOK chan bool) {
 		}()
 
 		// Prepare node for content
-		_, err = http.Post("http://" + nodeList[currentNum][currentAdr] + "/prepNode", "application/json", rpipe)
+		_, err = http.Post("http://" + nodeList[currentNum][currentAdr] + "/prepSN", "application/json", rpipe)
 		if err != nil {
-			fmt.Println("to prepNode, Error sending http POST ", err.Error())
+			fmt.Println("to prepSN, Error sending http POST ", err.Error())
 			putOK <- false
 			return
 		}
@@ -177,7 +177,7 @@ func Put(filePath string, trackerAddr string, numNodes int, putOK chan bool) {
 			}
 			defer wg.Done()
 			 <-httpVar.SendReady
-		}(m, "http://" + nodeList[currentNum][currentAdr] + "/StorageNodeListen")
+		}(m, "http://" + nodeList[currentNum][currentAdr] + "/SNPutObj")
 
 		currentPart++
 		currentNum = (currentNum + 1) % len(nodeList)
@@ -222,7 +222,7 @@ type jsonKeyURL struct {
 }
 
 
-func Get(Key string, proxyAddr []string, trackerAddr string){
+func GetObjProxy(Key string, proxyAddr []string, trackerAddr string){
 	time.Sleep(1 * time.Second)
 //	var chunk msg
 	// Ask tracker for nodes
@@ -264,7 +264,7 @@ func Get(Key string, proxyAddr []string, trackerAddr string){
 	// For each node ask for all their Proxy-pieces
 	for index, node := range nodeList {
 		r, w :=io.Pipe()			// create pipe
-		k:=jsonKeyURL{Key:Key, URL:proxyAddr[index]+"/ReturnData"}
+		k:=jsonKeyURL{Key:Key, URL:proxyAddr[index]+"/ReturnObjProxy"}
 
 		go func() {
 			defer w.Close()			// close pipe when go routine finishes
@@ -274,7 +274,7 @@ func Get(Key string, proxyAddr []string, trackerAddr string){
 				fmt.Println("Error encoding to pipe ", err.Error())
 			}
 		}()
-		url:="http://"+node[currentAddr]+"/GetChunks"
+		url:="http://"+node[currentAddr]+"/SNPutObjGetChunks"
 		res, err := http.Post(url,"application/json", r )
 		if err != nil {
 			fmt.Println("Get2: error creating request: ",err.Error())
@@ -287,7 +287,7 @@ func Get(Key string, proxyAddr []string, trackerAddr string){
 
 }
 
-func ReturnData(w http.ResponseWriter, r *http.Request){
+func ReturnObjProxy(w http.ResponseWriter, r *http.Request){
 
 	// Listen to tracker
 
@@ -335,7 +335,7 @@ and compares the new hash with the original one.
 @param path to the file we want to split
 Returns true if both hash are identic and false if not
 */
-func CheckPieces(key string ,fileName string, filePath string, numNodes int) bool{
+func CheckPiecesObj(key string ,fileName string, filePath string, numNodes int) bool{
 	 file, err := os.Open(filePath)
 	if err != nil {
 		fmt.Println(err.Error())
@@ -555,7 +555,7 @@ func CreateAccountProxy(name string, createOK chan bool){
 		defer w.Close()                        // close pipe //when go routine finishes
 	}()
 	fmt.Println(nodeList[currentPeer][currentPeerAddr])
-	_, err = http.Post("http://" + nodeList[currentPeer][currentPeerAddr] + "/createAccListen", "application/json", r)
+	_, err = http.Post("http://" + nodeList[currentPeer][currentPeerAddr] + "/SNPutAcc", "application/json", r)
 	if err != nil {
 		fmt.Println("Error sending http POST ", err.Error())
 		createOK <- false

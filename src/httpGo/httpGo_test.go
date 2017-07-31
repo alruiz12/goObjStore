@@ -149,17 +149,17 @@ func TestDirecories(t *testing.T){
 
 	go func(){
 		putOK := make(chan bool)
-		go Put(filePath, trackerAddr, 3, putOK)
+		go PutObjProxy(filePath, trackerAddr, 3, putOK)
 		success := <-putOK
 		if success != true {
 			t.Error("True expected")
 		}
 
 
-		Get("cdb95ea6b9a5c86c3fd0d1952c1f8c53",ProxyAddr, trackerAddr)
+		GetObjProxy("cdb95ea6b9a5c86c3fd0d1952c1f8c53",ProxyAddr, trackerAddr)
 
 
-		if (CheckPieces("cdb95ea6b9a5c86c3fd0d1952c1f8c53","NEW.xml",filePath, 3)) == false {
+		if (CheckPiecesObj("cdb95ea6b9a5c86c3fd0d1952c1f8c53","NEW.xml",filePath, 3)) == false {
 			t.Error("True expected")
 		}
 		fmt.Println("check pieces success ")
@@ -193,9 +193,9 @@ func TestDirecories(t *testing.T){
 
 
 
-		req, err := http.NewRequest("POST", "http://localhost:8000/createAccount", nil)
+		req, err := http.NewRequest("POST", "http://localhost:8000/putAcc", nil)
 		if err != nil {
-			t.Error(" error creating post request to http://localhost:8000/createAccount")
+			t.Error(" error creating post request to http://localhost:8000/putAcc")
 		}
 		req.Header.Set("Name", "account2")
 		response , err := http.DefaultClient.Do(req)
@@ -210,9 +210,9 @@ func TestDirecories(t *testing.T){
 		}
 
 
-		req, err = http.NewRequest("POST", "http://localhost:8000/createAccount", nil)
+		req, err = http.NewRequest("POST", "http://localhost:8000/putAcc", nil)
 		if err != nil {
-			t.Error(" error creating post request to http://localhost:8000/createAccount")
+			t.Error(" error creating post request to http://localhost:8000/putAcc")
 		}
 		req.Header.Set("Nme", "account2")
 		response , err = http.DefaultClient.Do(req)

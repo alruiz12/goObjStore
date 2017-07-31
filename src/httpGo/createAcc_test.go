@@ -172,9 +172,9 @@ func TestCreateAccountAPI(t *testing.T) {
 
 
 
-	req, err := http.NewRequest("POST", "http://localhost:8000/createAccount", nil)
+	req, err := http.NewRequest("POST", "http://localhost:8000/putAcc", nil)
 	if err != nil {
-		t.Error(" error creating post request to http://localhost:8000/createAccount")
+		t.Error(" error creating post request to http://localhost:8000/putAcc")
 	}
 	req.Header.Set("Name", "account2")
 	response , err := http.DefaultClient.Do(req)
@@ -189,9 +189,9 @@ func TestCreateAccountAPI(t *testing.T) {
 	}
 
 
-	req, err = http.NewRequest("POST", "http://localhost:8000/createAccount", nil)
+	req, err = http.NewRequest("POST", "http://localhost:8000/putAcc", nil)
 	if err != nil {
-		t.Error(" error creating post request to http://localhost:8000/createAccount")
+		t.Error(" error creating post request to http://localhost:8000/putAcc")
 	}
 	req.Header.Set("Nme", "account2")
 	response , err = http.DefaultClient.Do(req)
@@ -254,3 +254,6 @@ func TestCreateAccountAPI(t *testing.T) {
 	})
 	time.Sleep(90*time.Second)
 }
+
+//func Test
+

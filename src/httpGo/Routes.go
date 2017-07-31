@@ -18,15 +18,15 @@ Router using gorilla/mux
 func MyNewRouter() *mux.Router {
 
 	router := mux.NewRouter().StrictSlash(true)
-	router.HandleFunc("/StorageNodeListen", StorageNodeListen)
+	router.HandleFunc("/SNPutObj", SNPutObj)
 	router.HandleFunc("/SNodeListenNoP2P", SNodeListenNoP2P)
 
-	router.HandleFunc("/p2pRequest", p2pRequest)
-	router.HandleFunc("/ReturnData",ReturnData)
-	router.HandleFunc("/prepNode",prepNode)
-	router.HandleFunc("/PUT/abc/de", PUT)	// Todo: account/container/object
-	router.HandleFunc("/createAccount", CreateAccountAPI)
-	router.HandleFunc("/createAccListen", CreateAccListen)
+	router.HandleFunc("/SNPutObjP2PRequest", SNPutObjP2PRequest)
+	router.HandleFunc("/ReturnObjProxy", ReturnObjProxy)
+	router.HandleFunc("/prepSN", prepSN)
+	router.HandleFunc("/putObj", PutObjAPI)	// Todo: account/container/object
+	router.HandleFunc("/putAcc", PutAccAPI)
+	router.HandleFunc("/SNPutAcc", SNPutAcc)
 	for _, route := range routes {
 		router.
 			Methods(route.Method).
@@ -53,10 +53,10 @@ var routes = Routes{
 		GetNodesForKey,
 	},
 	Route{
-		"/GetChunks",
+		"/SNPutObjGetChunks",
 		"POST",
-		"/GetChunks",
-		GetChunks,
+		"/SNPutObjGetChunks",
+		SNPutObjGetChunks,
 	},
 
 

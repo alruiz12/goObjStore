@@ -19,7 +19,7 @@ import(
 var path = (os.Getenv("GOPATH")+"/src/github.com/alruiz12/simpleBT")
 //var chunk msg
 var hashRecived hashMsg
-func prepNode(w http.ResponseWriter, r *http.Request){
+func prepSN(w http.ResponseWriter, r *http.Request){
 	var nodeID int =int(r.Host[len(r.Host)-1]-'0')
 	body, err := ioutil.ReadAll(r.Body)
 	if err != nil {
@@ -61,7 +61,7 @@ func prepNode(w http.ResponseWriter, r *http.Request){
 	httpVar.DirMutex.Unlock()
 }
 
-func StorageNodeListen(w http.ResponseWriter, r *http.Request){
+func SNPutObj(w http.ResponseWriter, r *http.Request){
 	var listenWg sync.WaitGroup
 	listenWg.Add(1)
 	go func() {
@@ -168,7 +168,7 @@ func StorageNodeListen(w http.ResponseWriter, r *http.Request){
 
 
 // Listen to other peers
-func p2pRequest(w http.ResponseWriter, r *http.Request) {
+func SNPutObjP2PRequest(w http.ResponseWriter, r *http.Request) {
 	var chunk msg
 	// Get peer ID
 	var peerID int = int(r.Host[len(r.Host) - 1] - '0')
@@ -218,7 +218,7 @@ func p2pRequest(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func GetChunks(w http.ResponseWriter, r *http.Request){
+func SNPutObjGetChunks(w http.ResponseWriter, r *http.Request){
 	// Get node ID
 	var nodeIDint int = int(r.Host[len(r.Host) - 1] - '0')
 	var nodeID string = strconv.Itoa(nodeIDint)
@@ -245,7 +245,7 @@ func GetChunks(w http.ResponseWriter, r *http.Request){
 
 	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
 	w.WriteHeader(http.StatusOK)
-	go sendChunksToProxy(nodeID, keyURL.Key, keyURL.URL)
+	go SNPutObjSendChunksToProxy(nodeID, keyURL.Key, keyURL.URL)
 }
 
 type getMsg struct {
@@ -254,7 +254,7 @@ type getMsg struct {
 	NodeID string
 	Key string
 }
-func sendChunksToProxy(nodeID string, key string, URL string){
+func SNPutObjSendChunksToProxy(nodeID string, key string, URL string){
 	//partBuffer:=make([]byte,fileChunk)
 	proxyURL:="http://"+URL
 
@@ -296,7 +296,7 @@ func sendChunksToProxy(nodeID string, key string, URL string){
 	
 }
 
-func CreateAccListen(w http.ResponseWriter, r *http.Request){
+func SNPutAcc(w http.ResponseWriter, r *http.Request){
 	if r.Method == http.MethodPost {
 		var acc AccInfo
 		body, err := ioutil.ReadAll(r.Body)
