@@ -7,11 +7,12 @@ import (
 	"time"
 	"os"
 	"os/exec"
+	"strings"
 )
 func TestDirecories(t *testing.T){
 	router :=MyNewRouter()
 	const IP = "127.0.0.1"
-
+	var path = os.Getenv("GOPATH")+"/src/github.com/alruiz12/simpleBT/src"
 	var filePath = os.Getenv("GOPATH")+"/src/github.com/alruiz12/simpleBT/src/bigFile"
 
 	//var filePath = os.Getenv("GOPATH")+"/src/github.com/alruiz12/simpleBT/dataset.xml"
@@ -166,21 +167,26 @@ func TestDirecories(t *testing.T){
 			cmdOut []byte
 			err    error
 		)
-		cmdName := "curl"
-		//fmt.Println("m"+string('"')+"Name:account1"+string('"')+"m")
-		header:=string('"')+"Name:account1"+string('"')
-		cmdArgs := []string{"http://localhost:8000/createAccount", "-X", "POST","-H", header/*, "-w", "%{http_code}"*/}
-		fmt.Println(cmdArgs)
-		cmdArgsString:= "http://localhost:8000/createAccount -H "+header
-		fmt.Println(cmdArgsString)
-		// "curl http://localhost:8000/createAccount -H "+string('"')+"Name:account1"+string('"')+" -w %{http_code}"
-		if cmdOut, err = exec.Command(cmdName, cmdArgs...).Output(); err != nil {
+		if cmdOut, err = exec.Command(path+"/shellScriptsTests/curlCreateAccSuccess.sh").Output(); err != nil {
 			fmt.Fprintln(os.Stderr, "There was an error running command: ", err)
 			os.Exit(1)
 		}
 		resp := string(cmdOut)
 		fmt.Println("curl response ", resp)
+		if strings.Compare(resp,"201")==0 {
+			fmt.Println(resp+ " created")
+		}else{t.Error("Account not created")}
 
+
+		if cmdOut, err = exec.Command(path+"/shellScriptsTests/curlCreateAccFail.sh").Output(); err != nil {
+			fmt.Fprintln(os.Stderr, "There was an error running command: ", err)
+			os.Exit(1)
+		}
+		resp = string(cmdOut)
+		fmt.Println("curl response ", resp)
+		if strings.Compare(resp,"400")==0 {
+			fmt.Println(resp+" bad request as expected")
+		}else{t.Error("expecting bad request 400")}
 	}()
 
 	time.AfterFunc(600 * time.Second, func(){

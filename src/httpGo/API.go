@@ -61,20 +61,27 @@ func CreateAccountAPI(w http.ResponseWriter, r *http.Request){
 	wg.Add(1)
 	go func() {
 		defer wg.Done()
-		accountName:=r.Header["Name"][0]
-		createOK := make(chan bool)
-		go CreateAccountProxy(accountName, createOK)
-
-
-		//go Put(os.Getenv("GOPATH") + "/src/github.com/alruiz12/simpleBT/src/" + name, conf.TrackerAddr, conf.NumNodes, putOK)
-		success := <-createOK
-		if success == true {
-			fmt.Println("create success ")
-			w.WriteHeader(http.StatusCreated)
-		} else {
+		//accountName:=r.Header["Name"][0]
+		accountName:=r.Header.Get("Name")
+		if accountName==""{
 			fmt.Println("create fail")
-			w.WriteHeader(http.StatusUnprocessableEntity)
+			w.WriteHeader(http.StatusBadRequest)
+		} else{
+			createOK := make(chan bool)
+			go CreateAccountProxy(accountName, createOK)
+
+
+			//go Put(os.Getenv("GOPATH") + "/src/github.com/alruiz12/simpleBT/src/" + name, conf.TrackerAddr, conf.NumNodes, putOK)
+			success := <-createOK
+			if success == true {
+				fmt.Println("create success ")
+				w.WriteHeader(http.StatusCreated)
+			} else {
+				fmt.Println("create fail")
+				w.WriteHeader(http.StatusBadRequest)
+			}
 		}
+
 	}()
 	wg.Wait()
 }
