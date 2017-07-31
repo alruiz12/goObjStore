@@ -19,7 +19,7 @@ func MyNewRouter() *mux.Router {
 
 	router := mux.NewRouter().StrictSlash(true)
 	router.HandleFunc("/SNPutObj", SNPutObj)
-	router.HandleFunc("/SNodeListenNoP2P", SNodeListenNoP2P)
+	//router.HandleFunc("/SNodeListenNoP2P", SNodeListenNoP2P)
 
 	router.HandleFunc("/SNPutObjP2PRequest", SNPutObjP2PRequest)
 	router.HandleFunc("/ReturnObjProxy", ReturnObjProxy)
