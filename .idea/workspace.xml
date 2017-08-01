@@ -1,25 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="8e47a50e-bf29-44c1-8c05-f500e1510716" name="Default" comment="put account tested (p2p replication included)">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/Accounts1" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/Accounts2" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/Accounts3" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/Accounts4" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/Accounts5" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/httpGo/Account_gen.go" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/httpGo/Account_gen_test.go" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/httpGo/Accounts_gen.go" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/httpGo/Accounts_gen_test.go" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/httpGo/Container_gen.go" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/httpGo/Container_gen_test.go" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/Accounts" afterPath="" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/encodings.xml" afterPath="$PROJECT_DIR$/.idea/encodings.xml" />
+    <list default="true" id="8e47a50e-bf29-44c1-8c05-f500e1510716" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/httpGo/Routes.go" afterPath="$PROJECT_DIR$/src/httpGo/Routes.go" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/httpGo/StorageNode.go" afterPath="$PROJECT_DIR$/src/httpGo/StorageNode.go" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/httpGo/createAcc_test.go" afterPath="$PROJECT_DIR$/src/httpGo/createAcc_test.go" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/httpVar/peer.go" afterPath="$PROJECT_DIR$/src/httpVar/peer.go" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.travis.yml" afterPath="$PROJECT_DIR$/.travis.yml" />
     </list>
     <ignored path="$PROJECT_DIR$/out/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -87,11 +71,21 @@
               </provider>
             </entry>
           </file>
-          <file leaf-file-name="Accounts3" pinned="false" current-in-tab="true">
+          <file leaf-file-name="Accounts3" pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/src/Accounts3">
               <provider selected="true" editor-type-id="text-editor">
                 <state relative-caret-position="0">
                   <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+                  <folding />
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file leaf-file-name=".travis.yml" pinned="false" current-in-tab="true">
+            <entry file="file://$PROJECT_DIR$/.travis.yml">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="126">
+                  <caret line="7" column="39" lean-forward="false" selection-start-line="7" selection-start-column="39" selection-end-line="7" selection-end-column="39" />
                   <folding />
                 </state>
               </provider>
@@ -145,10 +139,10 @@
       </split-first>
       <split-second>
         <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-          <file leaf-file-name="StorageNode.go" pinned="false" current-in-tab="true">
+          <file leaf-file-name="StorageNode.go" pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/src/httpGo/StorageNode.go">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="93">
+                <state relative-caret-position="3834">
                   <caret line="298" column="0" lean-forward="false" selection-start-line="298" selection-start-column="0" selection-end-line="298" selection-end-column="0" />
                   <folding>
                     <element signature="e#15#207#0" expanded="true" />
@@ -200,6 +194,16 @@
                   <folding>
                     <element signature="e#15#145#0" expanded="true" />
                   </folding>
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file leaf-file-name="Account_gen_test.go" pinned="false" current-in-tab="true">
+            <entry file="file://$PROJECT_DIR$/src/httpGo/Account_gen_test.go">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="180">
+                  <caret line="10" column="9" lean-forward="true" selection-start-line="10" selection-start-column="9" selection-end-line="10" selection-end-column="37" />
+                  <folding />
                 </state>
               </provider>
             </entry>
@@ -277,6 +281,7 @@
         <option value="$PROJECT_DIR$/src/Accounts1" />
         <option value="$PROJECT_DIR$/src/Accounts2" />
         <option value="$PROJECT_DIR$/src/Accounts3" />
+        <option value="$PROJECT_DIR$/.travis.yml" />
       </list>
     </option>
   </component>
@@ -1004,7 +1009,7 @@
       <workItem from="1501093634925" duration="3577000" />
       <workItem from="1501263184433" duration="4050000" />
       <workItem from="1501353427997" duration="10660000" />
-      <workItem from="1501518735830" duration="31543000" />
+      <workItem from="1501518735830" duration="32225000" />
     </task>
     <task id="LOCAL-00017" summary="api PUT creation">
       <created>1499940068525</created>
@@ -1181,7 +1186,14 @@
       <option name="project" value="LOCAL" />
       <updated>1501599371416</updated>
     </task>
-    <option name="localTasksCounter" value="42" />
+    <task id="LOCAL-00042" summary="put account tested (p2p replication included)">
+      <created>1501605170444</created>
+      <option name="number" value="00042" />
+      <option name="presentableId" value="LOCAL-00042" />
+      <option name="project" value="LOCAL" />
+      <updated>1501605170444</updated>
+    </task>
+    <option name="localTasksCounter" value="43" />
     <servers />
   </component>
   <component name="TestHistory">
@@ -1217,11 +1229,11 @@
     </history-entry>
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="101689000" />
+    <option name="totallyTimeSpent" value="102371000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="65" y="24" width="2495" height="1056" extended-state="6" />
-    <editor active="false" />
+    <editor active="true" />
     <layout>
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
@@ -1238,7 +1250,7 @@
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Capture Tool" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.115831666" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.115831666" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32935324" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
@@ -1295,7 +1307,6 @@
     <option name="myLimit" value="2678400000" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="trying to use checkPieces for data/? + Main.go" />
     <MESSAGE value="trying to use checkPieces for data/? + Main.go full" />
     <MESSAGE value="trying to use checkPieces for all dirs" />
     <MESSAGE value="trying to use checkPieces for all dirs, simplified" />
@@ -1320,7 +1331,8 @@
     <MESSAGE value="renaming functions" />
     <MESSAGE value="testing put object" />
     <MESSAGE value="put account tested, not sending p2p yet" />
-    <option name="LAST_COMMIT_MESSAGE" value="put account tested, not sending p2p yet" />
+    <MESSAGE value="put account tested (p2p replication included)" />
+    <option name="LAST_COMMIT_MESSAGE" value="put account tested (p2p replication included)" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager />
@@ -1331,7 +1343,6 @@
     <option name="FILTER_TARGETS" value="false" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/src/conf/FileOperations.go" />
     <entry file="file://$PROJECT_DIR$/src/conf/conf_test.go" />
     <entry file="file://$PROJECT_DIR$/src/conf/announce_test.go" />
     <entry file="file://$PROJECT_DIR$/src/vars/Tracker.go" />
@@ -1390,13 +1401,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/.travis.yml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="216">
-          <caret line="12" column="0" lean-forward="false" selection-start-line="12" selection-start-column="0" selection-end-line="12" selection-end-column="0" />
         </state>
       </provider>
     </entry>
@@ -1513,7 +1517,7 @@
         <state relative-caret-position="291">
           <caret line="40" column="2" lean-forward="false" selection-start-line="40" selection-start-column="2" selection-end-line="40" selection-end-column="2" />
           <folding>
-            <element signature="e#13#29#0" expanded="true" />
+            <element signature="e#13#29#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -1716,6 +1720,22 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/httpGo/Account_gen_test.go">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="180">
+          <caret line="10" column="9" lean-forward="true" selection-start-line="10" selection-start-column="9" selection-end-line="10" selection-end-column="37" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/.travis.yml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="126">
+          <caret line="7" column="39" lean-forward="false" selection-start-line="7" selection-start-column="39" selection-end-line="7" selection-end-column="39" />
           <folding />
         </state>
       </provider>
