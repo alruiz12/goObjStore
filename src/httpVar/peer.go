@@ -10,12 +10,9 @@ var PeerMutex = &sync.Mutex{}
 var DirMutex = &sync.Mutex{}
 var GetMutex = &sync.Mutex{}
 var TotalNumMutex = &sync.Mutex{}
-var AccFileMutex1 = &sync.Mutex{}
-var AccFileMutex2 = &sync.Mutex{}
-var AccFileMutex3 = &sync.Mutex{}
-var AccFileMutex4 = &sync.Mutex{}
-var AccFileMutex5 = &sync.Mutex{}
-var AccFileMutexList = []*sync.Mutex{AccFileMutex1, AccFileMutex2, AccFileMutex3, AccFileMutex4, AccFileMutex5 }
+var AccFileMutex = &sync.Mutex{}
+var AccFileMutexP2P = &sync.Mutex{}
+
 
 var HashMap = make(map[string][]bool)
 

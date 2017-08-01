@@ -223,6 +223,23 @@ func TestCreateAccountAPI(t *testing.T) {
 	}
 	fmt.Println("---------------------------------------------------")
 
+	req, err = http.NewRequest("POST", "http://localhost:8000/putAcc", nil)
+	if err != nil {
+		t.Error(" error creating post request to http://localhost:8000/putAcc")
+	}
+	req.Header.Set("Name", "account2")
+	response , err = http.DefaultClient.Do(req)
+	if err != nil {
+		t.Error("Error doing request")
+	}
+	fmt.Println("response: ",response.StatusCode )
+	if response.StatusCode == 201 {
+		fmt.Println(response.StatusCode," created")
+	} else{
+		t.Error("Account not created")
+	}
+	fmt.Println("---------------------------------------------------")
+
 	time.AfterFunc(600 * time.Second, func(){
 		if err:= peer1arun.Shutdown(nil); err!=nil{
 			panic(err)

@@ -27,6 +27,8 @@ func MyNewRouter() *mux.Router {
 	router.HandleFunc("/putObj", PutObjAPI)	// Todo: account/container/object
 	router.HandleFunc("/putAcc", PutAccAPI)
 	router.HandleFunc("/SNPutAcc", SNPutAcc)
+	router.HandleFunc("/SNPutAccP2PRequest", SNPutAccP2PRequest)
+
 	for _, route := range routes {
 		router.
 			Methods(route.Method).

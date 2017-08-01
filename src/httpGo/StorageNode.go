@@ -93,7 +93,6 @@ func SNPutObj(w http.ResponseWriter, r *http.Request){
 
 
 
-			//go func(CurrentPart int,text []byte){
 			// Save chunk to file
 			err = ioutil.WriteFile(path + "/src/data/" + chunk.Hash + "/" + strconv.Itoa(nodeID) + "/NEW" + strconv.Itoa(chunk.Name), chunk.Text, 0777)
 			if err != nil {
@@ -103,15 +102,12 @@ func SNPutObj(w http.ResponseWriter, r *http.Request){
 			for err != nil {
 				err = ioutil.WriteFile(path + "/src/data/" + chunk.Hash + "/" + strconv.Itoa(nodeID) + "/NEW" + strconv.Itoa(chunk.Name), chunk.Text, 0777)
 				if err != nil {
-					fmt.Println("P2pRequest: Peer: error creating/writing file p2p", err.Error())
+					fmt.Println("SNPutObj: Peer: error creating/writing file p2p", err.Error())
 				}
 				fmt.Println("for", chunk.Name)
 				_, err = os.Stat(path + "/src/data/" + chunk.Hash + "/" + strconv.Itoa(nodeID) + "/NEW" + strconv.Itoa(chunk.Name))
 
 			}
-
-			//			defer wg.Done()
-			//		}(chunk.Name, chunk.Text)
 
                         wg.Add(len(chunk.NodeList)/*+1*/)
 
@@ -195,13 +191,13 @@ func SNPutObjP2PRequest(w http.ResponseWriter, r *http.Request) {
 
 		err = ioutil.WriteFile(path + "/src/data/"+chunk.Hash+"/"+strconv.Itoa( peerID)+ "/P2P" + strconv.Itoa(chunk.Name),chunk.Text, 0777)
 		if err != nil {
-			fmt.Println("P2pRequest: Peer: error creating/writing file p2p", err.Error())
+			fmt.Println("SNPutObjP2PRequest: Peer: error creating/writing file p2p", err.Error())
 		}
 		_, err = os.Stat(path+ "/src/data/"+chunk.Hash+"/"+strconv.Itoa( peerID)+ "/P2P" + strconv.Itoa(chunk.Name))
 		if err != nil {
 			err = ioutil.WriteFile(path + "/src/data/"+chunk.Hash+"/"+strconv.Itoa( peerID)+ "/P2P" + strconv.Itoa(chunk.Name), chunk.Text, 0777)
                 	if err != nil {
-                      		fmt.Println("P2pRequest: Peer: error creating/writing file p2p", err.Error())
+                      		fmt.Println("SNPutObjP2PRequest: Peer: error creating/writing file p2p", err.Error())
                 	}
 		}
 		httpVar.DirMutex.Unlock()
@@ -323,8 +319,8 @@ func SNPutAcc(w http.ResponseWriter, r *http.Request){
 
 
 		// check Accounts map for new Account
-		httpVar.AccFileMutexList[peerID].Lock()
-		accountsBytes, err := ioutil.ReadFile(path+"/src/Accounts")
+		httpVar.AccFileMutex.Lock()
+		accountsBytes, err := ioutil.ReadFile(path+"/src/Accounts"+strconv.Itoa(peerID))
 		_,err = accounts.UnmarshalMsg(accountsBytes)
 
 		if len(accountsBytes)==0{
@@ -345,35 +341,60 @@ func SNPutAcc(w http.ResponseWriter, r *http.Request){
 		marshalledAcc, err := accounts.MarshalMsg(nil)
 		fmt.Println("	SNPutAccP2P",len(accountsBytes))
 		fmt.Println(marshalledAcc)
-		err = ioutil.WriteFile(path+"/src/Accounts",marshalledAcc,0777)
-		//file, err := os.Open(path+"/src/Accounts")
-		httpVar.AccFileMutexList[peerID].Unlock()
+		err = ioutil.WriteFile(path+"/src/Accounts"+strconv.Itoa(peerID),marshalledAcc,0777)
+
+
+		var wg sync.WaitGroup
+		wg.Add(len(accInfo.NodeList))
+		var currentAddr int = rand.Intn(len(accInfo.NodeList))
+		for _, peer := range accInfo.NodeList{
+			peerURL := "http://" + peer[currentAddr] + "/SNPutAccP2PRequest"
+			go func(p string, URL string){
+				if peerID == int(p[len(p) - 1] - '0') {
+					// Don't send to itself
+				} else {
+					r, w := io.Pipe()
+					go func() {
+						// save buffer to object
+						err = json.NewEncoder(w).Encode(marshalledAcc)
+						if err != nil {
+							fmt.Println("Error encoding to pipe ", err.Error())
+							return
+						}
+						defer w.Close()                        // close pipe //when go routine finishes
+					}()
+					response, err := http.Post(peerURL, "application/json", r)
+					if err != nil {
+						fmt.Println("Error sending http POST p2p", err.Error())
+					}
+					responseCode:=response.StatusCode
+					if responseCode == 201 {
+						fmt.Println(response.StatusCode," SN created")
+					}
+					fmt.Println(responseCode)
+					/*else{
+						for responseCode != 201{
+							response, err = http.Post(peerURL, "application/json", r)
+							responseCode=response.StatusCode
+						}
+					}*/
+				}
+				wg.Done()
+			}(peer[0], peerURL)
+		}
+		wg.Wait()
+		httpVar.AccFileMutex.Unlock()
 
 
 		fmt.Println("accounts: ",accounts)
-		// Save chunk to file
-		httpVar.DirMutex.Lock()
-		/*
-		err = ioutil.WriteFile(path + "/src/data/"+chunk.Hash+"/"+strconv.Itoa( peerID)+ "/P2P" + strconv.Itoa(chunk.Name),chunk.Text, 0777)
-		if err != nil {
-			fmt.Println("P2pRequest: Peer: error creating/writing file p2p", err.Error())
-		}
-		_, err = os.Stat(path+ "/src/data/"+chunk.Hash+"/"+strconv.Itoa( peerID)+ "/P2P" + strconv.Itoa(chunk.Name))
-		if err != nil {
-			err = ioutil.WriteFile(path + "/src/data/"+chunk.Hash+"/"+strconv.Itoa( peerID)+ "/P2P" + strconv.Itoa(chunk.Name), chunk.Text, 0777)
-			if err != nil {
-				fmt.Println("P2pRequest: Peer: error creating/writing file p2p", err.Error())
-			}
-		}
-		*/
-		httpVar.DirMutex.Unlock()
+
+
 	}
 }
 
 // Listen to other peers
 func SNPutAccP2PRequest(w http.ResponseWriter, r *http.Request) {
-	var accInfo AccInfo
-
+	var marshalledAccs []byte
 	// Get peer ID
 	var peerID int = int(r.Host[len(r.Host) - 1] - '0')
 	// Listen to tracker
@@ -382,50 +403,30 @@ func SNPutAccP2PRequest(w http.ResponseWriter, r *http.Request) {
 		body, err := ioutil.ReadAll(r.Body)
 		if err != nil {
 			fmt.Println("error reading ", err)
+			w.WriteHeader(http.StatusBadRequest)
 		}
 		if err := r.Body.Close(); err != nil {
 			fmt.Println("error body ", err)
+			w.WriteHeader(http.StatusBadRequest)
 		}
-		if err := json.Unmarshal(body, &accInfo); err != nil {
+		if err := json.Unmarshal(body, &marshalledAccs); err != nil {
 			w.Header().Set("Content-Type", "application/json; charset=UTF-8")
 			w.WriteHeader(422) // unprocessable entity
 			log.Println(err)
 			if err := json.NewEncoder(w).Encode(err); err != nil {
 				fmt.Println("error unmarshalling ", err)
 			}
+			w.WriteHeader(http.StatusBadRequest)
 		}
 		// check Accounts map for new Account
-		httpVar.AccFileMutexList[peerID].Lock()
-		accountsBytes, err := ioutil.ReadFile(path+"/src/Accounts")
-		accounts:=Accounts{}
-		bytes,err := accounts.UnmarshalMsg(accountsBytes)
-		if err != nil {
-			fmt.Println("SNPutAccP2P",err)
-		}
-		fmt.Println("	SNPutAccP2P",len(bytes))
-		//file, err := os.Open(path+"/src/Accounts")
-		httpVar.AccFileMutexList[peerID].Unlock()
+		httpVar.AccFileMutexP2P.Lock()
+		err = ioutil.WriteFile(path+"/src/Accounts"+strconv.Itoa(peerID),marshalledAccs,0777)
+		httpVar.AccFileMutexP2P.Unlock()
 
-		conts := make(map[string]Container)
-		newAcc:=Account{Name:accInfo.Name, Containers:conts}
-		fmt.Println(newAcc)
-		// Save chunk to file
-		httpVar.DirMutex.Lock()
-		/*
-		err = ioutil.WriteFile(path + "/src/data/"+chunk.Hash+"/"+strconv.Itoa( peerID)+ "/P2P" + strconv.Itoa(chunk.Name),chunk.Text, 0777)
 		if err != nil {
-			fmt.Println("P2pRequest: Peer: error creating/writing file p2p", err.Error())
+			fmt.Println("SNPutAccP2PRequest: ",err)
+			w.WriteHeader(http.StatusBadRequest)
 		}
-		_, err = os.Stat(path+ "/src/data/"+chunk.Hash+"/"+strconv.Itoa( peerID)+ "/P2P" + strconv.Itoa(chunk.Name))
-		if err != nil {
-			err = ioutil.WriteFile(path + "/src/data/"+chunk.Hash+"/"+strconv.Itoa( peerID)+ "/P2P" + strconv.Itoa(chunk.Name), chunk.Text, 0777)
-			if err != nil {
-				fmt.Println("P2pRequest: Peer: error creating/writing file p2p", err.Error())
-			}
-		}
-		*/
-		httpVar.DirMutex.Unlock()
-
-
+		w.WriteHeader(http.StatusCreated)
 	}
 }
