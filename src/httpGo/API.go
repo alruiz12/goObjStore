@@ -56,7 +56,6 @@ func md5String(str string) string{
 }
 
 func PutAccAPI(w http.ResponseWriter, r *http.Request){
-	fmt.Println("createAccountAPI")
 	var wg sync.WaitGroup
 	wg.Add(1)
 	go func() {

@@ -554,7 +554,7 @@ func CreateAccountProxy(name string, createOK chan bool){
 		}
 		defer w.Close()                        // close pipe //when go routine finishes
 	}()
-	fmt.Println(nodeList[currentPeer][currentPeerAddr])
+	//fmt.Println(nodeList[currentPeer][currentPeerAddr])
 	_, err = http.Post("http://" + nodeList[currentPeer][currentPeerAddr] + "/SNPutAcc", "application/json", r)
 	if err != nil {
 		fmt.Println("Error sending http POST ", err.Error())

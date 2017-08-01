@@ -1,15 +1,12 @@
 package httpGo
 import (
-	"sync"
+	//"sync"
 )
 //var Accounts = make(map[string]Account)
-var Accounts = struct{
-	m map[string]Account
-	sync.Mutex
-}{m: make(map[string]Account) }
+//go:generate msgp
 
 type Account struct {
-	Name string
-	Containers map[string]Container
-	sync.Mutex
+	Name string	`msg:"name"`
+	Containers map[string]Container	`msg:"containers"`
+	//sync.Mutex
 }

@@ -298,7 +298,8 @@ func SNPutObjSendChunksToProxy(nodeID string, key string, URL string){
 
 func SNPutAcc(w http.ResponseWriter, r *http.Request){
 	if r.Method == http.MethodPost {
-		var acc AccInfo
+		var accInfo AccInfo
+		var peerID int = int(r.Host[len(r.Host) - 1] - '0')
 		body, err := ioutil.ReadAll(r.Body)
 		if err != nil {
 			fmt.Println("error reading ", err)
@@ -306,7 +307,7 @@ func SNPutAcc(w http.ResponseWriter, r *http.Request){
 		if err := r.Body.Close(); err != nil {
 			fmt.Println("error body ", err)
 		}
-		if err := json.Unmarshal(body, &acc); err != nil {
+		if err := json.Unmarshal(body, &accInfo); err != nil {
 			w.Header().Set("Content-Type", "application/json; charset=UTF-8")
 			w.WriteHeader(422) // unprocessable entity
 			log.Println(err)
@@ -314,6 +315,117 @@ func SNPutAcc(w http.ResponseWriter, r *http.Request){
 				fmt.Println("error unmarshalling ", err)
 			}
 		}
-		fmt.Println("Storage Node: ",acc)
+		fmt.Println("Storage Node: ",accInfo)
+
+		conts := make(map[string]Container)
+		newAcc:=Account{Name:accInfo.Name, Containers:conts}
+		accounts:=Accounts{}
+
+
+		// check Accounts map for new Account
+		httpVar.AccFileMutexList[peerID].Lock()
+		accountsBytes, err := ioutil.ReadFile(path+"/src/Accounts")
+		_,err = accounts.UnmarshalMsg(accountsBytes)
+
+		if len(accountsBytes)==0{
+			// No accounts
+			accsMap := make(map[string]Account)
+			accounts.Num=1
+			accounts.Accounts=accsMap
+			accounts.Accounts[accInfo.Name]=newAcc
+		}else if err != nil {
+			fmt.Println("SNPutAccP2P Error: ",err)
+		} else {
+			_, exists := accounts.Accounts[accInfo.Name]
+			if !exists{
+				accounts.Num++
+			}
+			accounts.Accounts[accInfo.Name]=newAcc // replacing it if exists
+		}
+		marshalledAcc, err := accounts.MarshalMsg(nil)
+		fmt.Println("	SNPutAccP2P",len(accountsBytes))
+		fmt.Println(marshalledAcc)
+		err = ioutil.WriteFile(path+"/src/Accounts",marshalledAcc,0777)
+		//file, err := os.Open(path+"/src/Accounts")
+		httpVar.AccFileMutexList[peerID].Unlock()
+
+
+		fmt.Println("accounts: ",accounts)
+		// Save chunk to file
+		httpVar.DirMutex.Lock()
+		/*
+		err = ioutil.WriteFile(path + "/src/data/"+chunk.Hash+"/"+strconv.Itoa( peerID)+ "/P2P" + strconv.Itoa(chunk.Name),chunk.Text, 0777)
+		if err != nil {
+			fmt.Println("P2pRequest: Peer: error creating/writing file p2p", err.Error())
+		}
+		_, err = os.Stat(path+ "/src/data/"+chunk.Hash+"/"+strconv.Itoa( peerID)+ "/P2P" + strconv.Itoa(chunk.Name))
+		if err != nil {
+			err = ioutil.WriteFile(path + "/src/data/"+chunk.Hash+"/"+strconv.Itoa( peerID)+ "/P2P" + strconv.Itoa(chunk.Name), chunk.Text, 0777)
+			if err != nil {
+				fmt.Println("P2pRequest: Peer: error creating/writing file p2p", err.Error())
+			}
+		}
+		*/
+		httpVar.DirMutex.Unlock()
+	}
+}
+
+// Listen to other peers
+func SNPutAccP2PRequest(w http.ResponseWriter, r *http.Request) {
+	var accInfo AccInfo
+
+	// Get peer ID
+	var peerID int = int(r.Host[len(r.Host) - 1] - '0')
+	// Listen to tracker
+	if r.Method == http.MethodPost {
+
+		body, err := ioutil.ReadAll(r.Body)
+		if err != nil {
+			fmt.Println("error reading ", err)
+		}
+		if err := r.Body.Close(); err != nil {
+			fmt.Println("error body ", err)
+		}
+		if err := json.Unmarshal(body, &accInfo); err != nil {
+			w.Header().Set("Content-Type", "application/json; charset=UTF-8")
+			w.WriteHeader(422) // unprocessable entity
+			log.Println(err)
+			if err := json.NewEncoder(w).Encode(err); err != nil {
+				fmt.Println("error unmarshalling ", err)
+			}
+		}
+		// check Accounts map for new Account
+		httpVar.AccFileMutexList[peerID].Lock()
+		accountsBytes, err := ioutil.ReadFile(path+"/src/Accounts")
+		accounts:=Accounts{}
+		bytes,err := accounts.UnmarshalMsg(accountsBytes)
+		if err != nil {
+			fmt.Println("SNPutAccP2P",err)
+		}
+		fmt.Println("	SNPutAccP2P",len(bytes))
+		//file, err := os.Open(path+"/src/Accounts")
+		httpVar.AccFileMutexList[peerID].Unlock()
+
+		conts := make(map[string]Container)
+		newAcc:=Account{Name:accInfo.Name, Containers:conts}
+		fmt.Println(newAcc)
+		// Save chunk to file
+		httpVar.DirMutex.Lock()
+		/*
+		err = ioutil.WriteFile(path + "/src/data/"+chunk.Hash+"/"+strconv.Itoa( peerID)+ "/P2P" + strconv.Itoa(chunk.Name),chunk.Text, 0777)
+		if err != nil {
+			fmt.Println("P2pRequest: Peer: error creating/writing file p2p", err.Error())
+		}
+		_, err = os.Stat(path+ "/src/data/"+chunk.Hash+"/"+strconv.Itoa( peerID)+ "/P2P" + strconv.Itoa(chunk.Name))
+		if err != nil {
+			err = ioutil.WriteFile(path + "/src/data/"+chunk.Hash+"/"+strconv.Itoa( peerID)+ "/P2P" + strconv.Itoa(chunk.Name), chunk.Text, 0777)
+			if err != nil {
+				fmt.Println("P2pRequest: Peer: error creating/writing file p2p", err.Error())
+			}
+		}
+		*/
+		httpVar.DirMutex.Unlock()
+
+
 	}
 }

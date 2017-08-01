@@ -158,7 +158,7 @@ func TestCreateAccountAPI(t *testing.T) {
 	if strings.Compare(resp,"201")==0 {
 		fmt.Println(resp+ " created")
 	}else{t.Error("Account not created")}
-
+	fmt.Println("---------------------------------------------------")
 
 	if cmdOut, err = exec.Command(path+"/shellScriptsTests/curlCreateAccFail.sh").Output(); err != nil {
 		fmt.Fprintln(os.Stderr, "There was an error running command: ", err)
@@ -169,7 +169,7 @@ func TestCreateAccountAPI(t *testing.T) {
 	if strings.Compare(resp,"400")==0 {
 		fmt.Println(resp+" bad request as expected")
 	}else{t.Error("expecting bad request 400")}
-
+	fmt.Println("---------------------------------------------------")
 
 
 	req, err := http.NewRequest("POST", "http://localhost:8000/putAcc", nil)
@@ -187,7 +187,7 @@ func TestCreateAccountAPI(t *testing.T) {
 	} else{
 		t.Error("Account not created")
 	}
-
+	fmt.Println("---------------------------------------------------")
 
 	req, err = http.NewRequest("POST", "http://localhost:8000/putAcc", nil)
 	if err != nil {
@@ -204,6 +204,24 @@ func TestCreateAccountAPI(t *testing.T) {
 	} else{
 		t.Error("expecting bad request 400")
 	}
+
+
+	req, err = http.NewRequest("POST", "http://localhost:8000/putAcc", nil)
+	if err != nil {
+		t.Error(" error creating post request to http://localhost:8000/putAcc")
+	}
+	req.Header.Set("Name", "account3")
+	response , err = http.DefaultClient.Do(req)
+	if err != nil {
+		t.Error("Error doing request")
+	}
+	fmt.Println("response: ",response.StatusCode )
+	if response.StatusCode == 201 {
+		fmt.Println(response.StatusCode," created")
+	} else{
+		t.Error("Account not created")
+	}
+	fmt.Println("---------------------------------------------------")
 
 	time.AfterFunc(600 * time.Second, func(){
 		if err:= peer1arun.Shutdown(nil); err!=nil{

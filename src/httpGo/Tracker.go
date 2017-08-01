@@ -89,7 +89,6 @@ func GetNodes(w http.ResponseWriter, r *http.Request){
 		httpVar.MapAcc.Lock()
 		httpVar.MapAccNodes[nodeNum.ID] = nodeList
 		httpVar.MapAcc.Unlock()
-		fmt.Println("account")
 	}
 
 	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
