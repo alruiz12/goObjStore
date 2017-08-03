@@ -566,6 +566,30 @@ func CreateAccountProxy(name string, createOK chan bool){
 
 }
 
+func CheckFileReplication(File string, replication int) bool{
+	if replication<2 {return false}
+	var path = (os.Getenv("GOPATH")+"/src/github.com/alruiz12/simpleBT/src/")
+	 hashList := make([]string, replication)
+	var currentReplica int = 0
+	for currentReplica < replication{
+		hashList[currentReplica] = md5sum(path+File+strconv.Itoa(currentReplica+1) )
+		if strings.Compare( hashList[currentReplica], string(""))==0{
+			return false
+		}
+		currentReplica++
+	}
+	firstHash:=hashList[0]
+	currentReplica = 1
+	for currentReplica < replication{
+		if strings.Compare( hashList[currentReplica], firstHash) != 0{
+			return false
+		}
+		currentReplica++
+	}
+
+	return true
+}
+
 
 
 

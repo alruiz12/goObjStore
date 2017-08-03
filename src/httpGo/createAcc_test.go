@@ -240,6 +240,20 @@ func TestCreateAccountAPI(t *testing.T) {
 	}
 	fmt.Println("---------------------------------------------------")
 
+	fileReplicationCorrect:=CheckFileReplication("Accounts",3)
+	if fileReplicationCorrect==false{
+		t.Error("file replication not correct")
+	}
+	fmt.Println(fileReplicationCorrect)
+
+	if CheckFileReplication("Accounts", 1)==true{
+		t.Error("file replication not correct")
+	} else {fmt.Println("false")}
+
+	if CheckFileReplication("Accounts", 4)==true{
+		t.Error("file replication not correct")
+	} else {fmt.Println("false")}
+
 	time.AfterFunc(600 * time.Second, func(){
 		if err:= peer1arun.Shutdown(nil); err!=nil{
 			panic(err)
