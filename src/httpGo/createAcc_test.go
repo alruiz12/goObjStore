@@ -240,17 +240,23 @@ func TestCreateAccountAPI(t *testing.T) {
 	}
 	fmt.Println("---------------------------------------------------")
 
-	fileReplicationCorrect:=CheckFileReplication("Accounts",3)
+	fileReplicationCorrect:=CheckFileReplication("Account","account1",3)
 	if fileReplicationCorrect==false{
 		t.Error("file replication not correct")
 	}
 	fmt.Println(fileReplicationCorrect)
 
-	if CheckFileReplication("Accounts", 1)==true{
+	fileReplicationCorrect=CheckFileReplication("Account","account3",3)
+	if fileReplicationCorrect==false{
+		t.Error("file replication not correct")
+	}
+	fmt.Println(fileReplicationCorrect)
+
+	if CheckFileReplication("Account","accountX", 1)==true{
 		t.Error("file replication not correct")
 	} else {fmt.Println("false")}
 
-	if CheckFileReplication("Accounts", 4)==true{
+	if CheckFileReplication("Account", "account2", 4)==true{
 		t.Error("file replication not correct")
 	} else {fmt.Println("false")}
 

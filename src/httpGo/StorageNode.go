@@ -292,6 +292,11 @@ func SNPutObjSendChunksToProxy(nodeID string, key string, URL string){
 	
 }
 
+type MarshalledAcc struct {
+	Bytes []byte
+	Name string
+}
+
 func SNPutAcc(w http.ResponseWriter, r *http.Request){
 	if r.Method == http.MethodPost {
 		var accInfo AccInfo
@@ -313,37 +318,21 @@ func SNPutAcc(w http.ResponseWriter, r *http.Request){
 		}
 		fmt.Println("Storage Node: ",accInfo)
 
+		// create new account
 		conts := make(map[string]Container)
 		newAcc:=Account{Name:accInfo.Name, Containers:conts}
-		accounts:=Accounts{}
 
+		// marshall new account
+		accountBytes, err := newAcc.MarshalMsg(nil)
+		fmt.Println(accountBytes)
 
-		// check Accounts map for new Account
+		marshalledAcc:=MarshalledAcc{Bytes:accountBytes, Name:accInfo.Name}
+
+		// save account to file
 		httpVar.AccFileMutex.Lock()
-		accountsBytes, err := ioutil.ReadFile(path+"/src/Accounts"+strconv.Itoa(peerID))
-		_,err = accounts.UnmarshalMsg(accountsBytes)
+		err = ioutil.WriteFile(path+"/src/Account"+accInfo.Name+strconv.Itoa(peerID),accountBytes,0777)
 
-		if len(accountsBytes)==0{
-			// No accounts
-			accsMap := make(map[string]Account)
-			accounts.Num=1
-			accounts.Accounts=accsMap
-			accounts.Accounts[accInfo.Name]=newAcc
-		}else if err != nil {
-			fmt.Println("SNPutAccP2P Error: ",err)
-		} else {
-			_, exists := accounts.Accounts[accInfo.Name]
-			if !exists{
-				accounts.Num++
-			}
-			accounts.Accounts[accInfo.Name]=newAcc // replacing it if exists
-		}
-		marshalledAcc, err := accounts.MarshalMsg(nil)
-		fmt.Println("	SNPutAccP2P",len(accountsBytes))
-		fmt.Println(marshalledAcc)
-		err = ioutil.WriteFile(path+"/src/Accounts"+strconv.Itoa(peerID),marshalledAcc,0777)
-
-
+		// send marhshalled account to other nodes to save it
 		var wg sync.WaitGroup
 		wg.Add(len(accInfo.NodeList))
 		var currentAddr int = rand.Intn(len(accInfo.NodeList))
@@ -386,15 +375,12 @@ func SNPutAcc(w http.ResponseWriter, r *http.Request){
 		httpVar.AccFileMutex.Unlock()
 
 
-		fmt.Println("accounts: ",accounts)
-
-
 	}
 }
 
 // Listen to other peers
 func SNPutAccP2PRequest(w http.ResponseWriter, r *http.Request) {
-	var marshalledAccs []byte
+	var marshalledAcc MarshalledAcc
 	// Get peer ID
 	var peerID int = int(r.Host[len(r.Host) - 1] - '0')
 	// Listen to tracker
@@ -409,7 +395,7 @@ func SNPutAccP2PRequest(w http.ResponseWriter, r *http.Request) {
 			fmt.Println("error body ", err)
 			w.WriteHeader(http.StatusBadRequest)
 		}
-		if err := json.Unmarshal(body, &marshalledAccs); err != nil {
+		if err := json.Unmarshal(body, &marshalledAcc); err != nil {
 			w.Header().Set("Content-Type", "application/json; charset=UTF-8")
 			w.WriteHeader(422) // unprocessable entity
 			log.Println(err)
@@ -420,7 +406,7 @@ func SNPutAccP2PRequest(w http.ResponseWriter, r *http.Request) {
 		}
 		// check Accounts map for new Account
 		httpVar.AccFileMutexP2P.Lock()
-		err = ioutil.WriteFile(path+"/src/Accounts"+strconv.Itoa(peerID),marshalledAccs,0777)
+		err = ioutil.WriteFile(path+"/src/Account"+marshalledAcc.Name+strconv.Itoa(peerID),marshalledAcc.Bytes,0777)
 		httpVar.AccFileMutexP2P.Unlock()
 
 		if err != nil {
