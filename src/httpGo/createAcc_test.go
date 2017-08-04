@@ -321,7 +321,7 @@ func TestCreateAccountAPI(t *testing.T) {
 		}
 
 	})
-	time.Sleep(20*time.Second)
+	time.Sleep(40*time.Second)
 }
 
 
