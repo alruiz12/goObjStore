@@ -38,25 +38,27 @@ type hashMsg struct {
 var totalPartsNum int
 var startGet time.Time
 var numGets int = 0
-func PutObjProxy(filePath string, trackerAddr string, numNodes int, putOK chan bool) {
+func PutObjProxy(filePath string, trackerAddr string, numNodes int, putOK chan bool, account string, container string) {
 
 	time.Sleep(1 * time.Second)
 	var hash string = md5sum(filePath)
 	var err error
 
+	// check account and container
+	var nodeList [][]string
 	// Aask tracker for nodes
-	requestJson := `{"Quantity":"` + strconv.Itoa(numNodes) + `","ID":"` + hash + `","Type":"object"}`
+	requestJson := `{"Quantity":"` + strconv.Itoa(conf.NumNodes) + `","ID":"` + account + `","Type":"account"}`
 	reader := strings.NewReader(requestJson)
-	trackerURL := "http://" + trackerAddr + "/GetNodes"
+	trackerURL := "http://" + conf.TrackerAddr + "/GetNodesForKey"
 	request, err := http.NewRequest("GET", trackerURL, reader)
 	if err != nil {
-		fmt.Println("Put: error creating request: ", err.Error())
+		fmt.Println("putContProxy: error creating request: ", err.Error())
 		putOK <- false
 		return
 	}
 	res, err := http.DefaultClient.Do(request)
 	if err != nil {
-		fmt.Println("Put: error sending request: ", err.Error())
+		fmt.Println("putContProxy: error sending request: ", err.Error())
 		putOK <- false
 		return
 	}
@@ -71,13 +73,59 @@ func PutObjProxy(filePath string, trackerAddr string, numNodes int, putOK chan b
 		putOK <- false
 		return
 	}
-	var nodeList [][]string
+	if err := json.Unmarshal(body, &nodeList); err != nil {
+		fmt.Println("putContProxy: error unprocessable entity: ", err.Error())
+		putOK <- false
+		return
+	}
+	if err != nil {
+		fmt.Println("putContProxy: error receiving response: ", err.Error())
+		putOK <- false
+		return
+	}
+
+
+
+	// Aask tracker for nodes
+	requestJson = `{"Quantity":"` + strconv.Itoa(numNodes) + `","ID":"` + hash + `","Type":"object"}`
+	reader = strings.NewReader(requestJson)
+	trackerURL = "http://" + trackerAddr + "/GetNodes"
+	request, err = http.NewRequest("GET", trackerURL, reader)
+	if err != nil {
+		fmt.Println("Put: error creating request: ", err.Error())
+		putOK <- false
+		return
+	}
+	res, err = http.DefaultClient.Do(request)
+	if err != nil {
+		fmt.Println("Put: error sending request: ", err.Error())
+		putOK <- false
+		return
+	}
+	body, err = ioutil.ReadAll(io.LimitReader(res.Body, 1048576))
+	if err != nil {
+		fmt.Println(err)
+		putOK <- false
+		return
+	}
+	if err := res.Body.Close(); err != nil {
+		fmt.Println(err)
+		putOK <- false
+		return
+	}
 	if err := json.Unmarshal(body, &nodeList); err != nil {
 		fmt.Println("Put: error unprocessable entity: ", err.Error())
 		fmt.Println("NODELIST: ",nodeList)
 		putOK <- false
 		return
 	}
+
+	if len(nodeList)==0{
+		fmt.Println(" no such name ")
+		putOK <- false
+		return
+	}
+
 	if err != nil {
 		fmt.Println("Put: error receiving response: ", err.Error())
 		putOK <- false
@@ -496,6 +544,7 @@ type AccInfo struct {
 	Num int
 	CurrentNode int
 	Name string
+	Container string
 }
 
 func CreateAccountProxy(name string, createOK chan bool){
@@ -515,6 +564,11 @@ func CreateAccountProxy(name string, createOK chan bool){
 	res, err := http.DefaultClient.Do(request)
 	if err != nil {
 		fmt.Println("Put: error sending request: ", err.Error())
+		createOK <- false
+		return
+	}
+	if res.StatusCode==http.StatusBadRequest{
+		fmt.Println(" no such name ")
 		createOK <- false
 		return
 	}
@@ -539,6 +593,13 @@ func CreateAccountProxy(name string, createOK chan bool){
 		fmt.Println("Put: error receiving response: ", err.Error())
 		createOK <- false
 		return
+	}
+	if len(nodeList)==0{
+		fmt.Println(" no such name ")
+		createOK <- false
+		return
+	} else {
+		fmt.Println("len ",len(nodeList))
 	}
 
 	currentPeer:= rand.Intn(len(nodeList))
@@ -567,6 +628,76 @@ func CreateAccountProxy(name string, createOK chan bool){
 	createOK <- true
 
 }
+
+func putContProxy(account string, container string, createOK chan bool){
+	var nodeList [][]string
+	var err error
+
+	// Aask tracker for nodes
+	requestJson := `{"Quantity":"` + strconv.Itoa(conf.NumNodes) + `","ID":"` + account + `","Type":"account"}`
+	reader := strings.NewReader(requestJson)
+	trackerURL := "http://" + conf.TrackerAddr + "/GetNodesForKey"
+	request, err := http.NewRequest("GET", trackerURL, reader)
+	if err != nil {
+		fmt.Println("putContProxy: error creating request: ", err.Error())
+		createOK <- false
+		return
+	}
+	res, err := http.DefaultClient.Do(request)
+	if err != nil {
+		fmt.Println("putContProxy: error sending request: ", err.Error())
+		createOK <- false
+		return
+	}
+	body, err := ioutil.ReadAll(io.LimitReader(res.Body, 1048576))
+	if err != nil {
+		fmt.Println(err)
+		createOK <- false
+		return
+	}
+	if err := res.Body.Close(); err != nil {
+		fmt.Println(err)
+		createOK <- false
+		return
+	}
+	if err := json.Unmarshal(body, &nodeList); err != nil {
+		fmt.Println("putContProxy: error unprocessable entity: ", err.Error())
+		createOK <- false
+		return
+	}
+	if err != nil {
+		fmt.Println("putContProxy: error receiving response: ", err.Error())
+		createOK <- false
+		return
+	}
+
+	currentPeer:= rand.Intn(len(nodeList))
+	currentPeerAddr := rand.Intn(len(nodeList))
+	acc := AccInfo{NodeList:nodeList, Num:len(nodeList), CurrentNode:currentPeer, Name:account, Container:container }
+
+	r, w := io.Pipe()
+	go func() {
+		// save buffer to object
+		err = json.NewEncoder(w).Encode(acc)
+		if err != nil {
+			fmt.Println("Error encoding to pipe ", err.Error())
+			createOK <- false
+			return
+		}
+		defer w.Close()                        // close pipe //when go routine finishes
+	}()
+	//fmt.Println(nodeList[currentPeer][currentPeerAddr])
+	_, err = http.Post("http://" + nodeList[currentPeer][currentPeerAddr] + "/SNPutCont", "application/json", r)
+	if err != nil {
+		fmt.Println("Error sending http POST ", err.Error())
+		createOK <- false
+		return
+	}
+
+	createOK <- true
+}
+
+
 
 func CheckFileReplication(fileType string, name string, replication int) bool{
 	if replication<2 {return false}
@@ -603,6 +734,8 @@ func CheckFileReplication(fileType string, name string, replication int) bool{
 
 	return true
 }
+
+
 
 
 

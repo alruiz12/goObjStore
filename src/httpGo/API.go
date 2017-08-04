@@ -9,6 +9,7 @@ import(
 	"github.com/alruiz12/simpleBT/src/conf"
 	"time"
 	"sync"
+	"strings"
 )
 
 func PutObjAPI(w http.ResponseWriter, r *http.Request){
@@ -29,6 +30,7 @@ func PutObjAPI(w http.ResponseWriter, r *http.Request){
 		}
 		file.Close()
 		putOK := make(chan bool)
+
 		go PutObjProxy(os.Getenv("GOPATH") + "/src/github.com/alruiz12/simpleBT/src/" + name, conf.TrackerAddr, conf.NumNodes, putOK)
 		success := <-putOK
 		if success == true {
@@ -77,6 +79,38 @@ func PutAccAPI(w http.ResponseWriter, r *http.Request){
 				w.WriteHeader(http.StatusCreated)
 			} else {
 				fmt.Println("create fail")
+				w.WriteHeader(http.StatusBadRequest)
+			}
+		}
+
+	}()
+	wg.Wait()
+}
+
+
+func PutContAPI(w http.ResponseWriter, r *http.Request){
+	var wg sync.WaitGroup
+	wg.Add(1)
+	go func() {
+		defer wg.Done()
+		//accountName:=r.Header["Name"][0]
+		accountName:=r.URL.Path[1:]
+		results:= strings.Split(accountName, "/")
+		fmt.Println("PutContAPI: ",results[1])
+		if accountName==""{
+			fmt.Println("put fail")
+			w.WriteHeader(http.StatusBadRequest)
+		} else{
+			createOK := make(chan bool)
+			go putContProxy(results[0], results[1], createOK)
+
+
+			success := <-createOK
+			if success == true {
+				fmt.Println("put success ")
+				w.WriteHeader(http.StatusCreated)
+			} else {
+				fmt.Println("put fail")
 				w.WriteHeader(http.StatusBadRequest)
 			}
 		}

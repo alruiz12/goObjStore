@@ -80,11 +80,6 @@ func GetNodes(w http.ResponseWriter, r *http.Request){
 		httpVar.MapKeys.Lock()
 		httpVar.MapKeyNodes[nodeNum.ID] = nodeList
 		httpVar.MapKeys.Unlock()
-	}else if strings.Compare(nodeNum.Type,"container")==0{
-		httpVar.MapCont.Lock()
-		httpVar.MapContNodes[nodeNum.ID] = nodeList
-		httpVar.MapCont.Unlock()
-		fmt.Println("container")
 	}else if strings.Compare(nodeNum.Type,"account")==0{
 		httpVar.MapAcc.Lock()
 		httpVar.MapAccNodes[nodeNum.ID] = nodeList
@@ -164,10 +159,16 @@ func GetNodesForKey(w http.ResponseWriter, r *http.Request){
 	var nodeList [][]string
 	if strings.Compare(request.Type, "object") == 0  {
 		nodeList = httpVar.MapKeyNodes[request.ID]
-	}else if strings.Compare(request.Type, "container") == 0 {
-		nodeList = httpVar.MapContNodes[request.ID]
+		if len(nodeList)==0{
+			w.WriteHeader(http.StatusBadRequest)
+			return
+		}
 	}else if strings.Compare(request.Type, "account" )== 0 {
 		nodeList = httpVar.MapAccNodes[request.ID]
+		if len(nodeList)==0{
+			w.WriteHeader(http.StatusBadRequest)
+			return
+		}
 	}
 
 	w.Header().Set("Content-Type", "application/json; charset=UTF-8")

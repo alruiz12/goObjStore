@@ -298,7 +298,6 @@ type MarshalledAcc struct {
 }
 
 func SNPutAcc(w http.ResponseWriter, r *http.Request){
-	if r.Method == http.MethodPost {
 		var accInfo AccInfo
 		var peerID int = int(r.Host[len(r.Host) - 1] - '0')
 		body, err := ioutil.ReadAll(r.Body)
@@ -374,7 +373,7 @@ func SNPutAcc(w http.ResponseWriter, r *http.Request){
 		httpVar.AccFileMutex.Unlock()
 
 
-	}
+
 }
 
 // Listen to other peers
@@ -415,3 +414,146 @@ func SNPutAccP2PRequest(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusCreated)
 	}
 }
+
+
+
+func SNPutCont(w http.ResponseWriter, r *http.Request){
+
+		var accInfo AccInfo
+		var peerID int = int(r.Host[len(r.Host) - 1] - '0')
+		body, err := ioutil.ReadAll(r.Body)
+		if err != nil {
+			fmt.Println("error reading ", err)
+		}
+		if err := r.Body.Close(); err != nil {
+			fmt.Println("error body ", err)
+		}
+		if err := json.Unmarshal(body, &accInfo); err != nil {
+			w.Header().Set("Content-Type", "application/json; charset=UTF-8")
+			w.WriteHeader(422) // unprocessable entity
+			log.Println(err)
+			if err := json.NewEncoder(w).Encode(err); err != nil {
+				fmt.Println("error unmarshalling ", err)
+			}
+		}
+
+
+
+
+
+		// read account from file
+		httpVar.AccFileMutex.Lock()
+		accountBytes, err := ioutil.ReadFile(path+"/src/Account"+accInfo.Name+strconv.Itoa(peerID))
+		if err != nil {
+			fmt.Println("SNPutCont Error: reading ", path+"/src/Account"+accInfo.Name+strconv.Itoa(peerID))
+		}
+
+		// update account
+		account:=Account{}
+		_,err = account.UnmarshalMsg(accountBytes)
+		objs:= make(map[string]bool)
+		container:=Container{Name:accInfo.Name, Objs:objs}
+		if len(account.Containers)==0{
+			account.Containers=make(map[string]Container)
+		}
+		account.Containers[accInfo.Container]=container
+		fmt.Println(account)
+		// marshall account
+		accountBytes, err = account.MarshalMsg(nil)
+
+		marshalledAcc:=MarshalledAcc{Bytes:accountBytes, Name:accInfo.Name}
+
+		err = ioutil.WriteFile(path+"/src/Account"+accInfo.Name+strconv.Itoa(peerID),accountBytes,0777)
+
+		// send marhshalled account to other nodes to save it
+		var wg sync.WaitGroup
+		wg.Add(len(accInfo.NodeList))
+		var currentAddr int = rand.Intn(len(accInfo.NodeList))
+		for _, peer := range accInfo.NodeList{
+			peerURL := "http://" + peer[currentAddr] + "/SNPutAccP2PRequest"
+			go func(p string, URL string){
+				if peerID == int(p[len(p) - 1] - '0') {
+					// Don't send to itself
+				} else {
+					r, w := io.Pipe()
+					go func() {
+						// save buffer to object
+						err = json.NewEncoder(w).Encode(marshalledAcc)
+						if err != nil {
+							fmt.Println("Error encoding to pipe ", err.Error())
+							return
+						}
+						defer w.Close()                        // close pipe //when go routine finishes
+					}()
+					response, err := http.Post(peerURL, "application/json", r)
+					if err != nil {
+						fmt.Println("Error sending http POST p2p", err.Error())
+					}
+					responseCode:=response.StatusCode
+					if responseCode == 201 {
+						fmt.Println(response.StatusCode," SN created")
+					}
+					fmt.Println(responseCode)
+					/*else{
+						for responseCode != 201{
+							response, err = http.Post(peerURL, "application/json", r)
+							responseCode=response.StatusCode
+						}
+					}*/
+				}
+				wg.Done()
+			}(peer[0], peerURL)
+		}
+		wg.Wait()
+		httpVar.AccFileMutex.Unlock()
+
+
+
+}
+
+// Todo: make route
+// send accInfo with needed
+// receive ok or bad request
+// (same put obj code)
+// update obj map
+func checkAccCont(w http.ResponseWriter, r *http.Request){
+	var accInfo AccInfo
+	var peerID int = int(r.Host[len(r.Host) - 1] - '0')
+	body, err := ioutil.ReadAll(r.Body)
+	if err != nil {
+		fmt.Println("error reading ", err)
+	}
+	if err := r.Body.Close(); err != nil {
+		fmt.Println("error body ", err)
+	}
+	if err := json.Unmarshal(body, &accInfo); err != nil {
+		w.Header().Set("Content-Type", "application/json; charset=UTF-8")
+		w.WriteHeader(422) // unprocessable entity
+		log.Println(err)
+		if err := json.NewEncoder(w).Encode(err); err != nil {
+			fmt.Println("error unmarshalling ", err)
+		}
+	}
+
+
+
+
+
+	// read account from file
+	accountBytes, err := ioutil.ReadFile(path+"/src/Account"+accInfo.Name+strconv.Itoa(peerID))
+	if err != nil {
+		fmt.Println("SNPutCont Error: reading ", path+"/src/Account"+accInfo.Name+strconv.Itoa(peerID))
+	}
+	account:=Account{}
+	_,err = account.UnmarshalMsg(accountBytes)
+	_, exists := account.Containers[accInfo.Container]
+	if exists{
+		w.WriteHeader(http.StatusOK)
+		return
+	}
+	w.WriteHeader(http.StatusBadRequest)
+
+
+}
+
+

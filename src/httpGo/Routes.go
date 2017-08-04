@@ -41,6 +41,7 @@ func MyNewRouter() *mux.Router {
 	router.HandleFunc("/putAcc", PutAccAPI)
 	router.HandleFunc("/SNPutAcc", SNPutAcc)
 	router.HandleFunc("/SNPutAccP2PRequest", SNPutAccP2PRequest)
+	router.HandleFunc("/SNPutCont", SNPutCont)
 	router.HandleFunc(`/{rest:[a-zA-Z0-9/\-\/]+}`, route)
 
 
@@ -72,6 +73,9 @@ func tripleF(w http.ResponseWriter, r *http.Request) {
 	fmt.Println("triple")
 }
 func doubleF(w http.ResponseWriter, r *http.Request) {
+	if r.Method == http.MethodPut {
+		PutContAPI(w,r)
+	}
 	fmt.Println("double")
 }
 func simpleF(w http.ResponseWriter, r *http.Request) {

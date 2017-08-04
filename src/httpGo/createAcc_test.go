@@ -274,6 +274,61 @@ func TestCreateAccountAPI(t *testing.T) {
 	}else{t.Error("Obj not created")}
 	fmt.Println("---------------------------------------------------")
 
+
+
+	req, err = http.NewRequest("PUT", "http://localhost:8000/ACCgo3/cont1", nil)
+	if err != nil {
+		t.Error(" error creating post request to http://localhost:8000/ACCgo3/cont1")
+	}
+	//req.Header.Set("Name", "account2")
+	response , err = http.DefaultClient.Do(req)
+	if err != nil {
+		t.Error("Error doing request")
+	}
+	fmt.Println("response: ",response.StatusCode )
+	if response.StatusCode == 201 {
+		fmt.Println(response.StatusCode," created")
+	} else{
+		t.Error("Account not created")
+	}
+	fmt.Println("---------------------------------------------------")
+
+	req, err = http.NewRequest("PUT", "http://localhost:8000/ACCgo3/contBB", nil)
+	if err != nil {
+		t.Error(" error creating post request to http://localhost:8000/ACCgo3/cont1")
+	}
+	//req.Header.Set("Name", "account2")
+	response , err = http.DefaultClient.Do(req)
+	if err != nil {
+		t.Error("Error doing request")
+	}
+	fmt.Println("response: ",response.StatusCode )
+	if response.StatusCode == 201 {
+		fmt.Println(response.StatusCode," created")
+	} else{
+		t.Error("Account not created")
+	}
+	fmt.Println("---------------------------------------------------")
+
+
+	req, err = http.NewRequest("PUT", "http://localhost:8000/InventedAccount/contB2B", nil)
+	if err != nil {
+		t.Error(" error creating post request to http://localhost:8000/ACCgo3/cont1")
+	}
+	//req.Header.Set("Name", "account2")
+	response , err = http.DefaultClient.Do(req)
+	if err != nil {
+		t.Error("Error doing request")
+	}
+	fmt.Println("response: ",response.StatusCode )
+	if response.StatusCode == 400 {
+		fmt.Println(response.StatusCode," bad request as expected")
+	} else{
+		t.Error("expecting failure")
+	}
+	fmt.Println("---------------------------------------------------")
+
+
 	time.AfterFunc(600 * time.Second, func(){
 		if err:= peer1arun.Shutdown(nil); err!=nil{
 			panic(err)
@@ -321,7 +376,7 @@ func TestCreateAccountAPI(t *testing.T) {
 		}
 
 	})
-	time.Sleep(40*time.Second)
+	time.Sleep(20*time.Second)
 }
 
 

@@ -24,6 +24,11 @@ func (z *Container) DecodeMsg(dc *msgp.Reader) (err error) {
 			return
 		}
 		switch msgp.UnsafeString(field) {
+		case "name":
+			z.Name, err = dc.ReadString()
+			if err != nil {
+				return
+			}
 		case "objs":
 			var msz uint32
 			msz, err = dc.ReadMapHeader()
@@ -63,9 +68,18 @@ func (z *Container) DecodeMsg(dc *msgp.Reader) (err error) {
 
 // EncodeMsg implements msgp.Encodable
 func (z *Container) EncodeMsg(en *msgp.Writer) (err error) {
-	// map header, size 1
+	// map header, size 2
+	// write "name"
+	err = en.Append(0x82, 0xa4, 0x6e, 0x61, 0x6d, 0x65)
+	if err != nil {
+		return err
+	}
+	err = en.WriteString(z.Name)
+	if err != nil {
+		return
+	}
 	// write "objs"
-	err = en.Append(0x81, 0xa4, 0x6f, 0x62, 0x6a, 0x73)
+	err = en.Append(0xa4, 0x6f, 0x62, 0x6a, 0x73)
 	if err != nil {
 		return err
 	}
@@ -89,9 +103,12 @@ func (z *Container) EncodeMsg(en *msgp.Writer) (err error) {
 // MarshalMsg implements msgp.Marshaler
 func (z *Container) MarshalMsg(b []byte) (o []byte, err error) {
 	o = msgp.Require(b, z.Msgsize())
-	// map header, size 1
+	// map header, size 2
+	// string "name"
+	o = append(o, 0x82, 0xa4, 0x6e, 0x61, 0x6d, 0x65)
+	o = msgp.AppendString(o, z.Name)
 	// string "objs"
-	o = append(o, 0x81, 0xa4, 0x6f, 0x62, 0x6a, 0x73)
+	o = append(o, 0xa4, 0x6f, 0x62, 0x6a, 0x73)
 	o = msgp.AppendMapHeader(o, uint32(len(z.Objs)))
 	for xvk, bzg := range z.Objs {
 		o = msgp.AppendString(o, xvk)
@@ -116,6 +133,11 @@ func (z *Container) UnmarshalMsg(bts []byte) (o []byte, err error) {
 			return
 		}
 		switch msgp.UnsafeString(field) {
+		case "name":
+			z.Name, bts, err = msgp.ReadStringBytes(bts)
+			if err != nil {
+				return
+			}
 		case "objs":
 			var msz uint32
 			msz, bts, err = msgp.ReadMapHeaderBytes(bts)
@@ -155,7 +177,7 @@ func (z *Container) UnmarshalMsg(bts []byte) (o []byte, err error) {
 }
 
 func (z *Container) Msgsize() (s int) {
-	s = 1 + 5 + msgp.MapHeaderSize
+	s = 1 + 5 + msgp.StringPrefixSize + len(z.Name) + 5 + msgp.MapHeaderSize
 	if z.Objs != nil {
 		for xvk, bzg := range z.Objs {
 			_ = bzg
