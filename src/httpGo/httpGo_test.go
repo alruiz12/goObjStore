@@ -6,13 +6,12 @@ import (
 	"net/http"
 	"time"
 	"os"
-	"os/exec"
-	"strings"
+
 )
 func TestDirecories(t *testing.T){
 	router :=MyNewRouter()
 	const IP = "127.0.0.1"
-	var path = os.Getenv("GOPATH")+"/src/github.com/alruiz12/simpleBT/src"
+//	var path = os.Getenv("GOPATH")+"/src/github.com/alruiz12/simpleBT/src"
 	var filePath = os.Getenv("GOPATH")+"/src/github.com/alruiz12/simpleBT/src/bigFile"
 
 	//var filePath = os.Getenv("GOPATH")+"/src/github.com/alruiz12/simpleBT/dataset.xml"
@@ -165,66 +164,6 @@ func TestDirecories(t *testing.T){
 		fmt.Println("check pieces success ")
 
 
-		// Create Account
-		var (
-			cmdOut []byte
-			err    error
-		)
-		if cmdOut, err = exec.Command(path+"/shellScriptsTests/curlCreateAccSuccess.sh").Output(); err != nil {
-			fmt.Fprintln(os.Stderr, "There was an error running command: ", err)
-			os.Exit(1)
-		}
-		resp := string(cmdOut)
-		fmt.Println("curl response ", resp)
-		if strings.Compare(resp,"201")==0 {
-			fmt.Println(resp+ " created")
-		}else{t.Error("Account not created")}
-
-
-		if cmdOut, err = exec.Command(path+"/shellScriptsTests/curlCreateAccFail.sh").Output(); err != nil {
-			fmt.Fprintln(os.Stderr, "There was an error running command: ", err)
-			os.Exit(1)
-		}
-		resp = string(cmdOut)
-		fmt.Println("curl response ", resp)
-		if strings.Compare(resp,"400")==0 {
-			fmt.Println(resp+" bad request as expected")
-		}else{t.Error("expecting bad request 400")}
-
-
-
-		req, err := http.NewRequest("POST", "http://localhost:8000/putAcc", nil)
-		if err != nil {
-			t.Error(" error creating post request to http://localhost:8000/putAcc")
-		}
-		req.Header.Set("Name", "account2")
-		response , err := http.DefaultClient.Do(req)
-		if err != nil {
-			t.Error("Error doing request")
-		}
-		fmt.Println("response: ",response.StatusCode )
-		if response.StatusCode == 201 {
-			fmt.Println(response.StatusCode," created")
-		} else{
-			t.Error("Account not created")
-		}
-
-
-		req, err = http.NewRequest("POST", "http://localhost:8000/putAcc", nil)
-		if err != nil {
-			t.Error(" error creating post request to http://localhost:8000/putAcc")
-		}
-		req.Header.Set("Nme", "account2")
-		response , err = http.DefaultClient.Do(req)
-		if err != nil {
-			t.Error("Error doing request")
-		}
-		fmt.Println("response: ",response.StatusCode )
-		if response.StatusCode == 400 {
-			fmt.Println(response.StatusCode," bad request as expected")
-		} else{
-			t.Error("expecting bad request 400")
-		}
 
 
 
@@ -278,6 +217,6 @@ func TestDirecories(t *testing.T){
 		}
 
 	})
-	time.Sleep(120*time.Second)
+	time.Sleep(20*time.Second)
 
 }

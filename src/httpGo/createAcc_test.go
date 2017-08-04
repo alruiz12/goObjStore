@@ -259,6 +259,20 @@ func TestCreateAccountAPI(t *testing.T) {
 	if CheckFileReplication("Account", "account2", 4)==true{
 		t.Error("file replication not correct")
 	} else {fmt.Println("false")}
+	fmt.Println("---------------------------------------------------")
+
+
+
+	if cmdOut, err = exec.Command(path+"/shellScriptsTests/curlPutObjSuccess.sh").Output(); err != nil {
+		fmt.Fprintln(os.Stderr, "There was an error running command: ", err)
+		os.Exit(1)
+	}
+	resp = string(cmdOut)
+	fmt.Println("curl response ", resp)
+	if strings.Compare(resp,"201")==0 {
+		fmt.Println(resp+ " created")
+	}else{t.Error("Obj not created")}
+	fmt.Println("---------------------------------------------------")
 
 	time.AfterFunc(600 * time.Second, func(){
 		if err:= peer1arun.Shutdown(nil); err!=nil{
