@@ -74,6 +74,7 @@ func PutObjProxy(filePath string, trackerAddr string, numNodes int, putOK chan b
 	var nodeList [][]string
 	if err := json.Unmarshal(body, &nodeList); err != nil {
 		fmt.Println("Put: error unprocessable entity: ", err.Error())
+		fmt.Println("NODELIST: ",nodeList)
 		putOK <- false
 		return
 	}
@@ -530,6 +531,7 @@ func CreateAccountProxy(name string, createOK chan bool){
 	}
 	if err := json.Unmarshal(body, &nodeList); err != nil {
 		fmt.Println("Put: error unprocessable entity: ", err.Error())
+		fmt.Println("CreateAccountProxy: NODELIST: ", nodeList)
 		createOK <- false
 		return
 	}

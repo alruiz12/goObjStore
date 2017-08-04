@@ -159,7 +159,7 @@ func TestCreateAccountAPI(t *testing.T) {
 		fmt.Println(resp+ " created")
 	}else{t.Error("Account not created")}
 	fmt.Println("---------------------------------------------------")
-
+/*
 	if cmdOut, err = exec.Command(path+"/shellScriptsTests/curlCreateAccFail.sh").Output(); err != nil {
 		fmt.Fprintln(os.Stderr, "There was an error running command: ", err)
 		os.Exit(1)
@@ -170,13 +170,13 @@ func TestCreateAccountAPI(t *testing.T) {
 		fmt.Println(resp+" bad request as expected")
 	}else{t.Error("expecting bad request 400")}
 	fmt.Println("---------------------------------------------------")
+*/
 
-
-	req, err := http.NewRequest("POST", "http://localhost:8000/putAcc", nil)
+	req, err := http.NewRequest("PUT", "http://localhost:8000/accGo", nil)
 	if err != nil {
 		t.Error(" error creating post request to http://localhost:8000/putAcc")
 	}
-	req.Header.Set("Name", "account2")
+	//req.Header.Set("Name", "account2")
 	response , err := http.DefaultClient.Do(req)
 	if err != nil {
 		t.Error("Error doing request")
@@ -188,12 +188,12 @@ func TestCreateAccountAPI(t *testing.T) {
 		t.Error("Account not created")
 	}
 	fmt.Println("---------------------------------------------------")
-
-	req, err = http.NewRequest("POST", "http://localhost:8000/putAcc", nil)
+/*
+	req, err = http.NewRequest("PUT", "http://localhost:8000/ACC1", nil)
 	if err != nil {
 		t.Error(" error creating post request to http://localhost:8000/putAcc")
 	}
-	req.Header.Set("Nme", "account2")
+	//req.Header.Set("Nme", "account2")
 	response , err = http.DefaultClient.Do(req)
 	if err != nil {
 		t.Error("Error doing request")
@@ -205,12 +205,12 @@ func TestCreateAccountAPI(t *testing.T) {
 		t.Error("expecting bad request 400")
 	}
 
-
-	req, err = http.NewRequest("POST", "http://localhost:8000/putAcc", nil)
+*/
+	req, err = http.NewRequest("PUT", "http://localhost:8000/ACCGo2", nil)
 	if err != nil {
 		t.Error(" error creating post request to http://localhost:8000/putAcc")
 	}
-	req.Header.Set("Name", "account3")
+	//req.Header.Set("Name", "account3")
 	response , err = http.DefaultClient.Do(req)
 	if err != nil {
 		t.Error("Error doing request")
@@ -223,11 +223,11 @@ func TestCreateAccountAPI(t *testing.T) {
 	}
 	fmt.Println("---------------------------------------------------")
 
-	req, err = http.NewRequest("POST", "http://localhost:8000/putAcc", nil)
+	req, err = http.NewRequest("PUT", "http://localhost:8000/ACCgo3", nil)
 	if err != nil {
 		t.Error(" error creating post request to http://localhost:8000/putAcc")
 	}
-	req.Header.Set("Name", "account2")
+	//req.Header.Set("Name", "account2")
 	response , err = http.DefaultClient.Do(req)
 	if err != nil {
 		t.Error("Error doing request")
@@ -240,13 +240,13 @@ func TestCreateAccountAPI(t *testing.T) {
 	}
 	fmt.Println("---------------------------------------------------")
 
-	fileReplicationCorrect:=CheckFileReplication("Account","account1",3)
+	fileReplicationCorrect:=CheckFileReplication("Account","acc1",3)
 	if fileReplicationCorrect==false{
 		t.Error("file replication not correct")
 	}
 	fmt.Println(fileReplicationCorrect)
 
-	fileReplicationCorrect=CheckFileReplication("Account","account3",3)
+	fileReplicationCorrect=CheckFileReplication("Account","accGo",3)
 	if fileReplicationCorrect==false{
 		t.Error("file replication not correct")
 	}

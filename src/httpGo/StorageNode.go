@@ -316,7 +316,6 @@ func SNPutAcc(w http.ResponseWriter, r *http.Request){
 				fmt.Println("error unmarshalling ", err)
 			}
 		}
-		fmt.Println("Storage Node: ",accInfo)
 
 		// create new account
 		conts := make(map[string]Container)
@@ -324,7 +323,7 @@ func SNPutAcc(w http.ResponseWriter, r *http.Request){
 
 		// marshall new account
 		accountBytes, err := newAcc.MarshalMsg(nil)
-		fmt.Println(accountBytes)
+		//fmt.Println(accountBytes)
 
 		marshalledAcc:=MarshalledAcc{Bytes:accountBytes, Name:accInfo.Name}
 

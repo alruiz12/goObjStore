@@ -61,7 +61,7 @@ func PutAccAPI(w http.ResponseWriter, r *http.Request){
 	go func() {
 		defer wg.Done()
 		//accountName:=r.Header["Name"][0]
-		accountName:=r.Header.Get("Name")
+		accountName:=r.URL.Path[1:]
 		if accountName==""{
 			fmt.Println("create fail")
 			w.WriteHeader(http.StatusBadRequest)
