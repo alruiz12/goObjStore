@@ -6,7 +6,7 @@ import (
 //go:generate msgp
 type Container struct {
 	Name string	`msg:"name"`
-	Objs map[string]string	`msg:"objs"`
+	Objs map[string]Object	`msg:"objs"`
 	Policy string	`msg:"policy"`
 	//sync.Mutex
 }

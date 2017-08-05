@@ -62,7 +62,7 @@ func GetObjAPI(w http.ResponseWriter, r *http.Request){
 		addedResults:=results[1]+results[2]+results[3]
 
 		GetOK := make(chan bool)
-		go GetObjProxy(addedResults, conf.ProxyAddr, conf.TrackerAddr, GetOK)
+		go GetObjProxy(addedResults, conf.ProxyAddr, conf.TrackerAddr, GetOK,results[1], results[2], results[3])
 		success := <-GetOK
 		if success == true {
 			fmt.Println("get success ", time.Since(startGET))
@@ -73,8 +73,9 @@ func GetObjAPI(w http.ResponseWriter, r *http.Request){
 		}
 
 		//Todo put it in Get
-		currentHash := md5sum(os.Getenv("GOPATH") + "/src/github.com/alruiz12/simpleBT/src/" + addedResults)
-		fmt.Println(CheckPiecesObj(addedResults, "NEW.xml", conf.FilePath, conf.NumNodes, currentHash))
+		//currentHash := md5sum(os.Getenv("GOPATH") + "/src/github.com/alruiz12/simpleBT/src/" + addedResults)
+		//fmt.Println(CheckPiecesObj(addedResults, "NEW.xml", conf.FilePath, conf.NumNodes, currentHash))
+
 	}()
 	wg.Wait()
 	fmt.Println("GET API: ",time.Since(startGET))
@@ -92,6 +93,37 @@ func md5String(str string) string{
 }
 
 func PutAccAPI(w http.ResponseWriter, r *http.Request){
+	var wg sync.WaitGroup
+	wg.Add(1)
+	go func() {
+		defer wg.Done()
+		//accountName:=r.Header["Name"][0]
+		accountName:=r.URL.Path[1:]
+		if accountName==""{
+			fmt.Println("create fail")
+			w.WriteHeader(http.StatusBadRequest)
+		} else{
+			createOK := make(chan bool)
+			go CreateAccountProxy(accountName, createOK)
+
+
+			//go Put(os.Getenv("GOPATH") + "/src/github.com/alruiz12/simpleBT/src/" + name, conf.TrackerAddr, conf.NumNodes, putOK)
+			success := <-createOK
+			if success == true {
+				fmt.Println("create success ")
+				w.WriteHeader(http.StatusCreated)
+			} else {
+				fmt.Println("create fail")
+				w.WriteHeader(http.StatusBadRequest)
+			}
+		}
+
+	}()
+	wg.Wait()
+}
+
+
+func GetAccAPI(w http.ResponseWriter, r *http.Request){
 	var wg sync.WaitGroup
 	wg.Add(1)
 	go func() {

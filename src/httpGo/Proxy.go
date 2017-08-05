@@ -31,6 +31,8 @@ type msg struct {
 	Text []byte 
 	CurrentNode int
 	Name int
+	Size	int
+	Parts	int
 }
 type putObjMSg struct {
 	ID string
@@ -287,7 +289,7 @@ func PutObjProxy(filePath string, trackerAddr string, numNodes int, putOK chan b
 	// ask random node for correctness (account/container)
 	currentPeer= rand.Intn(len(nodeList))
 	currentPeerAddr = rand.Intn(len(nodeList))
-	acc = AccInfo{AccName:account, Container:container, Obj:objName }
+	acc = AccInfo{AccName:account, Container:container, Obj:objName, Size:size, Parts:totalPartsNum }
 
 	r, w = io.Pipe()
 	go func() {
@@ -342,10 +344,14 @@ func md5sum(filePath string) string{
 type jsonKeyURL struct {
 	Key string		`json:"Key"`
 	URL string		`json:"URL"`
+	Account string		`json:"Account"`
+	Container string	`json:"Container"`
+	Object string		`json:"Object"`
+
 }
 
 
-func GetObjProxy(fullName string, proxyAddr []string, trackerAddr string, getOK chan bool){
+func GetObjProxy(fullName string, proxyAddr []string, trackerAddr string, getOK chan bool, account string, container string, objName string,){
 	time.Sleep(1 * time.Second)
 //	var chunk msg
 	// Ask tracker for nodes
@@ -395,7 +401,7 @@ func GetObjProxy(fullName string, proxyAddr []string, trackerAddr string, getOK 
 	// For each node ask for all their Proxy-pieces
 	for index, node := range nodeList {
 		r, w :=io.Pipe()			// create pipe
-		k:=jsonKeyURL{Key:fullName, URL:proxyAddr[index]+"/ReturnObjProxy"}
+		k:=jsonKeyURL{Key:fullName, URL:proxyAddr[index]+"/ReturnObjProxy", Account: account, Container:container, Object:objName}
 
 		go func() {
 			defer w.Close()			// close pipe when go routine finishes
@@ -428,7 +434,7 @@ func GetObjProxy(fullName string, proxyAddr []string, trackerAddr string, getOK 
 
 }
 
-func ReturnObjProxy(w http.ResponseWriter, r *http.Request){
+func ReturnObjProxy(w http.ResponseWriter, r *http.Request) {
 
 	// Listen to tracker
 
@@ -451,19 +457,35 @@ func ReturnObjProxy(w http.ResponseWriter, r *http.Request){
 			}
 		}
 		httpVar.GetMutex.Lock()
-                numGets++
-                httpVar.GetMutex.Unlock()
+		numGets++
+		fmt.Println(numGets)
+		httpVar.GetMutex.Unlock()
 
-		err = ioutil.WriteFile(path + "/src/local/"+getmsg.Key+"/"+getmsg.Name, getmsg.Text, 0777)
+		err = ioutil.WriteFile(path + "/src/local/" + getmsg.Key + "/" + getmsg.Name, getmsg.Text, 0777)
 		if err != nil {
 			fmt.Println("Peer: error creating/writing file p2p", err.Error())
 		}
+		httpVar.TotalNumMutex.Lock()
+		if numGets == totalPartsNum {
+			PartsNum := []byte(strconv.Itoa(getmsg.PartsNum))
+			err = ioutil.WriteFile(path + "/src/local/" + getmsg.Key + "/metadata", PartsNum, 0777)
+			if err != nil {
+				fmt.Println("Peer: error creating/writing file p2p", err.Error())
+			}
+			fmt.Println("METADAAAAAAAAAAATA",path + "/src/local/" + getmsg.Key + "/metadata")
 
 
+		}
+		httpVar.TotalNumMutex.Unlock()
 
+		httpVar.TotalNumMutex.Lock()
+
+		if numGets==totalPartsNum{
+			fmt.Println("GET: ",time.Since(startGet))
+		}
+		httpVar.TotalNumMutex.Unlock()
 	}
 }
-
 
 /*
 CheckPieces walks through the subfiles directory, creates a new file to be filled out with the content of each subfile,
@@ -472,7 +494,6 @@ and compares the new hash with the original one.
 Returns true if both hash are identic and false if not
 */
 func CheckPiecesObj(key string ,fileName string, filePath string, numNodes int, hash string) bool{
-	fmt.Println("inside check pieces")
 	 file, err := os.Open(filePath)
 	if err != nil {
 		fmt.Println(err.Error())
@@ -634,6 +655,8 @@ type AccInfo struct {
 	AccName     string
 	Container   string
 	Obj         string
+	Size	int
+	Parts	int
 }
 
 func CreateAccountProxy(name string, createOK chan bool){
@@ -829,8 +852,172 @@ func CheckFileReplication(fileType string, name string, replication int) bool{
 }
 
 
+/*
+CheckPieces walks through the subfiles directory, creates a new file to be filled out with the content of each subfile,
+and compares the new hash with the original one.
+@param path to the file we want to split
+Returns true if both hash are identic and false if not
+*/
+/*
+func GatherPieces(key string ,fileName string, numNodes int) bool{
+	fmt.Println("inside check pieces")
+	file, err := os.Open(filePath)
+	if err != nil {
+		fmt.Println(err.Error())
+		panic(err)
+	}
+	defer file.Close()
+	fileInfo, _ := file.Stat()
+	text := strconv.FormatInt(fileInfo.Size(), 10)        // size
+	size, _ := strconv.Atoi(text)
+	if err != nil {
+		fmt.Println(err.Error())
+		return false
+	}
+	totalPartsNumOriginal := int(math.Ceil(float64(size) / float64(fileChunk)))
+
+	// Walking through StorageNodes data
+	// Subfiles directory
+	path:=os.Getenv("GOPATH")+"/src/github.com/alruiz12/simpleBT/src/data/"+key+"/"
+	subDir, err := ioutil.ReadDir(path)
+	if err != nil {
+		fmt.Println(err)
+		return false
+	}
+
+	currentDir:=0
+	for currentDir<numNodes{
+
+		// Create new file
+		_, err = os.Create(os.Getenv("GOPATH") + "/src/github.com/alruiz12/simpleBT/src" + fileName+strconv.Itoa(currentDir))
+		newFile, err := os.OpenFile(os.Getenv("GOPATH") + "/src/github.com/alruiz12/simpleBT/src" + fileName+strconv.Itoa(currentDir), os.O_APPEND | os.O_WRONLY, 0666)
+		if err != nil {
+			fmt.Println(err)
+			return false
+		}
+		defer newFile.Close()
+
+		files, err := ioutil.ReadDir(path+subDir[currentDir].Name() )
+		//fmt.Println("Entering ", path+subDir[currentDir].Name())
+		// Trying to fill out the new file using subfiles (in order)
+		var inOrderCount = 0
+		var maxTimes int = 0
+		var fileNameOriginal= fileName[:len(fileName)-4]
+
+		for inOrderCount<totalPartsNumOriginal {
+			for _, file := range files {
+				if strings.Compare(file.Name(), fileNameOriginal + strconv.Itoa(inOrderCount)) == 0 || strings.Compare(file.Name(), "P2P" + strconv.Itoa(inOrderCount)) == 0{
+					inOrderCount++
+					//				fmt.Println(file.Name())
+					currentFile, err := os.Open(path + subDir[currentDir].Name() +"/"+ file.Name())
+					if err != nil {
+						fmt.Println(err)
+						return false
+					}
+
+					bytesCurrentFile, err := ioutil.ReadFile(path + subDir[currentDir].Name()+"/" +file.Name())
+
+					_, err = newFile.WriteString(string(bytesCurrentFile))
+					if err != nil {
+						fmt.Println(err)
+						return false
+					}
+
+					currentFile.Close()
+				}
+
+			}
+			if inOrderCount == 0 {
+				maxTimes++
+			}
+			if maxTimes > 1 {
+				fmt.Println("maxTimes > 1 when looking for ", fileNameOriginal + strconv.Itoa(inOrderCount))
+				return false
+			}
+		}
+
+		// Compute and compare new hash
+		newHash := md5sum(os.Getenv("GOPATH") + "/src/github.com/alruiz12/simpleBT/src" + fileName+strconv.Itoa(currentDir))
+		//fmt.Println("/src/github.com/alruiz12/simpleBT/src" + fileName+strconv.Itoa(currentDir) , newHash)
+		if strings.Compare(key, newHash) != 0 {
+			return false
+		}
 
 
+
+		currentDir++
+	}
+	if currentDir==0{return false}	// Never got in loop
+	//return true
+
+	// Checking Get output (locally)
+	path=os.Getenv("GOPATH")+"/src/github.com/alruiz12/simpleBT/src/local/"+key+"/"
+	files, err := ioutil.ReadDir(path)
+	if err != nil {
+		fmt.Println(err)
+		return false
+	}
+
+	// Create new file
+	_, err = os.Create(os.Getenv("GOPATH") + "/src/github.com/alruiz12/simpleBT/src" + fileName)
+	newFile, err := os.OpenFile(os.Getenv("GOPATH") + "/src/github.com/alruiz12/simpleBT/src" + fileName, os.O_APPEND | os.O_WRONLY, 0666)
+	if err != nil {
+		fmt.Println(err)
+		return false
+	}
+	defer newFile.Close()
+
+
+
+	// Trying to fill out the new file using subfiles (in order)
+	var inOrderCount = 0
+	var maxTimes int = 0
+	var fileNameOriginal= fileName[:len(fileName)-4]
+	for inOrderCount<totalPartsNumOriginal {
+		for _, file := range files {
+			if strings.Compare(file.Name(), fileNameOriginal + strconv.Itoa(inOrderCount)) == 0 {
+				inOrderCount++
+
+				currentFile, err := os.Open(path + file.Name())
+				if err != nil {
+					fmt.Println(err)
+					return false
+				}
+
+				bytesCurrentFile, err := ioutil.ReadFile(path + file.Name())
+
+				_, err = newFile.WriteString(string(bytesCurrentFile))
+				if err != nil {
+					fmt.Println(err)
+					return false
+				}
+
+				currentFile.Close()
+			}
+
+		}
+		if inOrderCount == 0 {
+			maxTimes++
+		}
+		if maxTimes > 1 {
+			fmt.Println("maxTimes > 1 when looking for ", fileNameOriginal + strconv.Itoa(inOrderCount))
+			return false
+		}
+	}
+
+	// Compute and compare new hash
+	newHash := md5sum(os.Getenv("GOPATH") + "/src/github.com/alruiz12/simpleBT/src" + fileName)
+	//fmt.Println("/src/github.com/alruiz12/simpleBT/src" + fileName ,newHash)
+	if strings.Compare(hash, newHash) != 0 {
+		return false
+	}
+
+	return true
+}
+
+
+
+*/
 
 
 

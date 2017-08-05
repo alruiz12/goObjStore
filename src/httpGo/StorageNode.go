@@ -237,11 +237,19 @@ func SNPutObjGetChunks(w http.ResponseWriter, r *http.Request){
 		}
 		return
 	}
+	// read account from file
+	accountBytes, err := ioutil.ReadFile(path+"/src/Account"+keyURL.Account +nodeID)
+	if err != nil {
+		fmt.Println("SNPutCont Error: reading ", path+"/src/Account"+keyURL.Account +nodeID)
+	}
 
+	// update account
+	account:=Account{}
+	_,err = account.UnmarshalMsg(accountBytes)
 
 	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
 	w.WriteHeader(http.StatusOK)
-	go SNPutObjSendChunksToProxy(nodeID, keyURL.Key, keyURL.URL)
+	go SNPutObjSendChunksToProxy(nodeID, keyURL.Key, keyURL.URL, account.Containers[keyURL.Container].Objs[keyURL.Object].PartsNum)
 }
 
 type getMsg struct {
@@ -249,8 +257,9 @@ type getMsg struct {
 	Name string
 	NodeID string
 	Key string
+	PartsNum int
 }
-func SNPutObjSendChunksToProxy(nodeID string, key string, URL string){
+func SNPutObjSendChunksToProxy(nodeID string, key string, URL string, PartsNum int){
 	//partBuffer:=make([]byte,fileChunk)
 	proxyURL:="http://"+URL
 
@@ -267,7 +276,7 @@ func SNPutObjSendChunksToProxy(nodeID string, key string, URL string){
 			if err != nil {
 				fmt.Println("sendChunksToProxy error opening file ",err.Error())
 			}
-			m:=getMsg{Text:partBuffer, Name: info.Name(), NodeID:nodeID, Key:key}
+			m:=getMsg{Text:partBuffer, Name: info.Name(), NodeID:nodeID, Key:key, PartsNum:PartsNum}
 			r, w :=io.Pipe()			// create pipe
 			go func() {
 				defer w.Close()			// close pipe when go routine finishes
@@ -451,7 +460,7 @@ func SNPutCont(w http.ResponseWriter, r *http.Request){
 		// update account
 		account:=Account{}
 		_,err = account.UnmarshalMsg(accountBytes)
-		objs:= make(map[string]string)
+		objs:= make(map[string]Object)
 		container:=Container{Name:accInfo.AccName, Objs:objs}
 		if len(account.Containers)==0{
 			account.Containers=make(map[string]Container)
@@ -589,11 +598,14 @@ func addObjToCont(w http.ResponseWriter, r *http.Request){
 	//add obj name to the container's object map
 	if len(account.Containers[accInfo.Container].Objs)==0{
 		fmt.Println("account.Containers[accInfo.Container].Objs len == 0")
-		m:=make(map[string]string)
+		m:=make(map[string]Object)
+
 		cont:=Container{Objs:m, Policy:account.Containers[accInfo.Container].Policy}
 		account.Containers[accInfo.Container]=cont
 	}
-	account.Containers[accInfo.Container].Objs[accInfo.Obj]=accInfo.Obj
+	newObj:=Object{Name:accInfo.Obj, Size:accInfo.Size, PartsNum:accInfo.Parts}
+	account.Containers[accInfo.Container].Objs[accInfo.Obj]=newObj
+
 	accountBytes, err = account.MarshalMsg(nil)
 	if err != nil {
 		fmt.Println("addObjToCont: error Marshalling")

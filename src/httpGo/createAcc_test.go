@@ -323,7 +323,7 @@ func TestCreateAccountAPI(t *testing.T) {
 	fmt.Println("---------------------------------------------------")
 
 
-
+/*
 	if cmdOut, err = exec.Command(path+"/shellScriptsTests/curlGetObjFailure.sh").Output(); err != nil {
 		fmt.Fprintln(os.Stderr, "There was an error running command: ", err)
 		os.Exit(1)
@@ -401,7 +401,7 @@ func TestCreateAccountAPI(t *testing.T) {
 		fmt.Println(resp+ " failed as expected")
 	}else{t.Error("Expecting failure")}
 	fmt.Println("---------------------------------------------------")
-
+*/
 	time.AfterFunc(600 * time.Second, func(){
 		if err:= peer1arun.Shutdown(nil); err!=nil{
 			panic(err)

@@ -36,7 +36,7 @@ func (z *Container) DecodeMsg(dc *msgp.Reader) (err error) {
 				return
 			}
 			if z.Objs == nil && msz > 0 {
-				z.Objs = make(map[string]string, msz)
+				z.Objs = make(map[string]Object, msz)
 			} else if len(z.Objs) > 0 {
 				for key, _ := range z.Objs {
 					delete(z.Objs, key)
@@ -45,12 +45,12 @@ func (z *Container) DecodeMsg(dc *msgp.Reader) (err error) {
 			for msz > 0 {
 				msz--
 				var xvk string
-				var bzg string
+				var bzg Object
 				xvk, err = dc.ReadString()
 				if err != nil {
 					return
 				}
-				bzg, err = dc.ReadString()
+				err = bzg.DecodeMsg(dc)
 				if err != nil {
 					return
 				}
@@ -97,7 +97,7 @@ func (z *Container) EncodeMsg(en *msgp.Writer) (err error) {
 		if err != nil {
 			return
 		}
-		err = en.WriteString(bzg)
+		err = bzg.EncodeMsg(en)
 		if err != nil {
 			return
 		}
@@ -126,7 +126,10 @@ func (z *Container) MarshalMsg(b []byte) (o []byte, err error) {
 	o = msgp.AppendMapHeader(o, uint32(len(z.Objs)))
 	for xvk, bzg := range z.Objs {
 		o = msgp.AppendString(o, xvk)
-		o = msgp.AppendString(o, bzg)
+		o, err = bzg.MarshalMsg(o)
+		if err != nil {
+			return
+		}
 	}
 	// string "policy"
 	o = append(o, 0xa6, 0x70, 0x6f, 0x6c, 0x69, 0x63, 0x79)
@@ -162,7 +165,7 @@ func (z *Container) UnmarshalMsg(bts []byte) (o []byte, err error) {
 				return
 			}
 			if z.Objs == nil && msz > 0 {
-				z.Objs = make(map[string]string, msz)
+				z.Objs = make(map[string]Object, msz)
 			} else if len(z.Objs) > 0 {
 				for key, _ := range z.Objs {
 					delete(z.Objs, key)
@@ -170,13 +173,13 @@ func (z *Container) UnmarshalMsg(bts []byte) (o []byte, err error) {
 			}
 			for msz > 0 {
 				var xvk string
-				var bzg string
+				var bzg Object
 				msz--
 				xvk, bts, err = msgp.ReadStringBytes(bts)
 				if err != nil {
 					return
 				}
-				bzg, bts, err = msgp.ReadStringBytes(bts)
+				bts, err = bzg.UnmarshalMsg(bts)
 				if err != nil {
 					return
 				}
@@ -203,7 +206,7 @@ func (z *Container) Msgsize() (s int) {
 	if z.Objs != nil {
 		for xvk, bzg := range z.Objs {
 			_ = bzg
-			s += msgp.StringPrefixSize + len(xvk) + msgp.StringPrefixSize + len(bzg)
+			s += msgp.StringPrefixSize + len(xvk) + bzg.Msgsize()
 		}
 	}
 	s += 7 + msgp.StringPrefixSize + len(z.Policy)
