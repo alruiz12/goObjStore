@@ -18,7 +18,7 @@ import(
 )
 var path = (os.Getenv("GOPATH")+"/src/github.com/alruiz12/simpleBT")
 //var chunk msg
-var hashRecived hashMsg
+var hashRecived putObjMSg
 func prepSN(w http.ResponseWriter, r *http.Request){
 	var nodeID int =int(r.Host[len(r.Host)-1]-'0')
 	body, err := ioutil.ReadAll(r.Body)
@@ -45,15 +45,15 @@ func prepSN(w http.ResponseWriter, r *http.Request){
 	}
 
 	// if data/chunk.Hash directory doesn't exist, create it
-	_, err = os.Stat(os.Getenv("GOPATH")+"/src/github.com/alruiz12/simpleBT/src/data/"+hashRecived.Hash)
+	_, err = os.Stat(os.Getenv("GOPATH")+"/src/github.com/alruiz12/simpleBT/src/data/"+hashRecived.ID)
 	if err != nil {
-		os.Mkdir(os.Getenv("GOPATH")+"/src/github.com/alruiz12/simpleBT/src/data/"+hashRecived.Hash,0777)
+		os.Mkdir(os.Getenv("GOPATH")+"/src/github.com/alruiz12/simpleBT/src/data/"+hashRecived.ID,0777)
 	}
 
 	// if data/chunk.Hash/nodeID directory doesn't exist, create it
-	_, err = os.Stat(os.Getenv("GOPATH")+"/src/github.com/alruiz12/simpleBT/src/data/"+hashRecived.Hash+"/"+strconv.Itoa( nodeID))
+	_, err = os.Stat(os.Getenv("GOPATH")+"/src/github.com/alruiz12/simpleBT/src/data/"+hashRecived.ID +"/"+strconv.Itoa( nodeID))
 	if err != nil {
-		err2:=os.Mkdir(os.Getenv("GOPATH")+"/src/github.com/alruiz12/simpleBT/src/data/"+hashRecived.Hash+"/"+strconv.Itoa( nodeID),0777)
+		err2:=os.Mkdir(os.Getenv("GOPATH")+"/src/github.com/alruiz12/simpleBT/src/data/"+hashRecived.ID +"/"+strconv.Itoa( nodeID),0777)
 		if err2!=nil{
 			fmt.Println("StorageNode error making dir", err.Error())
 		}
@@ -511,11 +511,7 @@ func SNPutCont(w http.ResponseWriter, r *http.Request){
 
 }
 
-// Todo: make route
-// send accInfo with needed
-// receive ok or bad request
-// (same put obj code)
-// update obj map
+
 func checkAccCont(w http.ResponseWriter, r *http.Request){
 	var accInfo AccInfo
 	var peerID int = int(r.Host[len(r.Host) - 1] - '0')

@@ -19,7 +19,6 @@ func PutObjAPI(w http.ResponseWriter, r *http.Request){
 	wg.Add(1)
 	go func() {
 		defer wg.Done()
-		//name := md5String(r.URL.Path)
 		results:= strings.Split(r.URL.Path, "/")	// ["",account, container, object]
 		addedResults:=results[1]+results[2]+results[3]
 		file, err := os.Create(os.Getenv("GOPATH") + "/src/github.com/alruiz12/simpleBT/src/" + addedResults )
@@ -33,7 +32,7 @@ func PutObjAPI(w http.ResponseWriter, r *http.Request){
 		file.Close()
 		putOK := make(chan bool)
 
-		go PutObjProxy(os.Getenv("GOPATH") + "/src/github.com/alruiz12/simpleBT/src/" + addedResults, conf.TrackerAddr, conf.NumNodes, putOK ,results[1], results[2], results[3])
+		go PutObjProxy(os.Getenv("GOPATH") + "/src/github.com/alruiz12/simpleBT/src/" + addedResults, conf.TrackerAddr, conf.NumNodes, putOK ,results[1], results[2], results[3], addedResults)
 		success := <-putOK
 		if success == true {
 			fmt.Println("put success ", time.Since(startPUT))
@@ -42,12 +41,45 @@ func PutObjAPI(w http.ResponseWriter, r *http.Request){
 			fmt.Println("put fail")
 			w.WriteHeader(http.StatusBadRequest)
 		}
-		currentKey := md5sum(os.Getenv("GOPATH") + "/src/github.com/alruiz12/simpleBT/src/" + addedResults)
-		fmt.Println(CheckPiecesObj(currentKey, "NEW.xml", conf.FilePath, conf.NumNodes))
+
+		os.Remove(os.Getenv("GOPATH") + "/src/github.com/alruiz12/simpleBT/src/" + addedResults )
+		if err != nil {
+			fmt.Println(err)
+		}
 	}()
 	wg.Wait()
-	fmt.Println("API: ",time.Since(startPUT))
+	fmt.Println("PUT: ",time.Since(startPUT))
 }
+
+func GetObjAPI(w http.ResponseWriter, r *http.Request){
+	var startGET time.Time
+	startGET = time.Now()
+	var wg sync.WaitGroup
+	wg.Add(1)
+	go func() {
+		defer wg.Done()
+		results:= strings.Split(r.URL.Path, "/")	// ["",account, container, object]
+		addedResults:=results[1]+results[2]+results[3]
+
+		GetOK := make(chan bool)
+		go GetObjProxy(addedResults, conf.ProxyAddr, conf.TrackerAddr, GetOK)
+		success := <-GetOK
+		if success == true {
+			fmt.Println("get success ", time.Since(startGET))
+			w.WriteHeader(http.StatusOK)
+		} else {
+			fmt.Println("get fail")
+			w.WriteHeader(http.StatusBadRequest)
+		}
+
+		//Todo put it in Get
+		currentHash := md5sum(os.Getenv("GOPATH") + "/src/github.com/alruiz12/simpleBT/src/" + addedResults)
+		fmt.Println(CheckPiecesObj(addedResults, "NEW.xml", conf.FilePath, conf.NumNodes, currentHash))
+	}()
+	wg.Wait()
+	fmt.Println("GET API: ",time.Since(startGET))
+}
+
 
 
 func md5String(str string) string{

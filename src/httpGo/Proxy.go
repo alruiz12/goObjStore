@@ -32,15 +32,14 @@ type msg struct {
 	CurrentNode int
 	Name int
 }
-type hashMsg struct {
-	Hash string
+type putObjMSg struct {
+	ID string
 }
 var totalPartsNum int
 var startGet time.Time
 var numGets int = 0
-func PutObjProxy(filePath string, trackerAddr string, numNodes int, putOK chan bool, account string, container string, objName string) {
+func PutObjProxy(filePath string, trackerAddr string, numNodes int, putOK chan bool, account string, container string, objName string, fullName string) {
 	time.Sleep(1 * time.Second)
-	var hash string = md5sum(filePath)
 	var err error
 
 	// Get account nodes
@@ -120,7 +119,7 @@ func PutObjProxy(filePath string, trackerAddr string, numNodes int, putOK chan b
 
 
 	// Ask tracker for nodes to save object
-	requestJson = `{"Quantity":"` + strconv.Itoa(numNodes) + `","ID":"` + hash + `","Type":"object"}`
+	requestJson = `{"Quantity":"` + strconv.Itoa(numNodes) + `","ID":"` + fullName + `","Type":"object"}`
 	reader = strings.NewReader(requestJson)
 	trackerURL = "http://" + trackerAddr + "/GetNodes"
 	request, err = http.NewRequest("GET", trackerURL, reader)
@@ -179,7 +178,7 @@ func PutObjProxy(filePath string, trackerAddr string, numNodes int, putOK chan b
 		i++
 	}
 	httpVar.DirMutex.Lock()
-	httpVar.HashMap[hash] = auxList
+	httpVar.HashMap[fullName] = auxList
 	httpVar.DirMutex.Unlock()
 
 
@@ -188,15 +187,18 @@ func PutObjProxy(filePath string, trackerAddr string, numNodes int, putOK chan b
 	file, err := os.Open(filePath)
 	if err != nil {
 		fmt.Println(err.Error())
+		os.Remove(filePath)
+		file.Close()
 		putOK <- false
 		return
 	}
-	defer file.Close()
 	fileInfo, _ := file.Stat()
 	text := strconv.FormatInt(fileInfo.Size(), 10)        // size
 	size, _ := strconv.Atoi(text)
 	if err != nil {
 		fmt.Println(err.Error())
+		os.Remove(filePath)
+		file.Close()
 		putOK <- false
 		return
 	}
@@ -207,12 +209,14 @@ func PutObjProxy(filePath string, trackerAddr string, numNodes int, putOK chan b
 
 	for currentNum < len(nodeList) {
 		rpipe, wpipe := io.Pipe()
-		mHash := hashMsg{Hash:hash}
+		mHash := putObjMSg{ID:fullName}
 		go func() {
 			// save buffer to object
 			err = json.NewEncoder(wpipe).Encode(mHash)
 			if err != nil {
 				fmt.Println("Error encoding to pipe ", err.Error())
+				os.Remove(filePath)
+				file.Close()
 				putOK <- false
 				return		// Todo: does this exit only goRoutine?
 			}
@@ -223,6 +227,8 @@ func PutObjProxy(filePath string, trackerAddr string, numNodes int, putOK chan b
 		_, err = http.Post("http://" + nodeList[currentNum][currentAdr] + "/prepSN", "application/json", rpipe)
 		if err != nil {
 			fmt.Println("to prepSN, Error sending http POST ", err.Error())
+			os.Remove(filePath)
+			file.Close()
 			putOK <- false
 			return
 		}
@@ -236,7 +242,7 @@ func PutObjProxy(filePath string, trackerAddr string, numNodes int, putOK chan b
 		partSize = int(math.Min(fileChunk, float64(size - (currentPart * fileChunk))))
 		partBuffer = make([]byte, partSize)
 		_, err = file.Read(partBuffer)                // Get chunk
-		m := msg{NodeList:nodeList, Num:len(nodeList), Hash:hash, Text:partBuffer, CurrentNode:currentNum, Name: currentPart}
+		m := msg{NodeList:nodeList, Num:len(nodeList), Hash:fullName, Text:partBuffer, CurrentNode:currentNum, Name: currentPart}
 		//r, w :=io.Pipe()			// create pipe
 		go func(m2 msg, url string) {
 			 httpVar.SendReady <- 1
@@ -246,6 +252,8 @@ func PutObjProxy(filePath string, trackerAddr string, numNodes int, putOK chan b
 				err = json.NewEncoder(w).Encode(m2)
 				if err != nil {
 					fmt.Println("Error encoding to pipe ", err.Error())
+					os.Remove(filePath)
+					file.Close()
 					putOK <- false
 					return
 				}
@@ -254,6 +262,8 @@ func PutObjProxy(filePath string, trackerAddr string, numNodes int, putOK chan b
 			_, err := http.Post(url, "application/json", r)
 			if err != nil {
 				fmt.Println("Error sending http POST ", err.Error())
+				os.Remove(filePath)
+				file.Close()
 				putOK <- false
 				return
 			}
@@ -270,7 +280,8 @@ func PutObjProxy(filePath string, trackerAddr string, numNodes int, putOK chan b
 		}
 	}
 	wg.Wait()
-
+	os.Remove(filePath)
+	file.Close()
 	// Add object to the container's object map
 
 	// ask random node for correctness (account/container)
@@ -334,67 +345,85 @@ type jsonKeyURL struct {
 }
 
 
-func GetObjProxy(Key string, proxyAddr []string, trackerAddr string){
+func GetObjProxy(fullName string, proxyAddr []string, trackerAddr string, getOK chan bool){
 	time.Sleep(1 * time.Second)
 //	var chunk msg
 	// Ask tracker for nodes
 	startGet=time.Now()
 	var err error
 	// ask tracker for nodes for a given key
-	requestJson := `{"ID":"`+Key+`","Type":"object"}`
+	requestJson := `{"ID":"`+ fullName +`","Type":"object"}`
 	reader := strings.NewReader(requestJson)
 	trackerURL:="http://"+trackerAddr+"/GetNodesForKey"
 	request, err := http.NewRequest("GET", trackerURL, reader)
 	if err != nil {
-		fmt.Println("Get: error creating request: ",err.Error())
+		fmt.Println("GetObjProxy: error creating request: ",err.Error())
+		getOK <- false
+		return
+
 	}
 	res, err := http.DefaultClient.Do(request)
 	if err != nil {
-		fmt.Println("Get: error sending request: ",err.Error())
+		fmt.Println("GetObjProxy: error sending request: ",err.Error())
+		getOK <- false
+		return
 	}
 	body, err := ioutil.ReadAll(io.LimitReader(res.Body, 1048576))
 	if err != nil {
-		panic(err)
-	}
+		fmt.Println("GetObjProxy ",err)
+		getOK <- false
+		return
+		}
 	if err := res.Body.Close(); err != nil {
-		panic(err)
+		fmt.Println("GetObjProxy ",err)
+		getOK <- false
+		return
 	}
 	var nodeList [][]string
 	if err := json.Unmarshal(body, &nodeList); err != nil {
-		fmt.Println("Get: error unprocessable entity: ",err.Error())
+		fmt.Println("GetObjProxy ",err)
+		getOK <- false
 		return
 	}
-	if err != nil {
-		fmt.Println("Get: error reciving response: ",err.Error())
-	}
+
 	// Create folder for receiving
 	os.Mkdir(os.Getenv("GOPATH")+"/src/github.com/alruiz12/simpleBT/src/local",+0777)
-	os.Mkdir(os.Getenv("GOPATH")+"/src/github.com/alruiz12/simpleBT/src/local/"+Key,0777)
+	os.Mkdir(os.Getenv("GOPATH")+"/src/github.com/alruiz12/simpleBT/src/local/"+ fullName,0777)
 
 	//var currentAddr int = rand.Intn(len(chunk.NodeList)) @Todo
 	var currentAddr int = 0
 	// For each node ask for all their Proxy-pieces
 	for index, node := range nodeList {
 		r, w :=io.Pipe()			// create pipe
-		k:=jsonKeyURL{Key:Key, URL:proxyAddr[index]+"/ReturnObjProxy"}
+		k:=jsonKeyURL{Key:fullName, URL:proxyAddr[index]+"/ReturnObjProxy"}
 
 		go func() {
 			defer w.Close()			// close pipe when go routine finishes
 			// save buffer to object
 			err=json.NewEncoder(w).Encode(&k)
 			if err != nil {
-				fmt.Println("Error encoding to pipe ", err.Error())
+				fmt.Println("GetObjProxy: Error encoding to pipe ", err.Error())
+				getOK <- false
+				return
+
 			}
 		}()
 		url:="http://"+node[currentAddr]+"/SNPutObjGetChunks"
 		res, err := http.Post(url,"application/json", r )
 		if err != nil {
-			fmt.Println("Get2: error creating request: ",err.Error())
+			fmt.Println("GetObjProxy: error creating request: ",err.Error())
+			getOK <- false
+			return
+
 		}
 		//fmt.Println("statusCode: ",res.StatusCode )
 		if err := res.Body.Close(); err != nil {
-			fmt.Println(err)
+			fmt.Println("GetObjProxy: ", err.Error())
+			getOK <- false
+			return
 		}
+
+		getOK <- true
 	}
 
 }
@@ -429,12 +458,7 @@ func ReturnObjProxy(w http.ResponseWriter, r *http.Request){
 		if err != nil {
 			fmt.Println("Peer: error creating/writing file p2p", err.Error())
 		}
-		httpVar.TotalNumMutex.Lock()
 
-		if numGets==totalPartsNum{
-			fmt.Println("GET: ",time.Since(startGet))
-		}
-		httpVar.TotalNumMutex.Unlock()
 
 
 	}
@@ -447,7 +471,8 @@ and compares the new hash with the original one.
 @param path to the file we want to split
 Returns true if both hash are identic and false if not
 */
-func CheckPiecesObj(key string ,fileName string, filePath string, numNodes int) bool{
+func CheckPiecesObj(key string ,fileName string, filePath string, numNodes int, hash string) bool{
+	fmt.Println("inside check pieces")
 	 file, err := os.Open(filePath)
 	if err != nil {
 		fmt.Println(err.Error())
@@ -595,7 +620,7 @@ func CheckPiecesObj(key string ,fileName string, filePath string, numNodes int) 
 	// Compute and compare new hash
 	newHash := md5sum(os.Getenv("GOPATH") + "/src/github.com/alruiz12/simpleBT/src" + fileName)
 	//fmt.Println("/src/github.com/alruiz12/simpleBT/src" + fileName ,newHash)
-	if strings.Compare(key, newHash) != 0 {
+	if strings.Compare(hash, newHash) != 0 {
 		return false
 	}
 
@@ -710,6 +735,10 @@ func putContProxy(account string, container string, createOK chan bool){
 	res, err := http.DefaultClient.Do(request)
 	if err != nil {
 		fmt.Println("putContProxy: error sending request: ", err.Error())
+		createOK <- false
+		return
+	}
+	if res.StatusCode == http.StatusBadRequest{
 		createOK <- false
 		return
 	}

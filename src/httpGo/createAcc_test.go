@@ -309,6 +309,99 @@ func TestCreateAccountAPI(t *testing.T) {
 	}else{t.Error("Obj not created")}
 	fmt.Println("---------------------------------------------------")
 
+
+
+	if cmdOut, err = exec.Command(path+"/shellScriptsTests/curlGetObjSuccess.sh").Output(); err != nil {
+		fmt.Fprintln(os.Stderr, "There was an error running command: ", err)
+		os.Exit(1)
+	}
+	resp = string(cmdOut)
+	fmt.Println("curl response ", resp)
+	if strings.Compare(resp,"200")==0 {
+		fmt.Println(resp+ " OK")
+	}else{t.Error("Obj not obtained")}
+	fmt.Println("---------------------------------------------------")
+
+
+
+	if cmdOut, err = exec.Command(path+"/shellScriptsTests/curlGetObjFailure.sh").Output(); err != nil {
+		fmt.Fprintln(os.Stderr, "There was an error running command: ", err)
+		os.Exit(1)
+	}
+	resp = string(cmdOut)
+	fmt.Println("curl response ", resp)
+	if strings.Compare(resp,"400")==0 {
+		fmt.Println(resp+ " failed as expected")
+	}else{t.Error("Expecting failure")}
+	fmt.Println("---------------------------------------------------")
+
+
+
+
+
+	if cmdOut, err = exec.Command(path+"/shellScriptsTests/curlGetObjFailure2.sh").Output(); err != nil {
+		fmt.Fprintln(os.Stderr, "There was an error running command: ", err)
+		os.Exit(1)
+	}
+	resp = string(cmdOut)
+	fmt.Println("curl response ", resp)
+	if strings.Compare(resp,"400")==0 {
+		fmt.Println(resp+ " failed as expected")
+	}else{t.Error("Expecting failure")}
+	fmt.Println("---------------------------------------------------")
+
+
+
+	if cmdOut, err = exec.Command(path+"/shellScriptsTests/curlGetObjFailure3.sh").Output(); err != nil {
+		fmt.Fprintln(os.Stderr, "There was an error running command: ", err)
+		os.Exit(1)
+	}
+	resp = string(cmdOut)
+	fmt.Println("curl response ", resp)
+	if strings.Compare(resp,"400")==0 {
+		fmt.Println(resp+ " failed as expected")
+	}else{t.Error("Expecting failure")}
+	fmt.Println("---------------------------------------------------")
+
+
+
+	if cmdOut, err = exec.Command(path+"/shellScriptsTests/curlGetObjFailure4.sh").Output(); err != nil {
+		fmt.Fprintln(os.Stderr, "There was an error running command: ", err)
+		os.Exit(1)
+	}
+	resp = string(cmdOut)
+	fmt.Println("curl response ", resp)
+	if strings.Compare(resp,"400")==0 {
+		fmt.Println(resp+ " failed as expected")
+	}else{t.Error("Expecting failure")}
+	fmt.Println("---------------------------------------------------")
+
+
+
+	if cmdOut, err = exec.Command(path+"/shellScriptsTests/curlGetObjFailure5.sh").Output(); err != nil {
+		fmt.Fprintln(os.Stderr, "There was an error running command: ", err)
+		os.Exit(1)
+	}
+	resp = string(cmdOut)
+	fmt.Println("curl response ", resp)
+	if strings.Compare(resp,"400")==0 {
+		fmt.Println(resp+ " failed as expected")
+	}else{t.Error("Expecting failure")}
+	fmt.Println("---------------------------------------------------")
+
+
+
+	if cmdOut, err = exec.Command(path+"/shellScriptsTests/curlGetObjFailure6.sh").Output(); err != nil {
+		fmt.Fprintln(os.Stderr, "There was an error running command: ", err)
+		os.Exit(1)
+	}
+	resp = string(cmdOut)
+	fmt.Println("curl response ", resp)
+	if strings.Compare(resp,"400")==0 {
+		fmt.Println(resp+ " failed as expected")
+	}else{t.Error("Expecting failure")}
+	fmt.Println("---------------------------------------------------")
+
 	time.AfterFunc(600 * time.Second, func(){
 		if err:= peer1arun.Shutdown(nil); err!=nil{
 			panic(err)

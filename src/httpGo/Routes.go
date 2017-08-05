@@ -73,6 +73,9 @@ func tripleF(w http.ResponseWriter, r *http.Request) {
 	if r.Method == http.MethodPut {
 		PutObjAPI(w,r)
 	}
+	if r.Method == http.MethodGet {
+		GetObjAPI(w,r)
+	}
 	fmt.Println("triple")
 }
 func doubleF(w http.ResponseWriter, r *http.Request) {
