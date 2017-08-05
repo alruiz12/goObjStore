@@ -100,9 +100,14 @@ func PutObjProxy(filePath string, trackerAddr string, numNodes int, putOK chan b
 		}
 		defer w.Close()                        // close pipe //when go routine finishes
 	}()
-	_, err = http.Post("http://" + nodeList[currentPeer][currentPeerAddr] + "/checkAccCont", "application/json", r)
+	res, err = http.Post("http://" + nodeList[currentPeer][currentPeerAddr] + "/checkAccCont", "application/json", r)
 	if err != nil {
 		fmt.Println("Error sending http GET ", err.Error())
+		putOK <- false
+		return
+	}
+	if res.StatusCode == http.StatusBadRequest{
+		fmt.Println("Error bad request")
 		putOK <- false
 		return
 	}

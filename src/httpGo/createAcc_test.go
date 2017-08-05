@@ -159,22 +159,11 @@ func TestCreateAccountAPI(t *testing.T) {
 		fmt.Println(resp+ " created")
 	}else{t.Error("Account not created")}
 	fmt.Println("---------------------------------------------------")
-/*
-	if cmdOut, err = exec.Command(path+"/shellScriptsTests/curlCreateAccFail.sh").Output(); err != nil {
-		fmt.Fprintln(os.Stderr, "There was an error running command: ", err)
-		os.Exit(1)
-	}
-	resp = string(cmdOut)
-	fmt.Println("curl response ", resp)
-	if strings.Compare(resp,"400")==0 {
-		fmt.Println(resp+" bad request as expected")
-	}else{t.Error("expecting bad request 400")}
-	fmt.Println("---------------------------------------------------")
-*/
 
-	req, err := http.NewRequest("PUT", "http://localhost:8000/accGo", nil)
+
+	req, err := http.NewRequest("PUT", "http://localhost:8000/alvaroGO", nil)
 	if err != nil {
-		t.Error(" error creating post request to http://localhost:8000/putAcc")
+		t.Error(" error creating post request to http://localhost:8000/alvaroGO")
 	}
 	//req.Header.Set("Name", "account2")
 	response , err := http.DefaultClient.Do(req)
@@ -188,77 +177,57 @@ func TestCreateAccountAPI(t *testing.T) {
 		t.Error("Account not created")
 	}
 	fmt.Println("---------------------------------------------------")
-/*
-	req, err = http.NewRequest("PUT", "http://localhost:8000/ACC1", nil)
-	if err != nil {
-		t.Error(" error creating post request to http://localhost:8000/putAcc")
-	}
-	//req.Header.Set("Nme", "account2")
-	response , err = http.DefaultClient.Do(req)
-	if err != nil {
-		t.Error("Error doing request")
-	}
-	fmt.Println("response: ",response.StatusCode )
-	if response.StatusCode == 400 {
-		fmt.Println(response.StatusCode," bad request as expected")
-	} else{
-		t.Error("expecting bad request 400")
-	}
 
-*/
-	req, err = http.NewRequest("PUT", "http://localhost:8000/ACCGo2", nil)
-	if err != nil {
-		t.Error(" error creating post request to http://localhost:8000/putAcc")
-	}
-	//req.Header.Set("Name", "account3")
-	response , err = http.DefaultClient.Do(req)
-	if err != nil {
-		t.Error("Error doing request")
-	}
-	fmt.Println("response: ",response.StatusCode )
-	if response.StatusCode == 201 {
-		fmt.Println(response.StatusCode," created")
-	} else{
-		t.Error("Account not created")
-	}
-	fmt.Println("---------------------------------------------------")
 
-	req, err = http.NewRequest("PUT", "http://localhost:8000/ACCgo3", nil)
-	if err != nil {
-		t.Error(" error creating post request to http://localhost:8000/putAcc")
-	}
-	//req.Header.Set("Name", "account2")
-	response , err = http.DefaultClient.Do(req)
-	if err != nil {
-		t.Error("Error doing request")
-	}
-	fmt.Println("response: ",response.StatusCode )
-	if response.StatusCode == 201 {
-		fmt.Println(response.StatusCode," created")
-	} else{
-		t.Error("Account not created")
-	}
-	fmt.Println("---------------------------------------------------")
-
-	fileReplicationCorrect:=CheckFileReplication("Account","acc1",3)
+	fileReplicationCorrect:=CheckFileReplication("Account","alvaro",3)
 	if fileReplicationCorrect==false{
 		t.Error("file replication not correct")
 	}
 	fmt.Println(fileReplicationCorrect)
+	fmt.Println("---------------------------------------------------")
 
-	fileReplicationCorrect=CheckFileReplication("Account","accGo",3)
+
+	fileReplicationCorrect=CheckFileReplication("Account","alvaroGO",3)
 	if fileReplicationCorrect==false{
 		t.Error("file replication not correct")
 	}
 	fmt.Println(fileReplicationCorrect)
+	fmt.Println("---------------------------------------------------")
 
-	if CheckFileReplication("Account","accountX", 1)==true{
+
+	if CheckFileReplication("Account","accountWillFail", 1)==true{
 		t.Error("file replication not correct")
 	} else {fmt.Println("false")}
+	fmt.Println("---------------------------------------------------")
 
-	if CheckFileReplication("Account", "account2", 4)==true{
+
+	if CheckFileReplication("Account", "alvaro", 4)==true{
 		t.Error("file replication not correct")
 	} else {fmt.Println("false")}
+	fmt.Println("---------------------------------------------------")
+
+
+	if cmdOut, err = exec.Command(path+"/shellScriptsTests/curlPutContSuccess.sh").Output(); err != nil {
+		fmt.Fprintln(os.Stderr, "There was an error running command: ", err)
+		os.Exit(1)
+	}
+	resp = string(cmdOut)
+	fmt.Println("curl response ", resp)
+	if strings.Compare(resp,"201")==0 {
+		fmt.Println(resp+ " created")
+	}else{t.Error("Obj not created")}
+	fmt.Println("---------------------------------------------------")
+
+
+	if cmdOut, err = exec.Command(path+"/shellScriptsTests/curlPutContFailure.sh").Output(); err != nil {
+		fmt.Fprintln(os.Stderr, "There was an error running command: ", err)
+		os.Exit(1)
+	}
+	resp = string(cmdOut)
+	fmt.Println("curl response ", resp)
+	if strings.Compare(resp,"400")==0 {
+		fmt.Println(resp+ " failed as expected")
+	}else{t.Error("Expecting failure")}
 	fmt.Println("---------------------------------------------------")
 
 
@@ -275,40 +244,39 @@ func TestCreateAccountAPI(t *testing.T) {
 	fmt.Println("---------------------------------------------------")
 
 
-
-	req, err = http.NewRequest("PUT", "http://localhost:8000/ACCgo3/cont1", nil)
-	if err != nil {
-		t.Error(" error creating post request to http://localhost:8000/ACCgo3/cont1")
+	if cmdOut, err = exec.Command(path+"/shellScriptsTests/curlPutObjFailure.sh").Output(); err != nil {
+		fmt.Fprintln(os.Stderr, "There was an error running command: ", err)
+		os.Exit(1)
 	}
-	//req.Header.Set("Name", "account2")
-	response , err = http.DefaultClient.Do(req)
-	if err != nil {
-		t.Error("Error doing request")
-	}
-	fmt.Println("response: ",response.StatusCode )
-	if response.StatusCode == 201 {
-		fmt.Println(response.StatusCode," created")
-	} else{
-		t.Error("Account not created")
-	}
+	resp = string(cmdOut)
+	fmt.Println("curl response ", resp)
+	if strings.Compare(resp,"400")==0 {
+		fmt.Println(resp+ " failed as expected")
+	}else{t.Error("Expecting failure")}
 	fmt.Println("---------------------------------------------------")
 
-	req, err = http.NewRequest("PUT", "http://localhost:8000/ACCgo3/contBB", nil)
-	if err != nil {
-		t.Error(" error creating post request to http://localhost:8000/ACCgo3/cont1")
+	if cmdOut, err = exec.Command(path+"/shellScriptsTests/curlPutObjFailure2.sh").Output(); err != nil {
+		fmt.Fprintln(os.Stderr, "There was an error running command: ", err)
+		os.Exit(1)
 	}
-	//req.Header.Set("Name", "account2")
-	response , err = http.DefaultClient.Do(req)
-	if err != nil {
-		t.Error("Error doing request")
-	}
-	fmt.Println("response: ",response.StatusCode )
-	if response.StatusCode == 201 {
-		fmt.Println(response.StatusCode," created")
-	} else{
-		t.Error("Account not created")
-	}
+	resp = string(cmdOut)
+	fmt.Println("curl response ", resp)
+	if strings.Compare(resp,"400")==0 {
+		fmt.Println(resp+ " failed as expected")
+	}else{t.Error("Expecting failure")}
 	fmt.Println("---------------------------------------------------")
+
+	if cmdOut, err = exec.Command(path+"/shellScriptsTests/curlPutObjFailure3.sh").Output(); err != nil {
+		fmt.Fprintln(os.Stderr, "There was an error running command: ", err)
+		os.Exit(1)
+	}
+	resp = string(cmdOut)
+	fmt.Println("curl response ", resp)
+	if strings.Compare(resp,"400")==0 {
+		fmt.Println(resp+ " failed as expected")
+	}else{t.Error("Expecting failure")}
+	fmt.Println("---------------------------------------------------")
+
 
 
 	req, err = http.NewRequest("PUT", "http://localhost:8000/InventedAccount/contB2B", nil)
@@ -328,6 +296,18 @@ func TestCreateAccountAPI(t *testing.T) {
 	}
 	fmt.Println("---------------------------------------------------")
 
+
+	// Same Obj Again
+	if cmdOut, err = exec.Command(path+"/shellScriptsTests/curlPutObjSuccess.sh").Output(); err != nil {
+		fmt.Fprintln(os.Stderr, "There was an error running command: ", err)
+		os.Exit(1)
+	}
+	resp = string(cmdOut)
+	fmt.Println("curl response ", resp)
+	if strings.Compare(resp,"201")==0 {
+		fmt.Println(resp+ " created")
+	}else{t.Error("Obj not created")}
+	fmt.Println("---------------------------------------------------")
 
 	time.AfterFunc(600 * time.Second, func(){
 		if err:= peer1arun.Shutdown(nil); err!=nil{
