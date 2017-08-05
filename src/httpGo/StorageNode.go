@@ -318,17 +318,17 @@ func SNPutAcc(w http.ResponseWriter, r *http.Request){
 
 		// create new account
 		conts := make(map[string]Container)
-		newAcc:=Account{Name:accInfo.Name, Containers:conts}
+		newAcc:=Account{Name:accInfo.AccName, Containers:conts}
 
 		// marshall new account
 		accountBytes, err := newAcc.MarshalMsg(nil)
 		//fmt.Println(accountBytes)
 
-		marshalledAcc:=MarshalledAcc{Bytes:accountBytes, Name:accInfo.Name}
+		marshalledAcc:=MarshalledAcc{Bytes:accountBytes, Name:accInfo.AccName}
 
 		// save account to file
 		httpVar.AccFileMutex.Lock()
-		err = ioutil.WriteFile(path+"/src/Account"+accInfo.Name+strconv.Itoa(peerID),accountBytes,0777)
+		err = ioutil.WriteFile(path+"/src/Account"+accInfo.AccName +strconv.Itoa(peerID),accountBytes,0777)
 
 		// send marhshalled account to other nodes to save it
 		var wg sync.WaitGroup
@@ -443,16 +443,16 @@ func SNPutCont(w http.ResponseWriter, r *http.Request){
 
 		// read account from file
 		httpVar.AccFileMutex.Lock()
-		accountBytes, err := ioutil.ReadFile(path+"/src/Account"+accInfo.Name+strconv.Itoa(peerID))
+		accountBytes, err := ioutil.ReadFile(path+"/src/Account"+accInfo.AccName +strconv.Itoa(peerID))
 		if err != nil {
-			fmt.Println("SNPutCont Error: reading ", path+"/src/Account"+accInfo.Name+strconv.Itoa(peerID))
+			fmt.Println("SNPutCont Error: reading ", path+"/src/Account"+accInfo.AccName +strconv.Itoa(peerID))
 		}
 
 		// update account
 		account:=Account{}
 		_,err = account.UnmarshalMsg(accountBytes)
-		objs:= make(map[string]bool)
-		container:=Container{Name:accInfo.Name, Objs:objs}
+		objs:= make(map[string]string)
+		container:=Container{Name:accInfo.AccName, Objs:objs}
 		if len(account.Containers)==0{
 			account.Containers=make(map[string]Container)
 		}
@@ -461,9 +461,9 @@ func SNPutCont(w http.ResponseWriter, r *http.Request){
 		// marshall account
 		accountBytes, err = account.MarshalMsg(nil)
 
-		marshalledAcc:=MarshalledAcc{Bytes:accountBytes, Name:accInfo.Name}
+		marshalledAcc:=MarshalledAcc{Bytes:accountBytes, Name:accInfo.AccName}
 
-		err = ioutil.WriteFile(path+"/src/Account"+accInfo.Name+strconv.Itoa(peerID),accountBytes,0777)
+		err = ioutil.WriteFile(path+"/src/Account"+accInfo.AccName +strconv.Itoa(peerID),accountBytes,0777)
 
 		// send marhshalled account to other nodes to save it
 		var wg sync.WaitGroup
@@ -540,9 +540,9 @@ func checkAccCont(w http.ResponseWriter, r *http.Request){
 
 
 	// read account from file
-	accountBytes, err := ioutil.ReadFile(path+"/src/Account"+accInfo.Name+strconv.Itoa(peerID))
+	accountBytes, err := ioutil.ReadFile(path+"/src/Account"+accInfo.AccName +strconv.Itoa(peerID))
 	if err != nil {
-		fmt.Println("SNPutCont Error: reading ", path+"/src/Account"+accInfo.Name+strconv.Itoa(peerID))
+		fmt.Println("SNPutCont Error: reading ", path+"/src/Account"+accInfo.AccName +strconv.Itoa(peerID))
 	}
 	account:=Account{}
 	_,err = account.UnmarshalMsg(accountBytes)
@@ -555,5 +555,70 @@ func checkAccCont(w http.ResponseWriter, r *http.Request){
 
 
 }
+
+
+
+func addObjToCont(w http.ResponseWriter, r *http.Request){
+	var accInfo AccInfo
+	var peerID int = int(r.Host[len(r.Host) - 1] - '0')
+	body, err := ioutil.ReadAll(r.Body)
+	if err != nil {
+		fmt.Println("error reading ", err)
+	}
+	if err := r.Body.Close(); err != nil {
+		fmt.Println("error body ", err)
+	}
+	if err := json.Unmarshal(body, &accInfo); err != nil {
+		w.Header().Set("Content-Type", "application/json; charset=UTF-8")
+		w.WriteHeader(422) // unprocessable entity
+		log.Println(err)
+		if err := json.NewEncoder(w).Encode(err); err != nil {
+			fmt.Println("error unmarshalling ", err)
+		}
+	}
+
+
+
+
+
+	// read account from file
+	accountBytes, err := ioutil.ReadFile(path+"/src/Account"+accInfo.AccName +strconv.Itoa(peerID))
+	if err != nil {
+		fmt.Println("SNPutCont Error: reading ", path+"/src/Account"+accInfo.AccName +strconv.Itoa(peerID))
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+	account:=Account{}
+	_,err = account.UnmarshalMsg(accountBytes)
+	//add obj name to the container's object map
+	if len(account.Containers[accInfo.Container].Objs)==0{
+		fmt.Println("account.Containers[accInfo.Container].Objs len == 0")
+		m:=make(map[string]string)
+		cont:=Container{Objs:m, Policy:account.Containers[accInfo.Container].Policy}
+		account.Containers[accInfo.Container]=cont
+	}
+	account.Containers[accInfo.Container].Objs[accInfo.Obj]=accInfo.Obj
+	accountBytes, err = account.MarshalMsg(nil)
+	if err != nil {
+		fmt.Println("addObjToCont: error Marshalling")
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+	httpVar.AccFileMutexP2P.Lock()
+	err = ioutil.WriteFile(path+"/src/Account"+accInfo.AccName+strconv.Itoa(peerID),accountBytes,0777)
+	httpVar.AccFileMutexP2P.Unlock()
+	if err != nil {
+		fmt.Println("addObjToCont: error Marshalling")
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+	w.WriteHeader(http.StatusOK)
+
+
+
+
+}
+
+
 
 

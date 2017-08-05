@@ -38,27 +38,30 @@ type hashMsg struct {
 var totalPartsNum int
 var startGet time.Time
 var numGets int = 0
-func PutObjProxy(filePath string, trackerAddr string, numNodes int, putOK chan bool, account string, container string) {
-
+func PutObjProxy(filePath string, trackerAddr string, numNodes int, putOK chan bool, account string, container string, objName string) {
 	time.Sleep(1 * time.Second)
 	var hash string = md5sum(filePath)
 	var err error
 
-	// check account and container
+	// Get account nodes
 	var nodeList [][]string
-	// Aask tracker for nodes
 	requestJson := `{"Quantity":"` + strconv.Itoa(conf.NumNodes) + `","ID":"` + account + `","Type":"account"}`
 	reader := strings.NewReader(requestJson)
 	trackerURL := "http://" + conf.TrackerAddr + "/GetNodesForKey"
 	request, err := http.NewRequest("GET", trackerURL, reader)
 	if err != nil {
-		fmt.Println("putContProxy: error creating request: ", err.Error())
+		fmt.Println("putObjProxy: error creating request: ", err.Error())
 		putOK <- false
 		return
 	}
 	res, err := http.DefaultClient.Do(request)
 	if err != nil {
-		fmt.Println("putContProxy: error sending request: ", err.Error())
+		fmt.Println("putObjProxy: error sending request: ", err.Error())
+		putOK <- false
+		return
+	}
+	if res.StatusCode==http.StatusBadRequest{
+		fmt.Println("PutObjProxy: ",res.StatusCode)
 		putOK <- false
 		return
 	}
@@ -74,19 +77,44 @@ func PutObjProxy(filePath string, trackerAddr string, numNodes int, putOK chan b
 		return
 	}
 	if err := json.Unmarshal(body, &nodeList); err != nil {
-		fmt.Println("putContProxy: error unprocessable entity: ", err.Error())
+		fmt.Println("putObjProxy unmarshalling: error unprocessable entity: ", err.Error())
 		putOK <- false
 		return
 	}
+
+
+
+	// ask random node for correctness (account/container)
+	currentPeer:= rand.Intn(len(nodeList))
+	currentPeerAddr := rand.Intn(len(nodeList))
+	acc := AccInfo{AccName:account, Container:container }
+
+	r, w := io.Pipe()
+	go func() {
+		// save buffer to object
+		err = json.NewEncoder(w).Encode(acc)
+		if err != nil {
+			fmt.Println("Error encoding to pipe ", err.Error())
+			putOK <- false
+			return
+		}
+		defer w.Close()                        // close pipe //when go routine finishes
+	}()
+	_, err = http.Post("http://" + nodeList[currentPeer][currentPeerAddr] + "/checkAccCont", "application/json", r)
 	if err != nil {
-		fmt.Println("putContProxy: error receiving response: ", err.Error())
+		fmt.Println("Error sending http GET ", err.Error())
 		putOK <- false
 		return
 	}
 
 
 
-	// Aask tracker for nodes
+
+
+
+
+
+	// Ask tracker for nodes to save object
 	requestJson = `{"Quantity":"` + strconv.Itoa(numNodes) + `","ID":"` + hash + `","Type":"object"}`
 	reader = strings.NewReader(requestJson)
 	trackerURL = "http://" + trackerAddr + "/GetNodes"
@@ -237,8 +265,38 @@ func PutObjProxy(filePath string, trackerAddr string, numNodes int, putOK chan b
 		}
 	}
 	wg.Wait()
+
+	// Add object to the container's object map
+
+	// ask random node for correctness (account/container)
+	currentPeer= rand.Intn(len(nodeList))
+	currentPeerAddr = rand.Intn(len(nodeList))
+	acc = AccInfo{AccName:account, Container:container, Obj:objName }
+
+	r, w = io.Pipe()
+	go func() {
+		// save buffer to object
+		err = json.NewEncoder(w).Encode(acc)
+		if err != nil {
+			fmt.Println("Error encoding to pipe ", err.Error())
+			putOK <- false
+			return
+		}
+		defer w.Close()                        // close pipe //when go routine finishes
+	}()
+	resp, err := http.Post("http://" + nodeList[currentPeer][currentPeerAddr] + "/addObjToCont", "application/json", r)
+	if err != nil {
+		fmt.Println("Error sending http POST ", err.Error())
+		putOK <- false
+		return
+
+	}
+	if resp.StatusCode != http.StatusOK{
+		putOK <- false
+		return
+	}
+
 	putOK <- true
-	//fmt.Println("Proxy's routines finished")
 }
 
 
@@ -540,11 +598,12 @@ func CheckPiecesObj(key string ,fileName string, filePath string, numNodes int) 
 }
 
 type AccInfo struct {
-	NodeList [][]string
-	Num int
+	NodeList    [][]string
+	Num         int
 	CurrentNode int
-	Name string
-	Container string
+	AccName     string
+	Container   string
+	Obj         string
 }
 
 func CreateAccountProxy(name string, createOK chan bool){
@@ -604,7 +663,7 @@ func CreateAccountProxy(name string, createOK chan bool){
 
 	currentPeer:= rand.Intn(len(nodeList))
 	currentPeerAddr := rand.Intn(len(nodeList))
-	acc := AccInfo{NodeList:nodeList, Num:len(nodeList), CurrentNode:currentPeer, Name:name }
+	acc := AccInfo{NodeList:nodeList, Num:len(nodeList), CurrentNode:currentPeer, AccName:name }
 
 	r, w := io.Pipe()
 	go func() {
@@ -673,7 +732,7 @@ func putContProxy(account string, container string, createOK chan bool){
 
 	currentPeer:= rand.Intn(len(nodeList))
 	currentPeerAddr := rand.Intn(len(nodeList))
-	acc := AccInfo{NodeList:nodeList, Num:len(nodeList), CurrentNode:currentPeer, Name:account, Container:container }
+	acc := AccInfo{NodeList:nodeList, Num:len(nodeList), CurrentNode:currentPeer, AccName:account, Container:container }
 
 	r, w := io.Pipe()
 	go func() {

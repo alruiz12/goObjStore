@@ -42,6 +42,9 @@ func MyNewRouter() *mux.Router {
 	router.HandleFunc("/SNPutAcc", SNPutAcc)
 	router.HandleFunc("/SNPutAccP2PRequest", SNPutAccP2PRequest)
 	router.HandleFunc("/SNPutCont", SNPutCont)
+	router.HandleFunc("/checkAccCont", checkAccCont)
+	router.HandleFunc("/addObjToCont", addObjToCont)
+
 	router.HandleFunc(`/{rest:[a-zA-Z0-9/\-\/]+}`, route)
 
 

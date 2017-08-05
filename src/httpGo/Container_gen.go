@@ -36,7 +36,7 @@ func (z *Container) DecodeMsg(dc *msgp.Reader) (err error) {
 				return
 			}
 			if z.Objs == nil && msz > 0 {
-				z.Objs = make(map[string]bool, msz)
+				z.Objs = make(map[string]string, msz)
 			} else if len(z.Objs) > 0 {
 				for key, _ := range z.Objs {
 					delete(z.Objs, key)
@@ -45,16 +45,21 @@ func (z *Container) DecodeMsg(dc *msgp.Reader) (err error) {
 			for msz > 0 {
 				msz--
 				var xvk string
-				var bzg bool
+				var bzg string
 				xvk, err = dc.ReadString()
 				if err != nil {
 					return
 				}
-				bzg, err = dc.ReadBool()
+				bzg, err = dc.ReadString()
 				if err != nil {
 					return
 				}
 				z.Objs[xvk] = bzg
+			}
+		case "policy":
+			z.Policy, err = dc.ReadString()
+			if err != nil {
+				return
 			}
 		default:
 			err = dc.Skip()
@@ -68,9 +73,9 @@ func (z *Container) DecodeMsg(dc *msgp.Reader) (err error) {
 
 // EncodeMsg implements msgp.Encodable
 func (z *Container) EncodeMsg(en *msgp.Writer) (err error) {
-	// map header, size 2
+	// map header, size 3
 	// write "name"
-	err = en.Append(0x82, 0xa4, 0x6e, 0x61, 0x6d, 0x65)
+	err = en.Append(0x83, 0xa4, 0x6e, 0x61, 0x6d, 0x65)
 	if err != nil {
 		return err
 	}
@@ -92,10 +97,19 @@ func (z *Container) EncodeMsg(en *msgp.Writer) (err error) {
 		if err != nil {
 			return
 		}
-		err = en.WriteBool(bzg)
+		err = en.WriteString(bzg)
 		if err != nil {
 			return
 		}
+	}
+	// write "policy"
+	err = en.Append(0xa6, 0x70, 0x6f, 0x6c, 0x69, 0x63, 0x79)
+	if err != nil {
+		return err
+	}
+	err = en.WriteString(z.Policy)
+	if err != nil {
+		return
 	}
 	return
 }
@@ -103,17 +117,20 @@ func (z *Container) EncodeMsg(en *msgp.Writer) (err error) {
 // MarshalMsg implements msgp.Marshaler
 func (z *Container) MarshalMsg(b []byte) (o []byte, err error) {
 	o = msgp.Require(b, z.Msgsize())
-	// map header, size 2
+	// map header, size 3
 	// string "name"
-	o = append(o, 0x82, 0xa4, 0x6e, 0x61, 0x6d, 0x65)
+	o = append(o, 0x83, 0xa4, 0x6e, 0x61, 0x6d, 0x65)
 	o = msgp.AppendString(o, z.Name)
 	// string "objs"
 	o = append(o, 0xa4, 0x6f, 0x62, 0x6a, 0x73)
 	o = msgp.AppendMapHeader(o, uint32(len(z.Objs)))
 	for xvk, bzg := range z.Objs {
 		o = msgp.AppendString(o, xvk)
-		o = msgp.AppendBool(o, bzg)
+		o = msgp.AppendString(o, bzg)
 	}
+	// string "policy"
+	o = append(o, 0xa6, 0x70, 0x6f, 0x6c, 0x69, 0x63, 0x79)
+	o = msgp.AppendString(o, z.Policy)
 	return
 }
 
@@ -145,7 +162,7 @@ func (z *Container) UnmarshalMsg(bts []byte) (o []byte, err error) {
 				return
 			}
 			if z.Objs == nil && msz > 0 {
-				z.Objs = make(map[string]bool, msz)
+				z.Objs = make(map[string]string, msz)
 			} else if len(z.Objs) > 0 {
 				for key, _ := range z.Objs {
 					delete(z.Objs, key)
@@ -153,17 +170,22 @@ func (z *Container) UnmarshalMsg(bts []byte) (o []byte, err error) {
 			}
 			for msz > 0 {
 				var xvk string
-				var bzg bool
+				var bzg string
 				msz--
 				xvk, bts, err = msgp.ReadStringBytes(bts)
 				if err != nil {
 					return
 				}
-				bzg, bts, err = msgp.ReadBoolBytes(bts)
+				bzg, bts, err = msgp.ReadStringBytes(bts)
 				if err != nil {
 					return
 				}
 				z.Objs[xvk] = bzg
+			}
+		case "policy":
+			z.Policy, bts, err = msgp.ReadStringBytes(bts)
+			if err != nil {
+				return
 			}
 		default:
 			bts, err = msgp.Skip(bts)
@@ -181,8 +203,9 @@ func (z *Container) Msgsize() (s int) {
 	if z.Objs != nil {
 		for xvk, bzg := range z.Objs {
 			_ = bzg
-			s += msgp.StringPrefixSize + len(xvk) + msgp.BoolSize
+			s += msgp.StringPrefixSize + len(xvk) + msgp.StringPrefixSize + len(bzg)
 		}
 	}
+	s += 7 + msgp.StringPrefixSize + len(z.Policy)
 	return
 }

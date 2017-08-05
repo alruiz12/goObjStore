@@ -19,8 +19,10 @@ func PutObjAPI(w http.ResponseWriter, r *http.Request){
 	wg.Add(1)
 	go func() {
 		defer wg.Done()
-		name := md5String(r.URL.Path)
-		file, err := os.Create(os.Getenv("GOPATH") + "/src/github.com/alruiz12/simpleBT/src/" + name)
+		//name := md5String(r.URL.Path)
+		results:= strings.Split(r.URL.Path, "/")	// ["",account, container, object]
+		addedResults:=results[1]+results[2]+results[3]
+		file, err := os.Create(os.Getenv("GOPATH") + "/src/github.com/alruiz12/simpleBT/src/" + addedResults )
 		if err != nil {
 			fmt.Println(err)
 		}
@@ -31,7 +33,7 @@ func PutObjAPI(w http.ResponseWriter, r *http.Request){
 		file.Close()
 		putOK := make(chan bool)
 
-		go PutObjProxy(os.Getenv("GOPATH") + "/src/github.com/alruiz12/simpleBT/src/" + name, conf.TrackerAddr, conf.NumNodes, putOK)
+		go PutObjProxy(os.Getenv("GOPATH") + "/src/github.com/alruiz12/simpleBT/src/" + addedResults, conf.TrackerAddr, conf.NumNodes, putOK ,results[1], results[2], results[3])
 		success := <-putOK
 		if success == true {
 			fmt.Println("put success ", time.Since(startPUT))
@@ -40,7 +42,7 @@ func PutObjAPI(w http.ResponseWriter, r *http.Request){
 			fmt.Println("put fail")
 			w.WriteHeader(http.StatusBadRequest)
 		}
-		currentKey := md5sum(os.Getenv("GOPATH") + "/src/github.com/alruiz12/simpleBT/src/" + name)
+		currentKey := md5sum(os.Getenv("GOPATH") + "/src/github.com/alruiz12/simpleBT/src/" + addedResults)
 		fmt.Println(CheckPiecesObj(currentKey, "NEW.xml", conf.FilePath, conf.NumNodes))
 	}()
 	wg.Wait()
@@ -102,6 +104,7 @@ func PutContAPI(w http.ResponseWriter, r *http.Request){
 			w.WriteHeader(http.StatusBadRequest)
 		} else{
 			createOK := make(chan bool)
+			fmt.Println("PutContAPI")
 			go putContProxy(results[0], results[1], createOK)
 
 
