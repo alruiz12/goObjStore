@@ -4,6 +4,7 @@ import (
 )
 
 var NumNodes int = 3
+var LocalFileName = "NEW.xml"
 
 const IP = "127.0.0.1"
 
@@ -11,7 +12,7 @@ var FilePath = os.Getenv("GOPATH")+"/src/github.com/alruiz12/simpleBT/src/bigFil
 //var FilePath = os.Getenv("GOPATH")+"/src/github.com/alruiz12/simpleBT/dataset.xml"
 // TRACKER
 var TrackerAddr = IP+":8000"
-
+var DownloadsDirectory=os.Getenv("GOPATH")+"/src/github.com/alruiz12/simpleBT/src/Downloads/"
 // PEERS
 // IMPORTANT NOTE: last character of port is the peer's internal identifier
 var Peer1a = IP+":8011"

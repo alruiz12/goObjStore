@@ -429,7 +429,9 @@ func GetObjProxy(fullName string, proxyAddr []string, trackerAddr string, getOK 
 
 
 	}
+
 	getOK <- true
+
 
 }
 
@@ -470,6 +472,7 @@ func ReturnObjProxy(w http.ResponseWriter, r *http.Request) {
 			if err != nil {
 				fmt.Println("Peer: error creating/writing file p2p", err.Error())
 			}
+			fmt.Println("GatherPieces result:", GatherPieces(getmsg.Key,getmsg.Parts))
 
 
 
@@ -854,126 +857,40 @@ and compares the new hash with the original one.
 @param path to the file we want to split
 Returns true if both hash are identic and false if not
 */
-/*
-func GatherPieces(key string ,fileName string, numNodes int) bool{
-	fmt.Println("inside check pieces")
-	file, err := os.Open(filePath)
-	if err != nil {
-		fmt.Println(err.Error())
-		panic(err)
-	}
-	defer file.Close()
-	fileInfo, _ := file.Stat()
-	text := strconv.FormatInt(fileInfo.Size(), 10)        // size
-	size, _ := strconv.Atoi(text)
-	if err != nil {
-		fmt.Println(err.Error())
-		return false
-	}
-	totalPartsNumOriginal := int(math.Ceil(float64(size) / float64(fileChunk)))
 
-	// Walking through StorageNodes data
-	// Subfiles directory
-	path:=os.Getenv("GOPATH")+"/src/github.com/alruiz12/simpleBT/src/data/"+key+"/"
-	subDir, err := ioutil.ReadDir(path)
-	if err != nil {
-		fmt.Println(err)
-		return false
-	}
+func GatherPieces(key string , totalParts int) bool{
 
-	currentDir:=0
-	for currentDir<numNodes{
-
-		// Create new file
-		_, err = os.Create(os.Getenv("GOPATH") + "/src/github.com/alruiz12/simpleBT/src" + fileName+strconv.Itoa(currentDir))
-		newFile, err := os.OpenFile(os.Getenv("GOPATH") + "/src/github.com/alruiz12/simpleBT/src" + fileName+strconv.Itoa(currentDir), os.O_APPEND | os.O_WRONLY, 0666)
-		if err != nil {
-			fmt.Println(err)
-			return false
-		}
-		defer newFile.Close()
-
-		files, err := ioutil.ReadDir(path+subDir[currentDir].Name() )
-		//fmt.Println("Entering ", path+subDir[currentDir].Name())
-		// Trying to fill out the new file using subfiles (in order)
-		var inOrderCount = 0
-		var maxTimes int = 0
-		var fileNameOriginal= fileName[:len(fileName)-4]
-
-		for inOrderCount<totalPartsNumOriginal {
-			for _, file := range files {
-				if strings.Compare(file.Name(), fileNameOriginal + strconv.Itoa(inOrderCount)) == 0 || strings.Compare(file.Name(), "P2P" + strconv.Itoa(inOrderCount)) == 0{
-					inOrderCount++
-					//				fmt.Println(file.Name())
-					currentFile, err := os.Open(path + subDir[currentDir].Name() +"/"+ file.Name())
-					if err != nil {
-						fmt.Println(err)
-						return false
-					}
-
-					bytesCurrentFile, err := ioutil.ReadFile(path + subDir[currentDir].Name()+"/" +file.Name())
-
-					_, err = newFile.WriteString(string(bytesCurrentFile))
-					if err != nil {
-						fmt.Println(err)
-						return false
-					}
-
-					currentFile.Close()
-				}
-
-			}
-			if inOrderCount == 0 {
-				maxTimes++
-			}
-			if maxTimes > 1 {
-				fmt.Println("maxTimes > 1 when looking for ", fileNameOriginal + strconv.Itoa(inOrderCount))
-				return false
-			}
-		}
-
-		// Compute and compare new hash
-		newHash := md5sum(os.Getenv("GOPATH") + "/src/github.com/alruiz12/simpleBT/src" + fileName+strconv.Itoa(currentDir))
-		//fmt.Println("/src/github.com/alruiz12/simpleBT/src" + fileName+strconv.Itoa(currentDir) , newHash)
-		if strings.Compare(key, newHash) != 0 {
-			return false
-		}
-
-
-
-		currentDir++
-	}
-	if currentDir==0{return false}	// Never got in loop
-	//return true
 
 	// Checking Get output (locally)
 	path=os.Getenv("GOPATH")+"/src/github.com/alruiz12/simpleBT/src/local/"+key+"/"
 	files, err := ioutil.ReadDir(path)
 	if err != nil {
-		fmt.Println(err)
+		fmt.Println("Readir",err, " ",path)
 		return false
 	}
 
 	// Create new file
-	_, err = os.Create(os.Getenv("GOPATH") + "/src/github.com/alruiz12/simpleBT/src" + fileName)
-	newFile, err := os.OpenFile(os.Getenv("GOPATH") + "/src/github.com/alruiz12/simpleBT/src" + fileName, os.O_APPEND | os.O_WRONLY, 0666)
+	_, err = os.Create(conf.DownloadsDirectory + key)
 	if err != nil {
-		fmt.Println(err)
+		fmt.Println(" create ",err)
+	}
+	newFile, err := os.OpenFile(conf.DownloadsDirectory + key, os.O_APPEND | os.O_WRONLY, 0666)
+	if err != nil {
+		fmt.Println("GatherPieces",err)
 		return false
 	}
 	defer newFile.Close()
 
 
-
 	// Trying to fill out the new file using subfiles (in order)
 	var inOrderCount = 0
 	var maxTimes int = 0
-	var fileNameOriginal= fileName[:len(fileName)-4]
-	for inOrderCount<totalPartsNumOriginal {
+
+	var fileNameOriginal= conf.LocalFileName[:len(conf.LocalFileName)-4]
+	for inOrderCount<totalParts {
 		for _, file := range files {
 			if strings.Compare(file.Name(), fileNameOriginal + strconv.Itoa(inOrderCount)) == 0 {
 				inOrderCount++
-
 				currentFile, err := os.Open(path + file.Name())
 				if err != nil {
 					fmt.Println(err)
@@ -1000,20 +917,19 @@ func GatherPieces(key string ,fileName string, numNodes int) bool{
 			return false
 		}
 	}
-
-	// Compute and compare new hash
-	newHash := md5sum(os.Getenv("GOPATH") + "/src/github.com/alruiz12/simpleBT/src" + fileName)
-	//fmt.Println("/src/github.com/alruiz12/simpleBT/src" + fileName ,newHash)
-	if strings.Compare(hash, newHash) != 0 {
+/*
+	currentHash := md5sum(conf.DownloadsDirectory + key)
+	originalHash := md5sum(conf.FilePath)
+	if strings.Compare(currentHash, originalHash)!=0 {
 		return false
 	}
-
+*/
 	return true
 }
 
 
 
-*/
+
 
 
 

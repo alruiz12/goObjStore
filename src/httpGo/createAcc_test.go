@@ -7,6 +7,7 @@ import (
 	"os"
 	"os/exec"
 	"strings"
+	"github.com/alruiz12/simpleBT/src/conf"
 )
 func TestCreateAccountAPI(t *testing.T) {
 	router :=MyNewRouter()
@@ -330,6 +331,12 @@ func TestCreateAccountAPI(t *testing.T) {
 	}else{t.Error("Obj not obtained")}
 	fmt.Println("---------------------------------------------------")
 
+
+	currentHash := md5sum(conf.DownloadsDirectory + "alvarocontainer1obj1")
+	originalHash := md5sum(conf.FilePath)
+	if strings.Compare(currentHash, originalHash)!=0 {
+		t.Error("Obtained file failed")
+	}
 
 /*
 	if cmdOut, err = exec.Command(path+"/shellScriptsTests/curlGetObjFailure.sh").Output(); err != nil {

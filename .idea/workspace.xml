@@ -2,9 +2,11 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="8e47a50e-bf29-44c1-8c05-f500e1510716" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/httpGo/Object_gen.go" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/httpGo/Object_gen_test.go" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/Downloads/DoNotDelete" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/conf/configuration.go" afterPath="$PROJECT_DIR$/src/conf/configuration.go" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/httpGo/Proxy.go" afterPath="$PROJECT_DIR$/src/httpGo/Proxy.go" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/httpGo/createAcc_test.go" afterPath="$PROJECT_DIR$/src/httpGo/createAcc_test.go" />
     </list>
     <ignored path="$PROJECT_DIR$/out/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -23,16 +25,16 @@
   </component>
   <component name="ExecutionTargetManager" SELECTED_TARGET="default_target" />
   <component name="FileEditorManager">
-    <splitter split-orientation="horizontal" split-proportion="0.5233821">
+    <splitter split-orientation="horizontal" split-proportion="0.53141236">
       <split-first>
         <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
           <file leaf-file-name="createAcc_test.go" pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/src/httpGo/createAcc_test.go">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="323">
-                  <caret line="315" column="0" lean-forward="false" selection-start-line="315" selection-start-column="0" selection-end-line="315" selection-end-column="0" />
+                <state relative-caret-position="377">
+                  <caret line="337" column="45" lean-forward="false" selection-start-line="337" selection-start-column="45" selection-end-line="337" selection-end-column="45" />
                   <folding>
-                    <element signature="e#15#91#0" expanded="true" />
+                    <element signature="e#15#132#0" expanded="true" />
                   </folding>
                 </state>
               </provider>
@@ -41,10 +43,15 @@
           <file leaf-file-name="Proxy.go" pinned="false" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/src/httpGo/Proxy.go">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="18">
-                  <caret line="856" column="2" lean-forward="true" selection-start-line="856" selection-start-column="2" selection-end-line="856" selection-end-column="2" />
+                <state relative-caret-position="421">
+                  <caret line="923" column="28" lean-forward="true" selection-start-line="923" selection-start-column="28" selection-end-line="923" selection-end-column="28" />
                   <folding>
                     <element signature="e#16#288#0" expanded="true" />
+                    <element signature="n#!!block;n#CheckPiecesObj#0" expanded="false" />
+                    <element signature="e#17180#17329#0" expanded="false" />
+                    <element signature="n#!!block;n#CreateAccountProxy#0" expanded="false" />
+                    <element signature="n#!!block;n#putContProxy#0" expanded="false" />
+                    <element signature="n#!!block;n#CheckFileReplication#0" expanded="false" />
                   </folding>
                 </state>
               </provider>
@@ -63,7 +70,7 @@
           <file leaf-file-name="API.go" pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/src/httpGo/API.go">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="1782">
+                <state relative-caret-position="810">
                   <caret line="106" column="36" lean-forward="false" selection-start-line="106" selection-start-column="36" selection-end-line="106" selection-end-column="36" />
                   <folding>
                     <element signature="e#15#153#0" expanded="true" />
@@ -89,11 +96,11 @@
               </provider>
             </entry>
           </file>
-          <file leaf-file-name="StorageNode.go" pinned="false" current-in-tab="true">
+          <file leaf-file-name="StorageNode.go" pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/src/httpGo/StorageNode.go">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="259">
-                  <caret line="252" column="0" lean-forward="false" selection-start-line="252" selection-start-column="0" selection-end-line="252" selection-end-column="0" />
+                <state relative-caret-position="673">
+                  <caret line="284" column="25" lean-forward="false" selection-start-line="284" selection-start-column="25" selection-end-line="284" selection-end-column="25" />
                   <folding>
                     <element signature="e#15#207#0" expanded="true" />
                     <element signature="n#!!block;n#prepSN#0" expanded="false" />
@@ -104,11 +111,21 @@
               </provider>
             </entry>
           </file>
-          <file leaf-file-name="configuration.go" pinned="false" current-in-tab="false">
+          <file leaf-file-name="configuration.go" pinned="false" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/src/conf/configuration.go">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="-281">
-                  <caret line="9" column="4" lean-forward="false" selection-start-line="9" selection-start-column="4" selection-end-line="9" selection-end-column="4" />
+                <state relative-caret-position="216">
+                  <caret line="14" column="92" lean-forward="false" selection-start-line="14" selection-start-column="92" selection-end-line="14" selection-end-column="92" />
+                  <folding />
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file leaf-file-name="DoNotDelete" pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/src/Downloads/DoNotDelete">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="0">
+                  <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
                   <folding />
                 </state>
               </provider>
@@ -117,8 +134,8 @@
           <file leaf-file-name="peer.go" pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/src/httpVar/peer.go">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="90">
-                  <caret line="13" column="19" lean-forward="false" selection-start-line="13" selection-start-column="4" selection-end-line="13" selection-end-column="19" />
+                <state relative-caret-position="216">
+                  <caret line="14" column="0" lean-forward="false" selection-start-line="14" selection-start-column="0" selection-end-line="14" selection-end-column="0" />
                   <folding />
                 </state>
               </provider>
@@ -127,7 +144,7 @@
           <file leaf-file-name="Tracker.go" pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/src/httpGo/Tracker.go">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="2484">
+                <state relative-caret-position="938">
                   <caret line="147" column="9" lean-forward="false" selection-start-line="147" selection-start-column="9" selection-end-line="147" selection-end-column="9" />
                   <folding />
                 </state>
@@ -171,6 +188,7 @@
       <find>GetAccAPI</find>
       <find>addO</find>
       <find>Lock</find>
+      <find>open</find>
     </findStrings>
     <replaceStrings>
       <replace>Proxy</replace>
@@ -200,10 +218,8 @@
         <option value="$PROJECT_DIR$/src/curlTestcreateAccSuccess.sh" />
         <option value="$PROJECT_DIR$/src/httpGo/ProxyNop2p.go" />
         <option value="$PROJECT_DIR$/src/httpGo/putObj_test.go" />
-        <option value="$PROJECT_DIR$/src/conf/configuration.go" />
         <option value="$PROJECT_DIR$/src/httpGo/Accounts.go" />
         <option value="$PROJECT_DIR$/src/Accounts" />
-        <option value="$PROJECT_DIR$/src/httpVar/peer.go" />
         <option value="$PROJECT_DIR$/.travis.yml" />
         <option value="$PROJECT_DIR$/src/Accounts1" />
         <option value="$PROJECT_DIR$/src/Accounts2" />
@@ -235,8 +251,10 @@
         <option value="$PROJECT_DIR$/src/httpGo/API.go" />
         <option value="$PROJECT_DIR$/src/httpGo/Routes.go" />
         <option value="$PROJECT_DIR$/src/Accountalvaro1" />
-        <option value="$PROJECT_DIR$/src/httpGo/createAcc_test.go" />
         <option value="$PROJECT_DIR$/src/httpGo/StorageNode.go" />
+        <option value="$PROJECT_DIR$/src/httpVar/peer.go" />
+        <option value="$PROJECT_DIR$/src/conf/configuration.go" />
+        <option value="$PROJECT_DIR$/src/httpGo/createAcc_test.go" />
         <option value="$PROJECT_DIR$/src/httpGo/Proxy.go" />
       </list>
     </option>
@@ -311,65 +329,7 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="local" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="alvarocontainer1obj1" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="simpleBT" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="simpleBT" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="httpVar" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="simpleBT" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="simpleBT" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="httpGo" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="simpleBT" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="simpleBT" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="conf" />
+              <option name="myItemId" value="Downloads" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -860,13 +820,6 @@
     <option name="remove_strategy" value="false" />
   </component>
   <component name="TaskManager">
-    <task id="LOCAL-00006" summary="trying to use checkPieces for all dirs, all dirs in data">
-      <created>1499767613163</created>
-      <option name="number" value="00006" />
-      <option name="presentableId" value="LOCAL-00006" />
-      <option name="project" value="LOCAL" />
-      <updated>1499767613163</updated>
-    </task>
     <task id="LOCAL-00007" summary="trying to use checkPieces for all dirs, all dirs in data">
       <created>1499767982445</created>
       <option name="number" value="00007" />
@@ -958,7 +911,7 @@
       <workItem from="1501927513419" duration="7979000" />
       <workItem from="1501940483281" duration="14151000" />
       <workItem from="1502115869616" duration="5814000" />
-      <workItem from="1502121717618" duration="3040000" />
+      <workItem from="1502121717618" duration="10027000" />
     </task>
     <task id="LOCAL-00017" summary="api PUT creation">
       <created>1499940068525</created>
@@ -1226,47 +1179,54 @@
       <option name="project" value="LOCAL" />
       <updated>1502124369549</updated>
     </task>
-    <option name="localTasksCounter" value="55" />
+    <task id="LOCAL-00055" summary="Storing size as metadata, before GatherPieces, adding obj marshalling">
+      <created>1502124787601</created>
+      <option name="number" value="00055" />
+      <option name="presentableId" value="LOCAL-00055" />
+      <option name="project" value="LOCAL" />
+      <updated>1502124787601</updated>
+    </task>
+    <option name="localTasksCounter" value="56" />
     <servers />
   </component>
   <component name="TestHistory">
-    <history-entry file="createAcc_test_go - 2017.08.07 at 18h 26m 24s.xml">
+    <history-entry file="createAcc_test_go - 2017.08.07 at 19h 45m 04s.xml">
       <configuration name="createAcc_test.go" configurationId="GoTestRunConfiguration" />
     </history-entry>
-    <history-entry file="createAcc_test_go - 2017.08.07 at 18h 32m 30s.xml">
+    <history-entry file="createAcc_test_go - 2017.08.07 at 19h 47m 30s.xml">
       <configuration name="createAcc_test.go" configurationId="GoTestRunConfiguration" />
     </history-entry>
-    <history-entry file="createAcc_test_go - 2017.08.07 at 18h 34m 17s.xml">
+    <history-entry file="createAcc_test_go - 2017.08.07 at 19h 50m 03s.xml">
       <configuration name="createAcc_test.go" configurationId="GoTestRunConfiguration" />
     </history-entry>
-    <history-entry file="createAcc_test_go - 2017.08.07 at 18h 35m 02s.xml">
+    <history-entry file="createAcc_test_go - 2017.08.07 at 19h 52m 31s.xml">
       <configuration name="createAcc_test.go" configurationId="GoTestRunConfiguration" />
     </history-entry>
-    <history-entry file="createAcc_test_go - 2017.08.07 at 18h 38m 47s.xml">
+    <history-entry file="createAcc_test_go - 2017.08.07 at 19h 53m 36s.xml">
       <configuration name="createAcc_test.go" configurationId="GoTestRunConfiguration" />
     </history-entry>
-    <history-entry file="createAcc_test_go - 2017.08.07 at 18h 41m 04s.xml">
+    <history-entry file="createAcc_test_go - 2017.08.07 at 20h 01m 45s.xml">
       <configuration name="createAcc_test.go" configurationId="GoTestRunConfiguration" />
     </history-entry>
-    <history-entry file="createAcc_test_go - 2017.08.07 at 18h 41m 58s.xml">
+    <history-entry file="createAcc_test_go - 2017.08.07 at 20h 20m 46s.xml">
       <configuration name="createAcc_test.go" configurationId="GoTestRunConfiguration" />
     </history-entry>
-    <history-entry file="createAcc_test_go - 2017.08.07 at 18h 42m 28s.xml">
+    <history-entry file="createAcc_test_go - 2017.08.07 at 21h 07m 15s.xml">
       <configuration name="createAcc_test.go" configurationId="GoTestRunConfiguration" />
     </history-entry>
-    <history-entry file="createAcc_test_go - 2017.08.07 at 18h 43m 27s.xml">
+    <history-entry file="createAcc_test_go - 2017.08.07 at 21h 13m 19s.xml">
       <configuration name="createAcc_test.go" configurationId="GoTestRunConfiguration" />
     </history-entry>
-    <history-entry file="createAcc_test_go - 2017.08.07 at 18h 44m 11s.xml">
+    <history-entry file="createAcc_test_go - 2017.08.07 at 21h 15m 19s.xml">
       <configuration name="createAcc_test.go" configurationId="GoTestRunConfiguration" />
     </history-entry>
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="161100000" />
+    <option name="totallyTimeSpent" value="168087000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="65" y="24" width="2495" height="1056" extended-state="6" />
-    <editor active="false" />
+    <editor active="true" />
     <layout>
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
@@ -1277,12 +1237,12 @@
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.3651741" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.3562189" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Properties" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Capture Tool" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.15150301" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.15150301" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
@@ -1340,7 +1300,6 @@
     <option name="myLimit" value="2678400000" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="wokring on api PUT, before deleting Proxy's inner goRoutine" />
     <MESSAGE value="simple put API works locally" />
     <MESSAGE value="simple put API works locally, with response, multiple concurrent calls, goRoutine in whole PUT API" />
     <MESSAGE value="simple put API works locally, about to try in EC2" />
@@ -1365,7 +1324,8 @@
     <MESSAGE value="PutAcc OK, putCont OK, putObj OK, getObj OK, tested" />
     <MESSAGE value="Storing size as metadata, and trying to get it back" />
     <MESSAGE value="Storing size as metadata, before GatherPieces" />
-    <option name="LAST_COMMIT_MESSAGE" value="Storing size as metadata, before GatherPieces" />
+    <MESSAGE value="Storing size as metadata, before GatherPieces, adding obj marshalling" />
+    <option name="LAST_COMMIT_MESSAGE" value="Storing size as metadata, before GatherPieces, adding obj marshalling" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager />
@@ -1376,13 +1336,6 @@
     <option name="FILTER_TARGETS" value="false" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file:///usr/local/go/src/io/ioutil/ioutil.go">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="194">
-          <caret line="75" column="5" lean-forward="false" selection-start-line="75" selection-start-column="5" selection-end-line="75" selection-end-column="5" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/shellScriptsTests/curlCreateAccFail.sh">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="18">
@@ -1562,51 +1515,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/httpGo/Tracker.go">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2484">
-          <caret line="147" column="9" lean-forward="false" selection-start-line="147" selection-start-column="9" selection-end-line="147" selection-end-column="9" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/conf/configuration.go">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-281">
-          <caret line="9" column="4" lean-forward="false" selection-start-line="9" selection-start-column="4" selection-end-line="9" selection-end-column="4" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/httpVar/peer.go">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="90">
-          <caret line="13" column="19" lean-forward="false" selection-start-line="13" selection-start-column="4" selection-end-line="13" selection-end-column="19" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/httpGo/createAcc_test.go">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="323">
-          <caret line="315" column="0" lean-forward="false" selection-start-line="315" selection-start-column="0" selection-end-line="315" selection-end-column="0" />
-          <folding>
-            <element signature="e#15#91#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/httpGo/API.go">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1782">
-          <caret line="106" column="36" lean-forward="false" selection-start-line="106" selection-start-column="36" selection-end-line="106" selection-end-column="36" />
-          <folding>
-            <element signature="e#15#153#0" expanded="true" />
-            <element signature="n#!!block;n#md5String#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/local/alvarocontainer1obj1/NEW0">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
@@ -1631,10 +1539,45 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/src/local/alvarocontainer1obj1/metadata">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/httpGo/API.go">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="810">
+          <caret line="106" column="36" lean-forward="false" selection-start-line="106" selection-start-column="36" selection-end-line="106" selection-end-column="36" />
+          <folding>
+            <element signature="e#15#153#0" expanded="true" />
+            <element signature="n#!!block;n#md5String#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/httpVar/peer.go">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="216">
+          <caret line="14" column="0" lean-forward="false" selection-start-line="14" selection-start-column="0" selection-end-line="14" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/httpGo/Tracker.go">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="938">
+          <caret line="147" column="9" lean-forward="false" selection-start-line="147" selection-start-column="9" selection-end-line="147" selection-end-column="9" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/httpGo/StorageNode.go">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="259">
-          <caret line="252" column="0" lean-forward="false" selection-start-line="252" selection-start-column="0" selection-end-line="252" selection-end-column="0" />
+        <state relative-caret-position="673">
+          <caret line="284" column="25" lean-forward="false" selection-start-line="284" selection-start-column="25" selection-end-line="284" selection-end-column="25" />
           <folding>
             <element signature="e#15#207#0" expanded="true" />
             <element signature="n#!!block;n#prepSN#0" expanded="false" />
@@ -1644,7 +1587,7 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/local/alvarocontainer1obj1/metadata">
+    <entry file="file://$PROJECT_DIR$/src/Downloads/DoNotDelete">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
@@ -1652,12 +1595,35 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/src/conf/configuration.go">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="216">
+          <caret line="14" column="92" lean-forward="false" selection-start-line="14" selection-start-column="92" selection-end-line="14" selection-end-column="92" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/httpGo/createAcc_test.go">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="377">
+          <caret line="337" column="45" lean-forward="false" selection-start-line="337" selection-start-column="45" selection-end-line="337" selection-end-column="45" />
+          <folding>
+            <element signature="e#15#132#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/httpGo/Proxy.go">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="18">
-          <caret line="856" column="2" lean-forward="true" selection-start-line="856" selection-start-column="2" selection-end-line="856" selection-end-column="2" />
+        <state relative-caret-position="421">
+          <caret line="923" column="28" lean-forward="true" selection-start-line="923" selection-start-column="28" selection-end-line="923" selection-end-column="28" />
           <folding>
             <element signature="e#16#288#0" expanded="true" />
+            <element signature="n#!!block;n#CheckPiecesObj#0" expanded="false" />
+            <element signature="e#17180#17329#0" expanded="false" />
+            <element signature="n#!!block;n#CreateAccountProxy#0" expanded="false" />
+            <element signature="n#!!block;n#putContProxy#0" expanded="false" />
+            <element signature="n#!!block;n#CheckFileReplication#0" expanded="false" />
           </folding>
         </state>
       </provider>
