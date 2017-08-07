@@ -331,6 +331,7 @@ func TestCreateAccountAPI(t *testing.T) {
 	}else{t.Error("Obj not obtained")}
 	fmt.Println("---------------------------------------------------")
 
+	time.Sleep(2* time.Second)
 
 	currentHash := md5sum(conf.DownloadsDirectory + "alvarocontainer1obj1")
 	originalHash := md5sum(conf.FilePath)
