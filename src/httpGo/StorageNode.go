@@ -238,11 +238,12 @@ func SNPutObjGetChunks(w http.ResponseWriter, r *http.Request){
 		return
 	}
 	// read account from file
+	httpVar.AccFileMutex.Lock()
 	accountBytes, err := ioutil.ReadFile(path+"/src/Account"+keyURL.Account +nodeID)
 	if err != nil {
 		fmt.Println("SNPutCont Error: reading ", path+"/src/Account"+keyURL.Account +nodeID)
 	}
-
+	httpVar.AccFileMutex.Unlock()
 	// update account
 	account:=Account{}
 	_,err = account.UnmarshalMsg(accountBytes)
@@ -250,14 +251,16 @@ func SNPutObjGetChunks(w http.ResponseWriter, r *http.Request){
 	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
 	w.WriteHeader(http.StatusOK)
 	go SNPutObjSendChunksToProxy(nodeID, keyURL.Key, keyURL.URL, account.Containers[keyURL.Container].Objs[keyURL.Object].PartsNum)
+
+
 }
 
 type getMsg struct {
-	Text []byte
-	Name string
+	Text   []byte
+	Name   string
 	NodeID string
-	Key string
-	PartsNum int
+	Key    string
+	Parts  int
 }
 func SNPutObjSendChunksToProxy(nodeID string, key string, URL string, PartsNum int){
 	//partBuffer:=make([]byte,fileChunk)
@@ -271,12 +274,16 @@ func SNPutObjSendChunksToProxy(nodeID string, key string, URL string, PartsNum i
 			file, err := os.Open(path)
 			if err != nil {
 				fmt.Println("sendChunksToProxy error opening file ",err.Error())
+				//getOK <- false
+				return nil
 			}
 			_, err = file.Read(partBuffer)
 			if err != nil {
 				fmt.Println("sendChunksToProxy error opening file ",err.Error())
+				//getOK <- false
+				return nil
 			}
-			m:=getMsg{Text:partBuffer, Name: info.Name(), NodeID:nodeID, Key:key, PartsNum:PartsNum}
+			m:=getMsg{Text:partBuffer, Name: info.Name(), NodeID:nodeID, Key:key, Parts:PartsNum}
 			r, w :=io.Pipe()			// create pipe
 			go func() {
 				defer w.Close()			// close pipe when go routine finishes
@@ -284,20 +291,27 @@ func SNPutObjSendChunksToProxy(nodeID string, key string, URL string, PartsNum i
 				err=json.NewEncoder(w).Encode(&m)
 				if err != nil {
 					fmt.Println("Error encoding to pipe ", err.Error())
+					//getOK <- false
+					return
 				}
 			}()
 			res, err := http.Post(proxyURL,"application/json", r )
 			if err != nil {
 				fmt.Println("sendChunksToProxy: error creating request: ",err.Error())
+				//getOK <- false
+				return nil
 			}
 			if err := res.Body.Close(); err != nil {
 				fmt.Println(err)
+				//getOK <- false
+				return nil
 			}
 		}
 
-		//return nil
+
 		return nil
 	})
+	//getOK <- true
 	
 }
 
@@ -612,9 +626,53 @@ func addObjToCont(w http.ResponseWriter, r *http.Request){
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
-	httpVar.AccFileMutexP2P.Lock()
+	marshalledAcc:=MarshalledAcc{Bytes:accountBytes, Name:accInfo.AccName}
+	httpVar.AccFileMutex.Lock()
+
 	err = ioutil.WriteFile(path+"/src/Account"+accInfo.AccName+strconv.Itoa(peerID),accountBytes,0777)
-	httpVar.AccFileMutexP2P.Unlock()
+	var wg sync.WaitGroup
+	wg.Add(len(accInfo.NodeList))
+	var currentAddr int = rand.Intn(len(accInfo.NodeList))
+	for _, peer := range accInfo.NodeList{
+		peerURL := "http://" + peer[currentAddr] + "/SNPutAccP2PRequest"
+		go func(p string, URL string){
+			if peerID == int(p[len(p) - 1] - '0') {
+				// Don't send to itself
+			} else {
+				r, w := io.Pipe()
+				go func() {
+					// save buffer to object
+					err = json.NewEncoder(w).Encode(marshalledAcc)
+					if err != nil {
+						fmt.Println("Error encoding to pipe ", err.Error())
+						return
+					}
+					defer w.Close()                        // close pipe //when go routine finishes
+				}()
+				response, err := http.Post(peerURL, "application/json", r)
+				if err != nil {
+					fmt.Println("Error sending http POST p2p", err.Error())
+				}
+				responseCode:=response.StatusCode
+				if responseCode == 201 {
+					fmt.Println(response.StatusCode," SN created")
+				}
+				fmt.Println(responseCode)
+				/*else{
+					for responseCode != 201{
+						response, err = http.Post(peerURL, "application/json", r)
+						responseCode=response.StatusCode
+					}
+				}*/
+			}
+			wg.Done()
+		}(peer[0], peerURL)
+	}
+	wg.Wait()
+
+	httpVar.AccFileMutex.Unlock()
+
+
 	if err != nil {
 		fmt.Println("addObjToCont: error Marshalling")
 		w.WriteHeader(http.StatusBadRequest)

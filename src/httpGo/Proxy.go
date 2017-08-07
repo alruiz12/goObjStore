@@ -289,8 +289,7 @@ func PutObjProxy(filePath string, trackerAddr string, numNodes int, putOK chan b
 	// ask random node for correctness (account/container)
 	currentPeer= rand.Intn(len(nodeList))
 	currentPeerAddr = rand.Intn(len(nodeList))
-	acc = AccInfo{AccName:account, Container:container, Obj:objName, Size:size, Parts:totalPartsNum }
-
+	acc = AccInfo{AccName:account, Container:container, Obj:objName, Size:size, Parts:totalPartsNum, NodeList:nodeList }
 	r, w = io.Pipe()
 	go func() {
 		// save buffer to object
@@ -391,7 +390,7 @@ func GetObjProxy(fullName string, proxyAddr []string, trackerAddr string, getOK 
 		getOK <- false
 		return
 	}
-
+	fmt.Println(nodeList)
 	// Create folder for receiving
 	os.Mkdir(os.Getenv("GOPATH")+"/src/github.com/alruiz12/simpleBT/src/local",+0777)
 	os.Mkdir(os.Getenv("GOPATH")+"/src/github.com/alruiz12/simpleBT/src/local/"+ fullName,0777)
@@ -402,7 +401,6 @@ func GetObjProxy(fullName string, proxyAddr []string, trackerAddr string, getOK 
 	for index, node := range nodeList {
 		r, w :=io.Pipe()			// create pipe
 		k:=jsonKeyURL{Key:fullName, URL:proxyAddr[index]+"/ReturnObjProxy", Account: account, Container:container, Object:objName}
-
 		go func() {
 			defer w.Close()			// close pipe when go routine finishes
 			// save buffer to object
@@ -429,8 +427,9 @@ func GetObjProxy(fullName string, proxyAddr []string, trackerAddr string, getOK 
 			return
 		}
 
-		getOK <- true
+
 	}
+	getOK <- true
 
 }
 
@@ -458,7 +457,6 @@ func ReturnObjProxy(w http.ResponseWriter, r *http.Request) {
 		}
 		httpVar.GetMutex.Lock()
 		numGets++
-		fmt.Println(numGets)
 		httpVar.GetMutex.Unlock()
 
 		err = ioutil.WriteFile(path + "/src/local/" + getmsg.Key + "/" + getmsg.Name, getmsg.Text, 0777)
@@ -467,12 +465,12 @@ func ReturnObjProxy(w http.ResponseWriter, r *http.Request) {
 		}
 		httpVar.TotalNumMutex.Lock()
 		if numGets == totalPartsNum {
-			PartsNum := []byte(strconv.Itoa(getmsg.PartsNum))
+			PartsNum := []byte(strconv.Itoa(getmsg.Parts))
 			err = ioutil.WriteFile(path + "/src/local/" + getmsg.Key + "/metadata", PartsNum, 0777)
 			if err != nil {
 				fmt.Println("Peer: error creating/writing file p2p", err.Error())
 			}
-			fmt.Println("METADAAAAAAAAAAATA",path + "/src/local/" + getmsg.Key + "/metadata")
+
 
 
 		}
@@ -713,7 +711,6 @@ func CreateAccountProxy(name string, createOK chan bool){
 	} else {
 		fmt.Println("len ",len(nodeList))
 	}
-
 	currentPeer:= rand.Intn(len(nodeList))
 	currentPeerAddr := rand.Intn(len(nodeList))
 	acc := AccInfo{NodeList:nodeList, Num:len(nodeList), CurrentNode:currentPeer, AccName:name }
@@ -736,7 +733,6 @@ func CreateAccountProxy(name string, createOK chan bool){
 		createOK <- false
 		return
 	}
-
 	createOK <- true
 
 }

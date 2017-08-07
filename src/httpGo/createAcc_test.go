@@ -311,6 +311,14 @@ func TestCreateAccountAPI(t *testing.T) {
 
 
 
+	fileReplicationCorrect=CheckFileReplication("Account","alvaro",3)
+	if fileReplicationCorrect==false{
+		t.Error("file replication not correct")
+	}
+	fmt.Println(fileReplicationCorrect)
+	fmt.Println("---------------------------------------------------")
+
+
 	if cmdOut, err = exec.Command(path+"/shellScriptsTests/curlGetObjSuccess.sh").Output(); err != nil {
 		fmt.Fprintln(os.Stderr, "There was an error running command: ", err)
 		os.Exit(1)
