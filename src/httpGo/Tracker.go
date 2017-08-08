@@ -168,7 +168,6 @@ func GetNodesForKey(w http.ResponseWriter, r *http.Request){
 		nodeList = httpVar.MapAccNodes[request.ID]
 		if len(nodeList)==0{
 			fmt.Println("ID ",request.ID, " has length 0")
-			fmt.Println(httpVar.MapAccNodes)
 			w.WriteHeader(http.StatusBadRequest)
 			return
 		}
