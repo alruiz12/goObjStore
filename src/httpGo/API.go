@@ -132,18 +132,16 @@ func GetAccAPI(w http.ResponseWriter, r *http.Request){
 			fmt.Println("create fail")
 			w.WriteHeader(http.StatusBadRequest)
 		} else{
-			getOK := make(chan bool)
-			account:= GetAccountProxy(accountName, getOK)
+			account:= GetAccountProxy(accountName)
 
-			success := <-getOK
-			if success == true {
+			if strings.Compare( account.Name, accountName)==0 {
 				fmt.Println("get success ")
 
 				w.Header().Set("Content-Type", "application/json; charset=UTF-8")
 				if err := json.NewEncoder(w).Encode(account); err != nil {
 					fmt.Println("GetNodes: error encoding response: ",err.Error())
 				}
-				w.WriteHeader(http.StatusOK)
+				//w.WriteHeader(http.StatusOK)
 			} else {
 				fmt.Println("get fail")
 				w.WriteHeader(http.StatusBadRequest)

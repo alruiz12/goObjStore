@@ -347,9 +347,10 @@ func TestCreateAccountAPI(t *testing.T) {
 	}
 	resp = string(cmdOut)
 	fmt.Println("curl response ", resp)
-	if strings.Compare(resp,"200")==0 {
-		fmt.Println(resp+ " OK")
-	}else{t.Error("Obj not obtained")}
+	if strings.Compare(resp,"400")==0 {
+		t.Error("Obj not obtained")
+
+	}else{fmt.Println(" OK")}
 	fmt.Println("---------------------------------------------------")
 
 /*

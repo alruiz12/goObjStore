@@ -740,7 +740,7 @@ func CreateAccountProxy(name string, createOK chan bool){
 
 }
 
-func GetAccountProxy(accountName string, getOK chan bool) Account{
+func GetAccountProxy(accountName string) Account{
 	var nodeList [][]string
 	var err error
 	var account Account
@@ -751,33 +751,27 @@ func GetAccountProxy(accountName string, getOK chan bool) Account{
 	request, err := http.NewRequest("GET", trackerURL, reader)
 	if err != nil {
 		fmt.Println("putContProxy: error creating request: ", err.Error())
-		getOK <- false
 		return account
 	}
 	res, err := http.DefaultClient.Do(request)
 	if err != nil {
 		fmt.Println("GetAccountProxy: error sending request: ", err.Error())
-		getOK <- false
 		return account
 	}
 	if res.StatusCode == http.StatusBadRequest{
-		getOK <- false
 		return account
 	}
 	body, err := ioutil.ReadAll(io.LimitReader(res.Body, 1048576))
 	if err != nil {
 		fmt.Println(err)
-		getOK <- false
 		return account
 	}
 	if err := res.Body.Close(); err != nil {
 		fmt.Println(err)
-		getOK <- false
 		return account
 	}
 	if err := json.Unmarshal(body, &nodeList); err != nil {
 		fmt.Println("GetAccountProxy: error unprocessable entity: ", err.Error())
-		getOK <- false
 		return account
 	}
 
@@ -791,38 +785,30 @@ func GetAccountProxy(accountName string, getOK chan bool) Account{
 	request, err = http.NewRequest("GET", "http://" + nodeList[currentPeer][currentPeerAddr] + "/SNGetAcc", reader)
 	if err != nil {
 		fmt.Println("Error sending http GET ", err.Error())
-		getOK <- false
 		return account
 	}
 	res, err = http.DefaultClient.Do(request)
 	if err != nil {
 		fmt.Println("GetAccountProxy: error sending request: ", err.Error())
-		getOK <- false
 		return account
 	}
 	if res.StatusCode == http.StatusBadRequest{
-		getOK <- false
 		return account
 	}
 	body, err = ioutil.ReadAll(io.LimitReader(res.Body, 1048576))
 	if err != nil {
 		fmt.Println(err)
-		getOK <- false
 		return account
 	}
 	if err := res.Body.Close(); err != nil {
 		fmt.Println(err)
-		getOK <- false
 		return account
 	}
 
 	if err := json.Unmarshal(body, &account); err != nil {
 		fmt.Println("GetAccountProxy: error unprocessable entity: ", err.Error())
-		getOK <- false
 		return account
 	}
-
-	getOK <- true
 	return account
 }
 

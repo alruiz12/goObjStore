@@ -457,23 +457,25 @@ func SNGetAcc(w http.ResponseWriter, r *http.Request){
 		if err := json.NewEncoder(w).Encode(err); err != nil {
 			fmt.Println("error unmarshalling ", err)
 		}
+		return
 	}
 
 
 
-
+	var accPath string = (os.Getenv("GOPATH")+"/src/github.com/alruiz12/simpleBT")
 
 	// read account from file
 	httpVar.AccFileMutex.Lock()
-	accountBytes, err := ioutil.ReadFile(path+"/src/Account"+accInfo.AccName +strconv.Itoa(peerID))
+	accountBytes, err := ioutil.ReadFile(accPath+"/src/Account"+accInfo.AccName +strconv.Itoa(peerID))
 	if err != nil {
-		fmt.Println("SNGetAcc Error: reading ", path+"/src/Account"+accInfo.AccName +strconv.Itoa(peerID))
+		fmt.Println(accPath)
+		fmt.Println("SNGetAcc Error: reading ", accPath+"/src/Account"+accInfo.AccName +strconv.Itoa(peerID))
 	}
 	httpVar.AccFileMutex.Unlock()
 
 	account:=Account{}
 	_,err = account.UnmarshalMsg(accountBytes)
-	fmt.Println("SN:::::::::::::::: ", account)
+	//fmt.Println("SN:::::::::::::::: ", account)
 	if err != nil {
 		fmt.Println("SNGetAcc: error Unmarshalling account")
 	}

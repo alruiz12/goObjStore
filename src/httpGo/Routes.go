@@ -54,10 +54,10 @@ func MyNewRouter() *mux.Router {
 
 	return router
 }
+var simple = regexp.MustCompile(`[a-zA-Z0-9]`)
+var triple = regexp.MustCompile(`[a-zA-Z0-9]+/[a-zA-Z0-9]+/[a-zA-Z0-9]`)
+var double = regexp.MustCompile(`[a-zA-Z0-9]+/[a-zA-Z0-9]`)
 
-var triple = regexp.MustCompile(`[a-zA-Z0-9]+/[a-zA-Z0-9]+/[a-zA-Z0-9]`)  // Has digit(s)
-var double = regexp.MustCompile(`[a-zA-Z0-9]+/[a-zA-Z0-9]`)  // Has digit(s)
-var simple = regexp.MustCompile(`[a-zA-Z0-9]`) // Contains "abc"
 //has 2, 3 or 4 slashes
 func route(w http.ResponseWriter, r *http.Request){
 	fmt.Println(r.URL.Path)
