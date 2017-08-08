@@ -378,6 +378,48 @@ func TestCreateAccountAPI(t *testing.T) {
 	}else{
 		t.Error("GET cont failed")
 	}
+	fmt.Println("---------------------------------------------------")
+
+	if cmdOut, err = exec.Command(path+"/shellScriptsTests/curlGetContFailure.sh").Output(); err != nil {
+		fmt.Fprintln(os.Stderr, "There was an error running command: ", err)
+		os.Exit(1)
+	}
+	resp = string(cmdOut)
+	fmt.Println("curl response ", resp)
+	if strings.Compare(resp,"400")==0 {
+		fmt.Println("failed as expected")
+	}else{
+		t.Error("Expecting failure")
+	}
+
+	fmt.Println("---------------------------------------------------")
+	if cmdOut, err = exec.Command(path+"/shellScriptsTests/curlGetContFailure2.sh").Output(); err != nil {
+		fmt.Fprintln(os.Stderr, "There was an error running command: ", err)
+		os.Exit(1)
+	}
+	resp = string(cmdOut)
+	fmt.Println("curl response ", resp)
+	if strings.Compare(resp,"400")==0 {
+		fmt.Println("failed as expected")
+	}else{
+		t.Error("Expecting failure")
+	}
+
+	fmt.Println("---------------------------------------------------")
+
+	if cmdOut, err = exec.Command(path+"/shellScriptsTests/curlGetContFailure3.sh").Output(); err != nil {
+		fmt.Fprintln(os.Stderr, "There was an error running command: ", err)
+		os.Exit(1)
+	}
+	resp = string(cmdOut)
+	fmt.Println("curl response ", resp)
+	if strings.Compare(resp,"400")==0 {
+		fmt.Println("failed as expected")
+	}else{
+		t.Error("Expecting failure")
+	}
+
+
 
 
 	time.AfterFunc(600 * time.Second, func(){
