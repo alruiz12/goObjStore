@@ -167,7 +167,6 @@ func PutContAPI(w http.ResponseWriter, r *http.Request){
 			w.WriteHeader(http.StatusBadRequest)
 		} else{
 			createOK := make(chan bool)
-			fmt.Println("PutContAPI")
 			go putContProxy(results[0], results[1], createOK)
 
 
@@ -177,6 +176,39 @@ func PutContAPI(w http.ResponseWriter, r *http.Request){
 				w.WriteHeader(http.StatusCreated)
 			} else {
 				fmt.Println("put fail")
+				w.WriteHeader(http.StatusBadRequest)
+			}
+		}
+
+	}()
+	wg.Wait()
+}
+
+
+func GetContAPI(w http.ResponseWriter, r *http.Request){
+	var wg sync.WaitGroup
+	wg.Add(1)
+	go func() {
+		defer wg.Done()
+		//accountName:=r.Header["Name"][0]
+		accountName:=r.URL.Path[1:]
+		results:= strings.Split(accountName, "/")
+		fmt.Println("GetContAPI: ",results[1])
+		if accountName==""{
+			fmt.Println("get fail")
+			w.WriteHeader(http.StatusBadRequest)
+		} else{
+
+			container:=GetContProxy(results[0], results[1])
+
+			if strings.Compare( container.Name,results[1] ) == 0 {
+				fmt.Println("get success ")
+				w.Header().Set("Content-Type", "application/json; charset=UTF-8")
+				if err := json.NewEncoder(w).Encode(container); err != nil {
+					fmt.Println("GetNodes: error encoding response: ",err.Error())
+				}
+			} else {
+				fmt.Println("get fail",container.Name," /",results[1] )
 				w.WriteHeader(http.StatusBadRequest)
 			}
 		}

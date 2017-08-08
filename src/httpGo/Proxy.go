@@ -881,6 +881,83 @@ func putContProxy(account string, container string, createOK chan bool){
 
 
 
+func GetContProxy(accountName string, containerName string) Container{
+	var nodeList [][]string
+	var err error
+	var account Account
+	var container Container
+	// Aask tracker for nodes
+	requestJson := `{"Quantity":"` + strconv.Itoa(conf.NumNodes) + `","ID":"` + accountName + `","Type":"account"}`
+	reader := strings.NewReader(requestJson)
+	trackerURL := "http://" + conf.TrackerAddr + "/GetNodesForKey"
+	request, err := http.NewRequest("GET", trackerURL, reader)
+	if err != nil {
+		fmt.Println("putContProxy: error creating request: ", err.Error())
+		return container
+	}
+	res, err := http.DefaultClient.Do(request)
+	if err != nil {
+		fmt.Println("GetAccountProxy: error sending request: ", err.Error())
+		return container
+	}
+	if res.StatusCode == http.StatusBadRequest{
+		return container
+	}
+	body, err := ioutil.ReadAll(io.LimitReader(res.Body, 1048576))
+	if err != nil {
+		fmt.Println(err)
+		return container
+	}
+	if err := res.Body.Close(); err != nil {
+		fmt.Println(err)
+		return container
+	}
+	if err := json.Unmarshal(body, &nodeList); err != nil {
+		fmt.Println("GetAccountProxy: error unprocessable entity: ", err.Error())
+		return container
+	}
+
+	currentPeer:= rand.Intn(len(nodeList))
+	currentPeerAddr := rand.Intn(len(nodeList))
+	acc :=`{"Accname":"`+accountName+`"}`
+	//acc := AccInfo{ AccName:accountName }
+	reader = strings.NewReader(acc)
+
+
+	request, err = http.NewRequest("GET", "http://" + nodeList[currentPeer][currentPeerAddr] + "/SNGetAcc", reader)
+	if err != nil {
+		fmt.Println("Error sending http GET ", err.Error())
+		return container
+	}
+	res, err = http.DefaultClient.Do(request)
+	if err != nil {
+		fmt.Println("GetAccountProxy: error sending request: ", err.Error())
+		return container
+	}
+	if res.StatusCode == http.StatusBadRequest{
+		return container
+	}
+	body, err = ioutil.ReadAll(io.LimitReader(res.Body, 1048576))
+	if err != nil {
+		fmt.Println(err)
+		return container
+	}
+	if err := res.Body.Close(); err != nil {
+		fmt.Println(err)
+		return container
+	}
+
+	if err := json.Unmarshal(body, &account); err != nil {
+		fmt.Println("GetAccountProxy: error unprocessable entity: ", err.Error())
+		return container
+	}
+	fmt.Println("Proxy ",account)
+	fmt.Println(account.Containers[containerName])
+	return account.Containers[containerName]
+}
+
+
+
 func CheckFileReplication(fileType string, name string, replication int) bool{
 	if replication<2 {return false}
 	var path = (os.Getenv("GOPATH")+"/src/github.com/alruiz12/simpleBT/src/")

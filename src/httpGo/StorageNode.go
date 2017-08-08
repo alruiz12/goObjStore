@@ -527,12 +527,12 @@ func SNPutCont(w http.ResponseWriter, r *http.Request){
 		account:=Account{}
 		_,err = account.UnmarshalMsg(accountBytes)
 		objs:= make(map[string]Object)
-		container:=Container{Name:accInfo.AccName, Objs:objs}
+		container:=Container{Name:accInfo.Container, Objs:objs}
 		if len(account.Containers)==0{
 			account.Containers=make(map[string]Container)
 		}
 		account.Containers[accInfo.Container]=container
-		fmt.Println(account)
+
 		// marshall account
 		accountBytes, err = account.MarshalMsg(nil)
 
@@ -666,7 +666,7 @@ func addObjToCont(w http.ResponseWriter, r *http.Request){
 		fmt.Println("account.Containers[accInfo.Container].Objs len == 0")
 		m:=make(map[string]Object)
 
-		cont:=Container{Objs:m, Policy:account.Containers[accInfo.Container].Policy}
+		cont:=Container{Objs:m, Policy:account.Containers[accInfo.Container].Policy, Name:accInfo.Container}
 		account.Containers[accInfo.Container]=cont
 	}
 	newObj:=Object{Name:accInfo.Obj, Size:accInfo.Size, PartsNum:accInfo.Parts}

@@ -83,6 +83,8 @@ func tripleF(w http.ResponseWriter, r *http.Request) {
 func doubleF(w http.ResponseWriter, r *http.Request) {
 	if r.Method == http.MethodPut {
 		PutContAPI(w,r)
+	} else if r.Method == http.MethodGet {
+		GetContAPI(w,r)
 	}
 	fmt.Println("double")
 }
