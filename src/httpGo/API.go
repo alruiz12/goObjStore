@@ -10,6 +10,7 @@ import(
 	"time"
 	"sync"
 	"strings"
+	"encoding/json"
 )
 
 func PutObjAPI(w http.ResponseWriter, r *http.Request){
@@ -97,7 +98,6 @@ func PutAccAPI(w http.ResponseWriter, r *http.Request){
 	wg.Add(1)
 	go func() {
 		defer wg.Done()
-		//accountName:=r.Header["Name"][0]
 		accountName:=r.URL.Path[1:]
 		if accountName==""{
 			fmt.Println("create fail")
@@ -107,7 +107,6 @@ func PutAccAPI(w http.ResponseWriter, r *http.Request){
 			go CreateAccountProxy(accountName, createOK)
 
 
-			//go Put(os.Getenv("GOPATH") + "/src/github.com/alruiz12/simpleBT/src/" + name, conf.TrackerAddr, conf.NumNodes, putOK)
 			success := <-createOK
 			if success == true {
 				fmt.Println("create success ")
@@ -128,23 +127,25 @@ func GetAccAPI(w http.ResponseWriter, r *http.Request){
 	wg.Add(1)
 	go func() {
 		defer wg.Done()
-		//accountName:=r.Header["Name"][0]
 		accountName:=r.URL.Path[1:]
 		if accountName==""{
 			fmt.Println("create fail")
 			w.WriteHeader(http.StatusBadRequest)
 		} else{
-			createOK := make(chan bool)
-			go CreateAccountProxy(accountName, createOK)
+			getOK := make(chan bool)
+			account:= GetAccountProxy(accountName, getOK)
 
-
-			//go Put(os.Getenv("GOPATH") + "/src/github.com/alruiz12/simpleBT/src/" + name, conf.TrackerAddr, conf.NumNodes, putOK)
-			success := <-createOK
+			success := <-getOK
 			if success == true {
-				fmt.Println("create success ")
-				w.WriteHeader(http.StatusCreated)
+				fmt.Println("get success ")
+
+				w.Header().Set("Content-Type", "application/json; charset=UTF-8")
+				if err := json.NewEncoder(w).Encode(account); err != nil {
+					fmt.Println("GetNodes: error encoding response: ",err.Error())
+				}
+				w.WriteHeader(http.StatusOK)
 			} else {
-				fmt.Println("create fail")
+				fmt.Println("get fail")
 				w.WriteHeader(http.StatusBadRequest)
 			}
 		}

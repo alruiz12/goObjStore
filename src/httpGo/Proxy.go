@@ -650,14 +650,14 @@ func CheckPiecesObj(key string ,fileName string, filePath string, numNodes int, 
 }
 
 type AccInfo struct {
-	NodeList    [][]string
-	Num         int
-	CurrentNode int
-	AccName     string
-	Container   string
-	Obj         string
-	Size	int
-	Parts	int
+	NodeList    [][]string	`json:"NodeList"`
+	Num         int		`json:"Num"`
+	CurrentNode int		`json:"CurrentNode"`
+	AccName     string	`json:"AccName"`
+	Container   string	`json:"Container"`
+	Obj         string	`json:"Obj"`
+	Size	int		`json:"Size"`
+	Parts	int		`json:"Parts"`
 }
 
 func CreateAccountProxy(name string, createOK chan bool){
@@ -740,6 +740,92 @@ func CreateAccountProxy(name string, createOK chan bool){
 
 }
 
+func GetAccountProxy(accountName string, getOK chan bool) Account{
+	var nodeList [][]string
+	var err error
+	var account Account
+	// Aask tracker for nodes
+	requestJson := `{"Quantity":"` + strconv.Itoa(conf.NumNodes) + `","ID":"` + accountName + `","Type":"account"}`
+	reader := strings.NewReader(requestJson)
+	trackerURL := "http://" + conf.TrackerAddr + "/GetNodesForKey"
+	request, err := http.NewRequest("GET", trackerURL, reader)
+	if err != nil {
+		fmt.Println("putContProxy: error creating request: ", err.Error())
+		getOK <- false
+		return account
+	}
+	res, err := http.DefaultClient.Do(request)
+	if err != nil {
+		fmt.Println("GetAccountProxy: error sending request: ", err.Error())
+		getOK <- false
+		return account
+	}
+	if res.StatusCode == http.StatusBadRequest{
+		getOK <- false
+		return account
+	}
+	body, err := ioutil.ReadAll(io.LimitReader(res.Body, 1048576))
+	if err != nil {
+		fmt.Println(err)
+		getOK <- false
+		return account
+	}
+	if err := res.Body.Close(); err != nil {
+		fmt.Println(err)
+		getOK <- false
+		return account
+	}
+	if err := json.Unmarshal(body, &nodeList); err != nil {
+		fmt.Println("GetAccountProxy: error unprocessable entity: ", err.Error())
+		getOK <- false
+		return account
+	}
+
+	currentPeer:= rand.Intn(len(nodeList))
+	currentPeerAddr := rand.Intn(len(nodeList))
+	acc :=`{"Accname":"`+accountName+`"}`
+	//acc := AccInfo{ AccName:accountName }
+	reader = strings.NewReader(acc)
+
+
+	request, err = http.NewRequest("GET", "http://" + nodeList[currentPeer][currentPeerAddr] + "/SNGetAcc", reader)
+	if err != nil {
+		fmt.Println("Error sending http GET ", err.Error())
+		getOK <- false
+		return account
+	}
+	res, err = http.DefaultClient.Do(request)
+	if err != nil {
+		fmt.Println("GetAccountProxy: error sending request: ", err.Error())
+		getOK <- false
+		return account
+	}
+	if res.StatusCode == http.StatusBadRequest{
+		getOK <- false
+		return account
+	}
+	body, err = ioutil.ReadAll(io.LimitReader(res.Body, 1048576))
+	if err != nil {
+		fmt.Println(err)
+		getOK <- false
+		return account
+	}
+	if err := res.Body.Close(); err != nil {
+		fmt.Println(err)
+		getOK <- false
+		return account
+	}
+
+	if err := json.Unmarshal(body, &account); err != nil {
+		fmt.Println("GetAccountProxy: error unprocessable entity: ", err.Error())
+		getOK <- false
+		return account
+	}
+
+	getOK <- true
+	return account
+}
+
 func putContProxy(account string, container string, createOK chan bool){
 	var nodeList [][]string
 	var err error
@@ -780,11 +866,7 @@ func putContProxy(account string, container string, createOK chan bool){
 		createOK <- false
 		return
 	}
-	if err != nil {
-		fmt.Println("putContProxy: error receiving response: ", err.Error())
-		createOK <- false
-		return
-	}
+
 
 	currentPeer:= rand.Intn(len(nodeList))
 	currentPeerAddr := rand.Intn(len(nodeList))
@@ -801,7 +883,6 @@ func putContProxy(account string, container string, createOK chan bool){
 		}
 		defer w.Close()                        // close pipe //when go routine finishes
 	}()
-	//fmt.Println(nodeList[currentPeer][currentPeerAddr])
 	_, err = http.Post("http://" + nodeList[currentPeer][currentPeerAddr] + "/SNPutCont", "application/json", r)
 	if err != nil {
 		fmt.Println("Error sending http POST ", err.Error())
@@ -926,6 +1007,8 @@ func GatherPieces(key string , totalParts int) bool{
 */
 	return true
 }
+
+
 
 
 

@@ -439,6 +439,56 @@ func SNPutAccP2PRequest(w http.ResponseWriter, r *http.Request) {
 }
 
 
+func SNGetAcc(w http.ResponseWriter, r *http.Request){
+
+	var accInfo AccInfo
+	var peerID int = int(r.Host[len(r.Host) - 1] - '0')
+	body, err := ioutil.ReadAll(r.Body)
+	if err != nil {
+		fmt.Println("error reading ", err)
+	}
+	if err := r.Body.Close(); err != nil {
+		fmt.Println("error body ", err)
+	}
+	if err := json.Unmarshal(body, &accInfo); err != nil {
+		w.Header().Set("Content-Type", "application/json; charset=UTF-8")
+		w.WriteHeader(422) // unprocessable entity
+		log.Println(err)
+		if err := json.NewEncoder(w).Encode(err); err != nil {
+			fmt.Println("error unmarshalling ", err)
+		}
+	}
+
+
+
+
+
+	// read account from file
+	httpVar.AccFileMutex.Lock()
+	accountBytes, err := ioutil.ReadFile(path+"/src/Account"+accInfo.AccName +strconv.Itoa(peerID))
+	if err != nil {
+		fmt.Println("SNGetAcc Error: reading ", path+"/src/Account"+accInfo.AccName +strconv.Itoa(peerID))
+	}
+	httpVar.AccFileMutex.Unlock()
+
+	account:=Account{}
+	_,err = account.UnmarshalMsg(accountBytes)
+	fmt.Println("SN:::::::::::::::: ", account)
+	if err != nil {
+		fmt.Println("SNGetAcc: error Unmarshalling account")
+	}
+
+	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
+	w.WriteHeader(http.StatusOK)
+	if err := json.NewEncoder(w).Encode(account); err != nil {
+		fmt.Println("GetNodes: error encoding response: ",err.Error())
+	}
+
+
+
+}
+
+
 
 func SNPutCont(w http.ResponseWriter, r *http.Request){
 

@@ -338,6 +338,19 @@ func TestCreateAccountAPI(t *testing.T) {
 	if strings.Compare(currentHash, originalHash)!=0 {
 		t.Error("Obtained file failed")
 	}
+	fmt.Println("---------------------------------------------------")
+
+
+	if cmdOut, err = exec.Command(path+"/shellScriptsTests/curlGetAccSuccess.sh").Output(); err != nil {
+		fmt.Fprintln(os.Stderr, "There was an error running command: ", err)
+		os.Exit(1)
+	}
+	resp = string(cmdOut)
+	fmt.Println("curl response ", resp)
+	if strings.Compare(resp,"200")==0 {
+		fmt.Println(resp+ " OK")
+	}else{t.Error("Obj not obtained")}
+	fmt.Println("---------------------------------------------------")
 
 /*
 	if cmdOut, err = exec.Command(path+"/shellScriptsTests/curlGetObjFailure.sh").Output(); err != nil {
