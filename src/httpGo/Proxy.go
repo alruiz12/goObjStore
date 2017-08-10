@@ -44,7 +44,7 @@ func PutObjProxy(filePath string, trackerAddr string, numNodes int, putOK chan b
 	time.Sleep(1 * time.Second)
 	var err error
 
-	// Get account nodes
+	// Get the account nodes
 	var nodeList [][]string
 	requestJson := `{"Quantity":"` + strconv.Itoa(conf.NumNodes) + `","ID":"` + account + `","Type":"account"}`
 	reader := strings.NewReader(requestJson)
@@ -179,13 +179,11 @@ func PutObjProxy(filePath string, trackerAddr string, numNodes int, putOK chan b
 		auxList = append(auxList, false)
 		i++
 	}
-	httpVar.DirMutex.Lock()
-	httpVar.HashMap[fullName] = auxList
-	httpVar.DirMutex.Unlock()
 
 
 
-	// Open file
+
+	// Open file containing the object
 	file, err := os.Open(filePath)
 	if err != nil {
 		fmt.Println(err.Error())
@@ -209,6 +207,7 @@ func PutObjProxy(filePath string, trackerAddr string, numNodes int, putOK chan b
 	httpVar.TotalNumMutex.Unlock()
 	var currentAdr int = 0
 
+	// Prepare nodes for content
 	for currentNum < len(nodeList) {
 		rpipe, wpipe := io.Pipe()
 		mHash := putObjMSg{ID:fullName}
@@ -222,10 +221,9 @@ func PutObjProxy(filePath string, trackerAddr string, numNodes int, putOK chan b
 				putOK <- false
 				return		// Todo: does this exit only goRoutine?
 			}
-			defer wpipe.Close()                     // close pipe //when go routine finishes
+			defer wpipe.Close()                     // close pipe when go routine finishes
 		}()
 
-		// Prepare node for content
 		_, err = http.Post("http://" + nodeList[currentNum][currentAdr] + "/prepSN", "application/json", rpipe)
 		if err != nil {
 			fmt.Println("to prepSN, Error sending http POST ", err.Error())
@@ -237,7 +235,8 @@ func PutObjProxy(filePath string, trackerAddr string, numNodes int, putOK chan b
 		currentNum++
 	}
 	currentNum = 0
-	//return
+
+	// wait group will wait for all goroutines (one goroutine per chunk send)
 	var wg sync.WaitGroup
 	wg.Add(totalPartsNum)
 	for currentPart < totalPartsNum {
@@ -245,7 +244,6 @@ func PutObjProxy(filePath string, trackerAddr string, numNodes int, putOK chan b
 		partBuffer = make([]byte, partSize)
 		_, err = file.Read(partBuffer)                // Get chunk
 		m := msg{NodeList:nodeList, Num:len(nodeList), Hash:fullName, Text:partBuffer, CurrentNode:currentNum, Name: currentPart}
-		//r, w :=io.Pipe()			// create pipe
 		go func(m2 msg, url string) {
 			 httpVar.SendReady <- 1
 			r, w := io.Pipe()
@@ -259,7 +257,7 @@ func PutObjProxy(filePath string, trackerAddr string, numNodes int, putOK chan b
 					putOK <- false
 					return
 				}
-				defer w.Close()                        // close pipe //when go routine finishes
+				defer w.Close()                 // Close pipe //when go routine finishes
 			}()
 			_, err := http.Post(url, "application/json", r)
 			if err != nil {
@@ -284,9 +282,8 @@ func PutObjProxy(filePath string, trackerAddr string, numNodes int, putOK chan b
 	wg.Wait()
 	os.Remove(filePath)
 	file.Close()
-	// Add object to the container's object map
 
-	// ask random node for correctness (account/container)
+	// Add object to the container's object map
 	currentPeer= rand.Intn(len(nodeList))
 	currentPeerAddr = rand.Intn(len(nodeList))
 	acc = AccInfo{AccName:account, Container:container, Obj:objName, Size:size, Parts:totalPartsNum, NodeList:nodeList }
@@ -299,7 +296,7 @@ func PutObjProxy(filePath string, trackerAddr string, numNodes int, putOK chan b
 			putOK <- false
 			return
 		}
-		defer w.Close()                        // close pipe //when go routine finishes
+		defer w.Close()                        // close pipe when go routine finishes
 	}()
 	resp, err := http.Post("http://" + nodeList[currentPeer][currentPeerAddr] + "/addObjToCont", "application/json", r)
 	if err != nil {
@@ -352,8 +349,6 @@ type jsonKeyURL struct {
 
 func GetObjProxy(fullName string, proxyAddr []string, trackerAddr string, getOK chan bool, account string, container string, objName string,){
 	time.Sleep(1 * time.Second)
-//	var chunk msg
-	// Ask tracker for nodes
 	startGet=time.Now()
 	var err error
 	// ask tracker for nodes for a given key
@@ -390,13 +385,13 @@ func GetObjProxy(fullName string, proxyAddr []string, trackerAddr string, getOK 
 		getOK <- false
 		return
 	}
-	fmt.Println(nodeList)
+
 	// Create folder for receiving
 	os.Mkdir(os.Getenv("GOPATH")+"/src/github.com/alruiz12/simpleBT/src/local",+0777)
 	os.Mkdir(os.Getenv("GOPATH")+"/src/github.com/alruiz12/simpleBT/src/local/"+ fullName,0777)
 
-	//var currentAddr int = rand.Intn(len(chunk.NodeList)) @Todo
-	var currentAddr int = 0
+	var currentAddr int = rand.Intn(conf.PortsPerNode)
+
 	// For each node ask for all their Proxy-pieces
 	for index, node := range nodeList {
 		r, w :=io.Pipe()			// create pipe
@@ -420,7 +415,6 @@ func GetObjProxy(fullName string, proxyAddr []string, trackerAddr string, getOK 
 			return
 
 		}
-		//fmt.Println("statusCode: ",res.StatusCode )
 		if err := res.Body.Close(); err != nil {
 			fmt.Println("GetObjProxy: ", err.Error())
 			getOK <- false
@@ -437,55 +431,44 @@ func GetObjProxy(fullName string, proxyAddr []string, trackerAddr string, getOK 
 
 func ReturnObjProxy(w http.ResponseWriter, r *http.Request) {
 
-	// Listen to tracker
-
 	var getmsg getMsg
-	if r.Method == http.MethodPost {
 
-		body, err := ioutil.ReadAll(r.Body)
-		if err != nil {
-			fmt.Println("error reading ", err)
-		}
-		if err := r.Body.Close(); err != nil {
-			fmt.Println("error body ", err)
-		}
-		if err := json.Unmarshal(body, &getmsg); err != nil {
-			w.Header().Set("Content-Type", "application/json; charset=UTF-8")
-			w.WriteHeader(422) // unprocessable entity
-			fmt.Println(err.Error())
-			if err := json.NewEncoder(w).Encode(err); err != nil {
-				fmt.Println("error unmarshalling ", err)
-			}
-		}
-		httpVar.GetMutex.Lock()
-		numGets++
-		httpVar.GetMutex.Unlock()
-
-		err = ioutil.WriteFile(path + "/src/local/" + getmsg.Key + "/" + getmsg.Name, getmsg.Text, 0777)
-		if err != nil {
-			fmt.Println("Peer: error creating/writing file p2p", err.Error())
-		}
-		httpVar.TotalNumMutex.Lock()
-		if numGets == totalPartsNum {
-			PartsNum := []byte(strconv.Itoa(getmsg.Parts))
-			err = ioutil.WriteFile(path + "/src/local/" + getmsg.Key + "/metadata", PartsNum, 0777)
-			if err != nil {
-				fmt.Println("Peer: error creating/writing file p2p", err.Error())
-			}
-			fmt.Println("GatherPieces result:", GatherPieces(getmsg.Key,getmsg.Parts))
-
-
-
-		}
-		httpVar.TotalNumMutex.Unlock()
-
-		httpVar.TotalNumMutex.Lock()
-
-		if numGets==totalPartsNum{
-			fmt.Println("GET: ",time.Since(startGet))
-		}
-		httpVar.TotalNumMutex.Unlock()
+	// Read request
+	body, err := ioutil.ReadAll(r.Body)
+	if err != nil {
+		fmt.Println("error reading ", err)
 	}
+	if err := r.Body.Close(); err != nil {
+		fmt.Println("error body ", err)
+	}
+	if err := json.Unmarshal(body, &getmsg); err != nil {
+		w.Header().Set("Content-Type", "application/json; charset=UTF-8")
+		w.WriteHeader(422) // unprocessable entity
+		fmt.Println(err.Error())
+		if err := json.NewEncoder(w).Encode(err); err != nil {
+			fmt.Println("error unmarshalling ", err)
+		}
+	}
+
+	// Update counter
+	httpVar.GetMutex.Lock()
+	numGets++
+	httpVar.GetMutex.Unlock()
+
+	// Save chunk to file
+	err = ioutil.WriteFile(path + "/src/local/" + getmsg.Key + "/" + getmsg.Name, getmsg.Text, 0777)
+	if err != nil {
+		fmt.Println("Peer: error creating/writing file p2p", err.Error())
+	}
+
+	// Gather pieces to a single file
+	httpVar.TotalNumMutex.Lock()
+	if numGets == totalPartsNum {
+		fmt.Println("GatherPieces result:", GatherPieces(getmsg.Key,getmsg.Parts))
+	}
+	httpVar.TotalNumMutex.Unlock()
+
+
 }
 
 /*
@@ -510,8 +493,7 @@ func CheckPiecesObj(key string ,fileName string, filePath string, numNodes int, 
 	}
 	totalPartsNumOriginal := int(math.Ceil(float64(size) / float64(fileChunk)))
 
-	// Walking through StorageNodes data
-	// Subfiles directory
+	// Walking through subfiles directory
 	path:=os.Getenv("GOPATH")+"/src/github.com/alruiz12/simpleBT/src/data/"+key+"/"
 	subDir, err := ioutil.ReadDir(path)
 	if err != nil {
@@ -522,7 +504,7 @@ func CheckPiecesObj(key string ,fileName string, filePath string, numNodes int, 
 	currentDir:=0
 	for currentDir<numNodes{
 
-		// Create new file
+		// Create new file to fill out
 		_, err = os.Create(os.Getenv("GOPATH") + "/src/github.com/alruiz12/simpleBT/src" + fileName+strconv.Itoa(currentDir))
 		newFile, err := os.OpenFile(os.Getenv("GOPATH") + "/src/github.com/alruiz12/simpleBT/src" + fileName+strconv.Itoa(currentDir), os.O_APPEND | os.O_WRONLY, 0666)
 		if err != nil {
@@ -532,7 +514,7 @@ func CheckPiecesObj(key string ,fileName string, filePath string, numNodes int, 
 		defer newFile.Close()
 
 		files, err := ioutil.ReadDir(path+subDir[currentDir].Name() )
-		//fmt.Println("Entering ", path+subDir[currentDir].Name())
+
 		// Trying to fill out the new file using subfiles (in order)
 		var inOrderCount = 0
 		var maxTimes int = 0
@@ -572,17 +554,13 @@ func CheckPiecesObj(key string ,fileName string, filePath string, numNodes int, 
 
 		// Compute and compare new hash
 		newHash := md5sum(os.Getenv("GOPATH") + "/src/github.com/alruiz12/simpleBT/src" + fileName+strconv.Itoa(currentDir))
-		//fmt.Println("/src/github.com/alruiz12/simpleBT/src" + fileName+strconv.Itoa(currentDir) , newHash)
 		if strings.Compare(key, newHash) != 0 {
 			return false
 		}
 
-
-
 		currentDir++
 	}
 	if currentDir==0{return false}	// Never got in loop
-	//return true
 
 	// Checking Get output (locally)
 	path=os.Getenv("GOPATH")+"/src/github.com/alruiz12/simpleBT/src/local/"+key+"/"
@@ -641,7 +619,6 @@ func CheckPiecesObj(key string ,fileName string, filePath string, numNodes int, 
 
 	// Compute and compare new hash
 	newHash := md5sum(os.Getenv("GOPATH") + "/src/github.com/alruiz12/simpleBT/src" + fileName)
-	//fmt.Println("/src/github.com/alruiz12/simpleBT/src" + fileName ,newHash)
 	if strings.Compare(hash, newHash) != 0 {
 		return false
 	}
@@ -660,11 +637,11 @@ type AccInfo struct {
 	Parts	int		`json:"Parts"`
 }
 
-func CreateAccountProxy(name string, createOK chan bool){
+func PutAccountProxy(name string, createOK chan bool){
 	var nodeList [][]string
 	var err error
 
-	// Aask tracker for nodes
+	// Ask tracker for nodes
 	requestJson := `{"Quantity":"` + strconv.Itoa(conf.NumNodes) + `","ID":"` + name + `","Type":"account"}`
 	reader := strings.NewReader(requestJson)
 	trackerURL := "http://" + conf.TrackerAddr + "/GetNodes"
@@ -714,6 +691,8 @@ func CreateAccountProxy(name string, createOK chan bool){
 	} else {
 		fmt.Println("len ",len(nodeList))
 	}
+
+	// Randomly choose one Storage Node and one of its addresses to put account
 	currentPeer:= rand.Intn(len(nodeList))
 	currentPeerAddr := rand.Intn(len(nodeList))
 	acc := AccInfo{NodeList:nodeList, Num:len(nodeList), CurrentNode:currentPeer, AccName:name }
@@ -727,9 +706,8 @@ func CreateAccountProxy(name string, createOK chan bool){
 			createOK <- false
 			return
 		}
-		defer w.Close()                        // close pipe //when go routine finishes
+		defer w.Close()                        // close pipe when go routine finishes
 	}()
-	//fmt.Println(nodeList[currentPeer][currentPeerAddr])
 	_, err = http.Post("http://" + nodeList[currentPeer][currentPeerAddr] + "/SNPutAcc", "application/json", r)
 	if err != nil {
 		fmt.Println("Error sending http POST ", err.Error())
@@ -744,7 +722,7 @@ func GetAccountProxy(accountName string) Account{
 	var nodeList [][]string
 	var err error
 	var account Account
-	// Aask tracker for nodes
+	// Ask tracker for nodes
 	requestJson := `{"Quantity":"` + strconv.Itoa(conf.NumNodes) + `","ID":"` + accountName + `","Type":"account"}`
 	reader := strings.NewReader(requestJson)
 	trackerURL := "http://" + conf.TrackerAddr + "/GetNodesForKey"
@@ -775,10 +753,10 @@ func GetAccountProxy(accountName string) Account{
 		return account
 	}
 
+	// Randomly choose one Storage Node and one of its addresses to request account
 	currentPeer:= rand.Intn(len(nodeList))
 	currentPeerAddr := rand.Intn(len(nodeList))
 	acc :=`{"Accname":"`+accountName+`"}`
-	//acc := AccInfo{ AccName:accountName }
 	reader = strings.NewReader(acc)
 
 
@@ -816,7 +794,7 @@ func putContProxy(account string, container string, createOK chan bool){
 	var nodeList [][]string
 	var err error
 
-	// Aask tracker for nodes
+	// Ask tracker for nodes
 	requestJson := `{"Quantity":"` + strconv.Itoa(conf.NumNodes) + `","ID":"` + account + `","Type":"account"}`
 	reader := strings.NewReader(requestJson)
 	trackerURL := "http://" + conf.TrackerAddr + "/GetNodesForKey"
@@ -853,7 +831,7 @@ func putContProxy(account string, container string, createOK chan bool){
 		return
 	}
 
-
+	// Randomly choose one Storage Node and one of its addresses to put container
 	currentPeer:= rand.Intn(len(nodeList))
 	currentPeerAddr := rand.Intn(len(nodeList))
 	acc := AccInfo{NodeList:nodeList, Num:len(nodeList), CurrentNode:currentPeer, AccName:account, Container:container }
@@ -886,7 +864,7 @@ func GetContProxy(accountName string, containerName string) Container{
 	var err error
 	var account Account
 	var container Container
-	// Aask tracker for nodes
+	// Ask tracker for nodes
 	requestJson := `{"Quantity":"` + strconv.Itoa(conf.NumNodes) + `","ID":"` + accountName + `","Type":"account"}`
 	reader := strings.NewReader(requestJson)
 	trackerURL := "http://" + conf.TrackerAddr + "/GetNodesForKey"
@@ -917,10 +895,10 @@ func GetContProxy(accountName string, containerName string) Container{
 		return container
 	}
 
+	// Randomly choose one Storage Node and one of its addresses to request container
 	currentPeer:= rand.Intn(len(nodeList))
 	currentPeerAddr := rand.Intn(len(nodeList))
 	acc :=`{"Accname":"`+accountName+`"}`
-	//acc := AccInfo{ AccName:accountName }
 	reader = strings.NewReader(acc)
 
 
@@ -951,8 +929,7 @@ func GetContProxy(accountName string, containerName string) Container{
 		fmt.Println("GetAccountProxy: error unprocessable entity: ", err.Error())
 		return container
 	}
-	fmt.Println("Proxy ",account)
-	fmt.Println(account.Containers[containerName])
+
 	return account.Containers[containerName]
 }
 
@@ -1061,13 +1038,6 @@ func GatherPieces(key string , totalParts int) bool{
 			return false
 		}
 	}
-/*
-	currentHash := md5sum(conf.DownloadsDirectory + key)
-	originalHash := md5sum(conf.FilePath)
-	if strings.Compare(currentHash, originalHash)!=0 {
-		return false
-	}
-*/
 	return true
 }
 

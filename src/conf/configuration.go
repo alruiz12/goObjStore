@@ -5,7 +5,7 @@ import (
 
 var NumNodes int = 3
 var LocalFileName = "NEW.xml"
-
+var PortsPerNode int = 3
 const IP = "127.0.0.1"
 
 var FilePath = os.Getenv("GOPATH")+"/src/github.com/alruiz12/simpleBT/src/bigFile"

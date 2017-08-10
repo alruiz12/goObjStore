@@ -44,11 +44,6 @@ func TestCreateAccountAPI(t *testing.T) {
 	var proxy3 = IP+":8072"
 
 
-
-
-
-
-
 	peer1arun:=&http.Server{Addr:Peer1a, Handler:router}
 	peer1brun:=&http.Server{Addr:Peer1b, Handler:router}
 	peer1crun:=&http.Server{Addr:Peer1c, Handler:router}
@@ -145,7 +140,6 @@ func TestCreateAccountAPI(t *testing.T) {
 
 	StartTracker(Peers)
 
-	// Create Account
 	var (
 		cmdOut []byte
 		err    error
@@ -166,7 +160,6 @@ func TestCreateAccountAPI(t *testing.T) {
 	if err != nil {
 		t.Error(" error creating post request to http://localhost:8000/alvaroGO")
 	}
-	//req.Header.Set("Name", "account2")
 	response , err := http.DefaultClient.Do(req)
 	if err != nil {
 		t.Error("Error doing request")
@@ -284,7 +277,6 @@ func TestCreateAccountAPI(t *testing.T) {
 	if err != nil {
 		t.Error(" error creating post request to http://localhost:8000/ACCgo3/cont1")
 	}
-	//req.Header.Set("Name", "account2")
 	response , err = http.DefaultClient.Do(req)
 	if err != nil {
 		t.Error("Error doing request")

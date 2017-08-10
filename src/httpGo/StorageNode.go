@@ -9,7 +9,6 @@ import(
 	"encoding/json"
 	"github.com/alruiz12/simpleBT/src/httpVar"
 	"strconv"
-	//"time"
 	"path/filepath"
 	"strings"
 	"sync"
@@ -17,9 +16,9 @@ import(
 
 )
 var path = (os.Getenv("GOPATH")+"/src/github.com/alruiz12/simpleBT")
-//var chunk msg
-var hashRecived putObjMSg
+
 func prepSN(w http.ResponseWriter, r *http.Request){
+	var hashRecived putObjMSg
 	var nodeID int =int(r.Host[len(r.Host)-1]-'0')
 	body, err := ioutil.ReadAll(r.Body)
 	if err != nil {
@@ -109,7 +108,7 @@ func SNPutObj(w http.ResponseWriter, r *http.Request){
 
 			}
 
-                        wg.Add(len(chunk.NodeList)/*+1*/)
+                        wg.Add(len(chunk.NodeList))
 
 			// Send chunk to peers
 			// sending only one chunk to the rest of peers once, don't need to use multiple addr per peer

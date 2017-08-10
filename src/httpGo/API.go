@@ -22,6 +22,8 @@ func PutObjAPI(w http.ResponseWriter, r *http.Request){
 		defer wg.Done()
 		results:= strings.Split(r.URL.Path, "/")	// ["",account, container, object]
 		addedResults:=results[1]+results[2]+results[3]
+
+		// Creating temporary file to save received file (in the request body)
 		file, err := os.Create(os.Getenv("GOPATH") + "/src/github.com/alruiz12/simpleBT/src/" + addedResults )
 		if err != nil {
 			fmt.Println(err)
@@ -31,8 +33,9 @@ func PutObjAPI(w http.ResponseWriter, r *http.Request){
 			fmt.Println(err)
 		}
 		file.Close()
-		putOK := make(chan bool)
 
+		// Creating a channel to control call
+		putOK := make(chan bool)
 		go PutObjProxy(os.Getenv("GOPATH") + "/src/github.com/alruiz12/simpleBT/src/" + addedResults, conf.TrackerAddr, conf.NumNodes, putOK ,results[1], results[2], results[3], addedResults)
 		success := <-putOK
 		if success == true {
@@ -43,6 +46,7 @@ func PutObjAPI(w http.ResponseWriter, r *http.Request){
 			w.WriteHeader(http.StatusBadRequest)
 		}
 
+		// Removing temporary file
 		os.Remove(os.Getenv("GOPATH") + "/src/github.com/alruiz12/simpleBT/src/" + addedResults )
 		if err != nil {
 			fmt.Println(err)
@@ -62,6 +66,7 @@ func GetObjAPI(w http.ResponseWriter, r *http.Request){
 		results:= strings.Split(r.URL.Path, "/")	// ["",account, container, object]
 		addedResults:=results[1]+results[2]+results[3]
 
+		// Creating a channel to control call
 		GetOK := make(chan bool)
 		go GetObjProxy(addedResults, conf.ProxyAddr, conf.TrackerAddr, GetOK,results[1], results[2], results[3])
 		success := <-GetOK
@@ -72,10 +77,6 @@ func GetObjAPI(w http.ResponseWriter, r *http.Request){
 			fmt.Println("get fail")
 			w.WriteHeader(http.StatusBadRequest)
 		}
-
-		//Todo put it in Get
-		//currentHash := md5sum(os.Getenv("GOPATH") + "/src/github.com/alruiz12/simpleBT/src/" + addedResults)
-		//fmt.Println(CheckPiecesObj(addedResults, "NEW.xml", conf.FilePath, conf.NumNodes, currentHash))
 
 	}()
 	wg.Wait()
@@ -103,10 +104,9 @@ func PutAccAPI(w http.ResponseWriter, r *http.Request){
 			fmt.Println("create fail")
 			w.WriteHeader(http.StatusBadRequest)
 		} else{
+			// Creating a channel to control call
 			createOK := make(chan bool)
-			go CreateAccountProxy(accountName, createOK)
-
-
+			go PutAccountProxy(accountName, createOK)
 			success := <-createOK
 			if success == true {
 				fmt.Println("create success ")
@@ -134,14 +134,15 @@ func GetAccAPI(w http.ResponseWriter, r *http.Request){
 		} else{
 			account:= GetAccountProxy(accountName)
 
+			// if account doesn't have Name means that couldn't find it
 			if strings.Compare( account.Name, accountName)==0 {
 				fmt.Println("get success ")
 
 				w.Header().Set("Content-Type", "application/json; charset=UTF-8")
+				// returning account
 				if err := json.NewEncoder(w).Encode(account); err != nil {
 					fmt.Println("GetNodes: error encoding response: ",err.Error())
 				}
-				//w.WriteHeader(http.StatusOK)
 			} else {
 				fmt.Println("get fail")
 				w.WriteHeader(http.StatusBadRequest)
@@ -158,7 +159,6 @@ func PutContAPI(w http.ResponseWriter, r *http.Request){
 	wg.Add(1)
 	go func() {
 		defer wg.Done()
-		//accountName:=r.Header["Name"][0]
 		accountName:=r.URL.Path[1:]
 		results:= strings.Split(accountName, "/")
 		fmt.Println("PutContAPI: ",results[1])
@@ -166,10 +166,9 @@ func PutContAPI(w http.ResponseWriter, r *http.Request){
 			fmt.Println("put fail")
 			w.WriteHeader(http.StatusBadRequest)
 		} else{
+			// Creating a channel to control call
 			createOK := make(chan bool)
 			go putContProxy(results[0], results[1], createOK)
-
-
 			success := <-createOK
 			if success == true {
 				fmt.Println("put success ")
@@ -190,10 +189,8 @@ func GetContAPI(w http.ResponseWriter, r *http.Request){
 	wg.Add(1)
 	go func() {
 		defer wg.Done()
-		//accountName:=r.Header["Name"][0]
 		accountName:=r.URL.Path[1:]
 		results:= strings.Split(accountName, "/")
-		fmt.Println("GetContAPI: ",results[1])
 		if accountName==""{
 			fmt.Println("get fail")
 			w.WriteHeader(http.StatusBadRequest)
@@ -201,6 +198,7 @@ func GetContAPI(w http.ResponseWriter, r *http.Request){
 
 			container:=GetContProxy(results[0], results[1])
 
+			// if container doesn't have Name means that couldn't find it
 			if strings.Compare( container.Name,results[1] ) == 0 {
 				fmt.Println("get success ")
 				w.Header().Set("Content-Type", "application/json; charset=UTF-8")

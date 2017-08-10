@@ -2,7 +2,6 @@ package httpGo
 import (
 	"net/http"
 	"github.com/gorilla/mux"
- 	//"regexp/syntax"
 	"regexp"
 	"fmt"
 )
@@ -78,7 +77,6 @@ func tripleF(w http.ResponseWriter, r *http.Request) {
 	} else if r.Method == http.MethodGet {
 		GetObjAPI(w,r)
 	}
-	fmt.Println("triple")
 }
 func doubleF(w http.ResponseWriter, r *http.Request) {
 	if r.Method == http.MethodPut {
@@ -86,7 +84,6 @@ func doubleF(w http.ResponseWriter, r *http.Request) {
 	} else if r.Method == http.MethodGet {
 		GetContAPI(w,r)
 	}
-	fmt.Println("double")
 }
 func simpleF(w http.ResponseWriter, r *http.Request) {
 	if r.Method == http.MethodPut {
@@ -94,7 +91,6 @@ func simpleF(w http.ResponseWriter, r *http.Request) {
 	} else if r.Method == http.MethodGet {
 		GetAccAPI(w,r)
 	}
-	fmt.Println("simple")
 
 }
 var routes = Routes{
