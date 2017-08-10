@@ -14,9 +14,6 @@ var AccFileMutex = &sync.Mutex{}
 var AccFileMutexP2P = &sync.Mutex{}
 
 
-var HashMap = make(map[string][]bool)
-
-
 type NodeInfo struct {
 	Url []string
 	Busy bool
@@ -24,17 +21,12 @@ type NodeInfo struct {
 var TrackerNodeList []NodeInfo
 
 var MapKeys = &sync.Mutex{}
-var MapCont = &sync.Mutex{}
 var MapAcc = &sync.Mutex{}
 
 
 var MapKeyNodes = make(map[string][][]string)
-var MapContNodes = make(map[string][][]string)
 var MapAccNodes = make(map[string][][]string)
 
-var ProxyAddr []string
 var SendReady = make(chan int, 180)
 var SendP2PReady = make(chan int, 20)
 
-//var Accounts = make(map[string]httpGo.Account)
-//var AccountMutex

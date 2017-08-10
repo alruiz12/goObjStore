@@ -14,6 +14,7 @@ import(
 	"sync"
 	"math/rand"
 
+	"github.com/alruiz12/simpleBT/src/conf"
 )
 var path = (os.Getenv("GOPATH")+"/src/github.com/alruiz12/simpleBT")
 
@@ -129,11 +130,9 @@ func SNPutObj(w http.ResponseWriter, r *http.Request){
 								fmt.Println("Error encoding to pipe ", err.Error())
 							}
 						}()
-						//httpVar.SendMutex.Lock()
 						httpVar.SendP2PReady <- 1
 						_, err := http.Post(peerURL, "application/json", rpipe)
 						<-httpVar.SendP2PReady
-						//httpVar.SendMutex.Unlock()
 						if err != nil {
 							fmt.Println("Error sending http POST p2p", err.Error())
 						}
@@ -146,10 +145,6 @@ func SNPutObj(w http.ResponseWriter, r *http.Request){
 			chunk=msg{}
 		 	httpVar.TrackerMutex.Lock()
                         httpVar.CurrentPart++
-
-			if httpVar.CurrentPart == (totalPartsNum) {
-				//fmt.Println("Proxy data ended ...", time.Since(start), " currentPart= ",httpVar.CurrentPart)
-			}
                         httpVar.TrackerMutex.Unlock()
 		}
 		listenWg.Done()
@@ -204,10 +199,6 @@ func SNPutObjP2PRequest(w http.ResponseWriter, r *http.Request) {
 
 		httpVar.PeerMutex.Lock()
                 httpVar.P2pPart++
-
-		if httpVar.P2pPart >= (totalPartsNum*(chunk.Num-1)) {
-			//fmt.Println("p2p data ended: ",time.Since(start))
-		}
 		httpVar.PeerMutex.Unlock()
 
 	}
@@ -262,24 +253,21 @@ type getMsg struct {
 	Parts  int
 }
 func SNPutObjSendChunksToProxy(nodeID string, key string, URL string, PartsNum int){
-	//partBuffer:=make([]byte,fileChunk)
 	proxyURL:="http://"+URL
 
 	// for each proxy-name in directory send
 	filepath.Walk(path + "/src/data/"+key+"/"+nodeID, func(path string, info os.FileInfo, err error) error {
 
-		if strings.Contains(info.Name(),"NEW") {
+		if strings.Contains(info.Name(),conf.ChunkProxyName) {
 			partBuffer:=make([]byte,info.Size())
 			file, err := os.Open(path)
 			if err != nil {
 				fmt.Println("sendChunksToProxy error opening file ",err.Error())
-				//getOK <- false
 				return nil
 			}
 			_, err = file.Read(partBuffer)
 			if err != nil {
 				fmt.Println("sendChunksToProxy error opening file ",err.Error())
-				//getOK <- false
 				return nil
 			}
 			m:=getMsg{Text:partBuffer, Name: info.Name(), NodeID:nodeID, Key:key, Parts:PartsNum}
@@ -290,19 +278,16 @@ func SNPutObjSendChunksToProxy(nodeID string, key string, URL string, PartsNum i
 				err=json.NewEncoder(w).Encode(&m)
 				if err != nil {
 					fmt.Println("Error encoding to pipe ", err.Error())
-					//getOK <- false
 					return
 				}
 			}()
 			res, err := http.Post(proxyURL,"application/json", r )
 			if err != nil {
 				fmt.Println("sendChunksToProxy: error creating request: ",err.Error())
-				//getOK <- false
 				return nil
 			}
 			if err := res.Body.Close(); err != nil {
 				fmt.Println(err)
-				//getOK <- false
 				return nil
 			}
 		}
@@ -310,8 +295,7 @@ func SNPutObjSendChunksToProxy(nodeID string, key string, URL string, PartsNum i
 
 		return nil
 	})
-	//getOK <- true
-	
+
 }
 
 type MarshalledAcc struct {
@@ -344,7 +328,6 @@ func SNPutAcc(w http.ResponseWriter, r *http.Request){
 
 		// marshall new account
 		accountBytes, err := newAcc.MarshalMsg(nil)
-		//fmt.Println(accountBytes)
 
 		marshalledAcc:=MarshalledAcc{Bytes:accountBytes, Name:accInfo.AccName}
 
@@ -381,12 +364,7 @@ func SNPutAcc(w http.ResponseWriter, r *http.Request){
 						fmt.Println(response.StatusCode," SN created")
 					}
 					fmt.Println(responseCode)
-					/*else{
-						for responseCode != 201{
-							response, err = http.Post(peerURL, "application/json", r)
-							responseCode=response.StatusCode
-						}
-					}*/
+
 				}
 				wg.Done()
 			}(peer[0], peerURL)
@@ -403,38 +381,36 @@ func SNPutAccP2PRequest(w http.ResponseWriter, r *http.Request) {
 	var marshalledAcc MarshalledAcc
 	// Get peer ID
 	var peerID int = int(r.Host[len(r.Host) - 1] - '0')
-	// Listen to tracker
-	if r.Method == http.MethodPost {
 
-		body, err := ioutil.ReadAll(r.Body)
-		if err != nil {
-			fmt.Println("error reading ", err)
-			w.WriteHeader(http.StatusBadRequest)
-		}
-		if err := r.Body.Close(); err != nil {
-			fmt.Println("error body ", err)
-			w.WriteHeader(http.StatusBadRequest)
-		}
-		if err := json.Unmarshal(body, &marshalledAcc); err != nil {
-			w.Header().Set("Content-Type", "application/json; charset=UTF-8")
-			w.WriteHeader(422) // unprocessable entity
-			log.Println(err)
-			if err := json.NewEncoder(w).Encode(err); err != nil {
-				fmt.Println("error unmarshalling ", err)
-			}
-			w.WriteHeader(http.StatusBadRequest)
-		}
-		// check Accounts map for new Account
-		httpVar.AccFileMutexP2P.Lock()
-		err = ioutil.WriteFile(path+"/src/Account"+marshalledAcc.Name+strconv.Itoa(peerID),marshalledAcc.Bytes,0777)
-		httpVar.AccFileMutexP2P.Unlock()
-
-		if err != nil {
-			fmt.Println("SNPutAccP2PRequest: ",err)
-			w.WriteHeader(http.StatusBadRequest)
-		}
-		w.WriteHeader(http.StatusCreated)
+	body, err := ioutil.ReadAll(r.Body)
+	if err != nil {
+		fmt.Println("error reading ", err)
+		w.WriteHeader(http.StatusBadRequest)
 	}
+	if err := r.Body.Close(); err != nil {
+		fmt.Println("error body ", err)
+		w.WriteHeader(http.StatusBadRequest)
+	}
+	if err := json.Unmarshal(body, &marshalledAcc); err != nil {
+		w.Header().Set("Content-Type", "application/json; charset=UTF-8")
+		w.WriteHeader(422) // unprocessable entity
+		log.Println(err)
+		if err := json.NewEncoder(w).Encode(err); err != nil {
+			fmt.Println("error unmarshalling ", err)
+		}
+		w.WriteHeader(http.StatusBadRequest)
+	}
+	// check Accounts map for new Account
+	httpVar.AccFileMutexP2P.Lock()
+	err = ioutil.WriteFile(path+"/src/Account"+marshalledAcc.Name+strconv.Itoa(peerID),marshalledAcc.Bytes,0777)
+	httpVar.AccFileMutexP2P.Unlock()
+
+	if err != nil {
+		fmt.Println("SNPutAccP2PRequest: ",err)
+		w.WriteHeader(http.StatusBadRequest)
+	}
+	w.WriteHeader(http.StatusCreated)
+
 }
 
 
@@ -474,7 +450,6 @@ func SNGetAcc(w http.ResponseWriter, r *http.Request){
 
 	account:=Account{}
 	_,err = account.UnmarshalMsg(accountBytes)
-	//fmt.Println("SN:::::::::::::::: ", account)
 	if err != nil {
 		fmt.Println("SNGetAcc: error Unmarshalling account")
 	}
@@ -557,7 +532,7 @@ func SNPutCont(w http.ResponseWriter, r *http.Request){
 							fmt.Println("Error encoding to pipe ", err.Error())
 							return
 						}
-						defer w.Close()                        // close pipe //when go routine finishes
+						defer w.Close()                        // close pipe when go routine finishes
 					}()
 					response, err := http.Post(peerURL, "application/json", r)
 					if err != nil {
@@ -568,12 +543,7 @@ func SNPutCont(w http.ResponseWriter, r *http.Request){
 						fmt.Println(response.StatusCode," SN created")
 					}
 					fmt.Println(responseCode)
-					/*else{
-						for responseCode != 201{
-							response, err = http.Post(peerURL, "application/json", r)
-							responseCode=response.StatusCode
-						}
-					}*/
+
 				}
 				wg.Done()
 			}(peer[0], peerURL)
@@ -709,12 +679,7 @@ func addObjToCont(w http.ResponseWriter, r *http.Request){
 					fmt.Println(response.StatusCode," SN created")
 				}
 				fmt.Println(responseCode)
-				/*else{
-					for responseCode != 201{
-						response, err = http.Post(peerURL, "application/json", r)
-						responseCode=response.StatusCode
-					}
-				}*/
+
 			}
 			wg.Done()
 		}(peer[0], peerURL)

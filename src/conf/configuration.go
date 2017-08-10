@@ -5,6 +5,7 @@ import (
 
 var NumNodes int = 3
 var LocalFileName = "NEW.xml"
+var ChunkProxyName = "NEW"
 var PortsPerNode int = 3
 const IP = "127.0.0.1"
 
