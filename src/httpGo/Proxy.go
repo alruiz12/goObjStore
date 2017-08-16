@@ -38,7 +38,6 @@ type putObjMSg struct {
 	ID string
 }
 var startGet time.Time
-var numGets int = 0
 func PutObjProxy(filePath string, trackerAddr string, numNodes int, putOK chan bool, account string, container string, objName string, fullName string) {
 	time.Sleep(1 * time.Second)
 	var err error
@@ -472,6 +471,10 @@ func ReturnObjProxy(w http.ResponseWriter, r *http.Request) {
 	httpVar.TotalNumMutex.Lock()
 	if httpVar.NumGetsMap[getmsg.GetID] == getmsg.Parts {
 		fmt.Println("GatherPieces result:", GatherPieces(getmsg.Key,getmsg.Parts))
+		httpVar.GetMutex.Lock()
+		delete(httpVar.NumGetsMap, getmsg.GetID)
+		httpVar.GetMutex.Unlock()
+
 	}
 	httpVar.TotalNumMutex.Unlock()
 
