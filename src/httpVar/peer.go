@@ -30,3 +30,4 @@ var MapAccNodes = make(map[string][][]string)
 var SendReady = make(chan int, 180)
 var SendP2PReady = make(chan int, 20)
 
+var NumGetsMap = make(map[int]int)

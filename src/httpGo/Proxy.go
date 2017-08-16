@@ -37,12 +37,12 @@ type msg struct {
 type putObjMSg struct {
 	ID string
 }
-var totalPartsNum int
 var startGet time.Time
 var numGets int = 0
 func PutObjProxy(filePath string, trackerAddr string, numNodes int, putOK chan bool, account string, container string, objName string, fullName string) {
 	time.Sleep(1 * time.Second)
 	var err error
+	var totalPartsNum int
 
 	// Get the account nodes
 	var nodeList [][]string
@@ -343,6 +343,7 @@ type jsonKeyURL struct {
 	Account string		`json:"Account"`
 	Container string	`json:"Container"`
 	Object string		`json:"Object"`
+	GetID int		`json:"GetID"`
 
 }
 
@@ -390,12 +391,18 @@ func GetObjProxy(fullName string, proxyAddr []string, trackerAddr string, getOK 
 	os.Mkdir(os.Getenv("GOPATH")+"/src/github.com/alruiz12/simpleBT/src/local",+0777)
 	os.Mkdir(os.Getenv("GOPATH")+"/src/github.com/alruiz12/simpleBT/src/local/"+ fullName,0777)
 
+	r := rand.New(rand.NewSource(time.Now().UnixNano()))
+	getID:=r.Int()
+	httpVar.NumGetsMap[getID]=0
+
+
+
 	var currentAddr int = rand.Intn(conf.PortsPerNode)
 
 	// For each node ask for all their Proxy-pieces
 	for index, node := range nodeList {
 		r, w :=io.Pipe()			// create pipe
-		k:=jsonKeyURL{Key:fullName, URL:proxyAddr[index]+"/ReturnObjProxy", Account: account, Container:container, Object:objName}
+		k:=jsonKeyURL{Key:fullName, URL:proxyAddr[index]+"/ReturnObjProxy", Account: account, Container:container, Object:objName, GetID:getID}
 		go func() {
 			defer w.Close()			// close pipe when go routine finishes
 			// save buffer to object
@@ -407,7 +414,7 @@ func GetObjProxy(fullName string, proxyAddr []string, trackerAddr string, getOK 
 
 			}
 		}()
-		url:="http://"+node[currentAddr]+"/SNPutObjGetChunks"
+		url:="http://"+node[currentAddr]+"/SNObjGetChunks"
 		res, err := http.Post(url,"application/json", r )
 		if err != nil {
 			fmt.Println("GetObjProxy: error creating request: ",err.Error())
@@ -452,7 +459,7 @@ func ReturnObjProxy(w http.ResponseWriter, r *http.Request) {
 
 	// Update counter
 	httpVar.GetMutex.Lock()
-	numGets++
+	httpVar.NumGetsMap[getmsg.GetID]++
 	httpVar.GetMutex.Unlock()
 
 	// Save chunk to file
@@ -463,7 +470,7 @@ func ReturnObjProxy(w http.ResponseWriter, r *http.Request) {
 
 	// Gather pieces to a single file
 	httpVar.TotalNumMutex.Lock()
-	if numGets == totalPartsNum {
+	if httpVar.NumGetsMap[getmsg.GetID] == getmsg.Parts {
 		fmt.Println("GatherPieces result:", GatherPieces(getmsg.Key,getmsg.Parts))
 	}
 	httpVar.TotalNumMutex.Unlock()
@@ -790,7 +797,7 @@ func GetAccountProxy(accountName string) Account{
 	return account
 }
 
-func putContProxy(account string, container string, createOK chan bool){
+func PutContProxy(account string, container string, createOK chan bool){
 	var nodeList [][]string
 	var err error
 

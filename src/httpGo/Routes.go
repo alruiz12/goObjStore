@@ -108,10 +108,10 @@ var routes = Routes{
 		GetNodesForKey,
 	},
 	Route{
-		"/SNPutObjGetChunks",
+		"/SNObjGetChunks",
 		"POST",
-		"/SNPutObjGetChunks",
-		SNPutObjGetChunks,
+		"/SNObjGetChunks",
+		SNObjGetChunks,
 	},
 
 

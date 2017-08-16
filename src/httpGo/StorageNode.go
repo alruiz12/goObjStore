@@ -204,7 +204,7 @@ func SNPutObjP2PRequest(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func SNPutObjGetChunks(w http.ResponseWriter, r *http.Request){
+func SNObjGetChunks(w http.ResponseWriter, r *http.Request){
 	// Get node ID
 	var nodeIDint int = int(r.Host[len(r.Host) - 1] - '0')
 	var nodeID string = strconv.Itoa(nodeIDint)
@@ -240,7 +240,7 @@ func SNPutObjGetChunks(w http.ResponseWriter, r *http.Request){
 
 	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
 	w.WriteHeader(http.StatusOK)
-	go SNPutObjSendChunksToProxy(nodeID, keyURL.Key, keyURL.URL, account.Containers[keyURL.Container].Objs[keyURL.Object].PartsNum)
+	go SNPutObjSendChunksToProxy(nodeID, keyURL.Key, keyURL.URL, account.Containers[keyURL.Container].Objs[keyURL.Object].PartsNum, keyURL.GetID)
 
 
 }
@@ -251,8 +251,9 @@ type getMsg struct {
 	NodeID string
 	Key    string
 	Parts  int
+	GetID int
 }
-func SNPutObjSendChunksToProxy(nodeID string, key string, URL string, PartsNum int){
+func SNPutObjSendChunksToProxy(nodeID string, key string, URL string, PartsNum int, getID int){
 	proxyURL:="http://"+URL
 
 	// for each proxy-name in directory send
@@ -270,7 +271,7 @@ func SNPutObjSendChunksToProxy(nodeID string, key string, URL string, PartsNum i
 				fmt.Println("sendChunksToProxy error opening file ",err.Error())
 				return nil
 			}
-			m:=getMsg{Text:partBuffer, Name: info.Name(), NodeID:nodeID, Key:key, Parts:PartsNum}
+			m:=getMsg{Text:partBuffer, Name: info.Name(), NodeID:nodeID, Key:key, Parts:PartsNum, GetID:getID}
 			r, w :=io.Pipe()			// create pipe
 			go func() {
 				defer w.Close()			// close pipe when go routine finishes

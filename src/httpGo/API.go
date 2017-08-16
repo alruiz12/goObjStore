@@ -168,7 +168,7 @@ func PutContAPI(w http.ResponseWriter, r *http.Request){
 		} else{
 			// Creating a channel to control call
 			createOK := make(chan bool)
-			go putContProxy(results[0], results[1], createOK)
+			go PutContProxy(results[0], results[1], createOK)
 			success := <-createOK
 			if success == true {
 				fmt.Println("put success ")
