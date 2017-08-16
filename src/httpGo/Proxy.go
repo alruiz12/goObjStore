@@ -1047,6 +1047,11 @@ func GatherPieces(key string , totalParts int) bool{
 			fmt.Println("maxTimes > 1 when looking for ", fileNameOriginal + strconv.Itoa(inOrderCount))
 			return false
 		}
+
+	}
+	err=os.RemoveAll(path)
+	if err != nil {
+		fmt.Println("error removing path and subDirs")
 	}
 	return true
 }
