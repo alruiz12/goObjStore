@@ -143,9 +143,7 @@ func SNPutObj(w http.ResponseWriter, r *http.Request){
 			}
 			wg.Wait()
 			chunk=msg{}
-		 	httpVar.TrackerMutex.Lock()
-                        httpVar.CurrentPart++
-                        httpVar.TrackerMutex.Unlock()
+
 		}
 		listenWg.Done()
 	}()
@@ -197,9 +195,6 @@ func SNPutObjP2PRequest(w http.ResponseWriter, r *http.Request) {
 		httpVar.DirMutex.Unlock()
 
 
-		httpVar.PeerMutex.Lock()
-                httpVar.P2pPart++
-		httpVar.PeerMutex.Unlock()
 
 	}
 }
@@ -227,20 +222,11 @@ func SNObjGetChunks(w http.ResponseWriter, r *http.Request){
 		}
 		return
 	}
-	// read account from file
-	httpVar.AccFileMutex.Lock()
-	accountBytes, err := ioutil.ReadFile(path+"/src/Account"+keyURL.Account +nodeID)
-	if err != nil {
-		fmt.Println("SNPutCont Error: reading ", path+"/src/Account"+keyURL.Account +nodeID)
-	}
-	httpVar.AccFileMutex.Unlock()
-	// update account
-	account:=Account{}
-	_,err = account.UnmarshalMsg(accountBytes)
+
 
 	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
 	w.WriteHeader(http.StatusOK)
-	go SNPutObjSendChunksToProxy(nodeID, keyURL.Key, keyURL.URL, account.Containers[keyURL.Container].Objs[keyURL.Object].PartsNum, keyURL.GetID)
+	go SNPutObjSendChunksToProxy(nodeID, keyURL.Key, keyURL.URL, keyURL.NumParts, keyURL.GetID)
 
 
 }

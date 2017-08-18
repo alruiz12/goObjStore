@@ -343,7 +343,7 @@ type jsonKeyURL struct {
 	Container string	`json:"Container"`
 	Object string		`json:"Object"`
 	GetID int		`json:"GetID"`
-
+	NumParts int		`json:"NumParts"`
 }
 
 
@@ -394,14 +394,14 @@ func GetObjProxy(fullName string, proxyAddr []string, trackerAddr string, getOK 
 	getID:=r.Int()
 	httpVar.NumGetsMap[getID]=0
 
-
+	acc := GetAccountProxy(account)
 
 	var currentAddr int = rand.Intn(conf.PortsPerNode)
 
 	// For each node ask for all their Proxy-pieces
 	for index, node := range nodeList {
 		r, w :=io.Pipe()			// create pipe
-		k:=jsonKeyURL{Key:fullName, URL:proxyAddr[index]+"/ReturnObjProxy", Account: account, Container:container, Object:objName, GetID:getID}
+		k:=jsonKeyURL{Key:fullName, URL:proxyAddr[index]+"/ReturnObjProxy", Account: account, Container:container, Object:objName, GetID:getID, NumParts:acc.Containers[container].Objs[objName].PartsNum}
 		go func() {
 			defer w.Close()			// close pipe when go routine finishes
 			// save buffer to object
