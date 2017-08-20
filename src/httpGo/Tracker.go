@@ -8,6 +8,7 @@ import(
 	"io"
 	"strconv"
 	"strings"
+	"math/rand"
 )
 
 type NodeNum struct {
@@ -116,10 +117,22 @@ func chooseNodes(num int)[][]string{
 }
 
 func chooseBusyNodes(num int, busies [][]string, response [][]string) [][]string{
-	j:=0 // iterates through bussies
-	for len(response)<num && j<len(busies){
-		response=append(response, busies[j])
-		j++
+	var random int // iterates through bussies
+	var busiesAssigned = make(map[int]bool) // registers random indexes used
+	for len(response)<num {
+		random=rand.Intn(len(busies))
+		if len(busiesAssigned)!=0{
+			// check if index used
+			_, exists := busiesAssigned[random]
+			if !exists{
+				response=append(response, busies[random])
+				busiesAssigned[random]=true
+			}
+		} else{
+			response=append(response, busies[random])
+			busiesAssigned[random]=true
+		}
+
 	}
 	if num>len(response){fmt.Println(" total number of nodes less than proxy asked ")}
 		// proxy will receive less nodes than expected

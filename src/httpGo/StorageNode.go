@@ -57,6 +57,12 @@ func prepSN(w http.ResponseWriter, r *http.Request){
 		if err2!=nil{
 			fmt.Println("StorageNode error making dir", err.Error())
 		}
+	} else{
+		os.RemoveAll(os.Getenv("GOPATH")+"/src/github.com/alruiz12/simpleBT/src/data/"+hashRecived.ID +"/"+strconv.Itoa( nodeID))
+		err2:=os.Mkdir(os.Getenv("GOPATH")+"/src/github.com/alruiz12/simpleBT/src/data/"+hashRecived.ID +"/"+strconv.Itoa( nodeID),0777)
+		if err2!=nil{
+			fmt.Println("StorageNode error making dir", err.Error())
+		}
 	}
 	httpVar.DirMutex.Unlock()
 }
@@ -96,13 +102,13 @@ func SNPutObj(w http.ResponseWriter, r *http.Request){
 			// Save chunk to file
 			err = ioutil.WriteFile(path + "/src/data/" + chunk.Hash + "/" + strconv.Itoa(nodeID) + "/NEW" + strconv.Itoa(chunk.Name), chunk.Text, 0777)
 			if err != nil {
-				fmt.Println("StorageNodeListen: error creating/writing file", err.Error())
+				fmt.Println("StorageNodeListen: error creating/writing file1", err.Error())
 			}
 			_, err = os.Stat(path + "/src/data/" + chunk.Hash + "/" + strconv.Itoa(nodeID) + "/NEW" + strconv.Itoa(chunk.Name))
 			for err != nil {
 				err = ioutil.WriteFile(path + "/src/data/" + chunk.Hash + "/" + strconv.Itoa(nodeID) + "/NEW" + strconv.Itoa(chunk.Name), chunk.Text, 0777)
 				if err != nil {
-					fmt.Println("SNPutObj: Peer: error creating/writing file p2p", err.Error())
+					fmt.Println("SNPutObj: Peer: error creating/writing file p2p2", err.Error())
 				}
 				fmt.Println("for", chunk.Name)
 				_, err = os.Stat(path + "/src/data/" + chunk.Hash + "/" + strconv.Itoa(nodeID) + "/NEW" + strconv.Itoa(chunk.Name))
@@ -183,13 +189,13 @@ func SNPutObjP2PRequest(w http.ResponseWriter, r *http.Request) {
 
 		err = ioutil.WriteFile(path + "/src/data/"+chunk.Hash+"/"+strconv.Itoa( peerID)+ "/P2P" + strconv.Itoa(chunk.Name),chunk.Text, 0777)
 		if err != nil {
-			fmt.Println("SNPutObjP2PRequest: Peer: error creating/writing file p2p", err.Error())
+			fmt.Println("SNPutObjP2PRequest: Peer: error creating/writing file p2p3", err.Error())
 		}
 		_, err = os.Stat(path+ "/src/data/"+chunk.Hash+"/"+strconv.Itoa( peerID)+ "/P2P" + strconv.Itoa(chunk.Name))
 		if err != nil {
 			err = ioutil.WriteFile(path + "/src/data/"+chunk.Hash+"/"+strconv.Itoa( peerID)+ "/P2P" + strconv.Itoa(chunk.Name), chunk.Text, 0777)
                 	if err != nil {
-                      		fmt.Println("SNPutObjP2PRequest: Peer: error creating/writing file p2p", err.Error())
+                      		fmt.Println("SNPutObjP2PRequest: Peer: error creating/writing file p2p4", err.Error())
                 	}
 		}
 		httpVar.DirMutex.Unlock()
