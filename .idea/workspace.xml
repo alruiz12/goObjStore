@@ -4,8 +4,6 @@
     <list default="true" id="8e47a50e-bf29-44c1-8c05-f500e1510716" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/httpGo/Proxy.go" afterPath="$PROJECT_DIR$/src/httpGo/Proxy.go" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/httpGo/StorageNode.go" afterPath="$PROJECT_DIR$/src/httpGo/StorageNode.go" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/httpGo/Tracker.go" afterPath="$PROJECT_DIR$/src/httpGo/Tracker.go" />
     </list>
     <ignored path="$PROJECT_DIR$/out/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -45,11 +43,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="Proxy.go" pinned="false" current-in-tab="false">
+      <file leaf-file-name="Proxy.go" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/httpGo/Proxy.go">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="360">
-              <caret line="260" column="43" lean-forward="false" selection-start-line="260" selection-start-column="43" selection-end-line="260" selection-end-column="43" />
+              <caret line="260" column="0" lean-forward="false" selection-start-line="260" selection-start-column="0" selection-end-line="260" selection-end-column="0" />
               <folding>
                 <element signature="e#374#489#0" expanded="false" />
                 <element signature="e#505#526#0" expanded="false" />
@@ -94,7 +92,7 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="StorageNode.go" pinned="false" current-in-tab="true">
+      <file leaf-file-name="StorageNode.go" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/httpGo/StorageNode.go">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="666">
@@ -235,8 +233,8 @@
         <option value="$PROJECT_DIR$/src/httpVar/peer.go" />
         <option value="$PROJECT_DIR$/src/httpGo/Tracker.go" />
         <option value="$PROJECT_DIR$/src/Downloads/alvarocontainer1obj1" />
-        <option value="$PROJECT_DIR$/src/httpGo/Proxy.go" />
         <option value="$PROJECT_DIR$/src/httpGo/StorageNode.go" />
+        <option value="$PROJECT_DIR$/src/httpGo/Proxy.go" />
       </list>
     </option>
   </component>
@@ -895,14 +893,7 @@
       <workItem from="1501940483281" duration="14151000" />
       <workItem from="1502115869616" duration="5814000" />
       <workItem from="1502121717618" duration="28942000" />
-      <workItem from="1502356218085" duration="28688000" />
-    </task>
-    <task id="LOCAL-00020" summary="simple put API works locally, with response, multiple concurrent calls, goRoutine in whole PUT API">
-      <created>1500046478888</created>
-      <option name="number" value="00020" />
-      <option name="presentableId" value="LOCAL-00020" />
-      <option name="project" value="LOCAL" />
-      <updated>1500046478888</updated>
+      <workItem from="1502356218085" duration="28854000" />
     </task>
     <task id="LOCAL-00021" summary="simple put API works locally, about to try in EC2">
       <created>1500046644289</created>
@@ -1240,7 +1231,14 @@
       <option name="project" value="LOCAL" />
       <updated>1503053882719</updated>
     </task>
-    <option name="localTasksCounter" value="69" />
+    <task id="LOCAL-00069" summary="prepSN delete previous same obj">
+      <created>1503227674842</created>
+      <option name="number" value="00069" />
+      <option name="presentableId" value="LOCAL-00069" />
+      <option name="project" value="LOCAL" />
+      <updated>1503227674842</updated>
+    </task>
+    <option name="localTasksCounter" value="70" />
     <servers />
   </component>
   <component name="TestHistory">
@@ -1276,11 +1274,11 @@
     </history-entry>
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="215690000" />
+    <option name="totallyTimeSpent" value="215856000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="65" y="24" width="2495" height="951" extended-state="6" />
-    <editor active="false" />
+    <editor active="true" />
     <layout>
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
@@ -1291,7 +1289,7 @@
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.5977778" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.22333333" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Properties" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Capture Tool" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
@@ -1354,7 +1352,6 @@
     <option name="myLimit" value="2678400000" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="testing put object" />
     <MESSAGE value="put account tested, not sending p2p yet" />
     <MESSAGE value="put account tested (p2p replication included)" />
     <MESSAGE value="put account tested (p2p replication included), replicas tested" />
@@ -1379,7 +1376,8 @@
     <MESSAGE value="delete NumGetMap entry once it's used" />
     <MESSAGE value="remove local chunks" />
     <MESSAGE value="get account in get obj" />
-    <option name="LAST_COMMIT_MESSAGE" value="get account in get obj" />
+    <MESSAGE value="prepSN delete previous same obj" />
+    <option name="LAST_COMMIT_MESSAGE" value="prepSN delete previous same obj" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager />
@@ -1688,18 +1686,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/httpGo/Proxy.go">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="360">
-          <caret line="260" column="43" lean-forward="false" selection-start-line="260" selection-start-column="43" selection-end-line="260" selection-end-column="43" />
-          <folding>
-            <element signature="e#374#489#0" expanded="false" />
-            <element signature="e#505#526#0" expanded="false" />
-            <element signature="n#!!block;n#md5sum#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/httpGo/createAcc_test.go">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="296">
@@ -1722,6 +1708,18 @@
           <caret line="64" column="17" lean-forward="false" selection-start-line="64" selection-start-column="17" selection-end-line="64" selection-end-column="17" />
           <folding>
             <element signature="e#15#238#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/httpGo/Proxy.go">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="360">
+          <caret line="260" column="0" lean-forward="false" selection-start-line="260" selection-start-column="0" selection-end-line="260" selection-end-column="0" />
+          <folding>
+            <element signature="e#374#489#0" expanded="false" />
+            <element signature="e#505#526#0" expanded="false" />
+            <element signature="n#!!block;n#md5sum#0" expanded="false" />
           </folding>
         </state>
       </provider>

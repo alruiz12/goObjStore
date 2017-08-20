@@ -258,7 +258,6 @@ func PutObjProxy(filePath string, trackerAddr string, numNodes int, putOK chan b
 				}
 				defer w.Close()                 // Close pipe //when go routine finishes
 			}()
-			fmt.Println(m2.Name, " |||| ", url)
 			_, err := http.Post(url, "application/json", r)
 			if err != nil {
 				fmt.Println("Error sending http POST ", err.Error())
