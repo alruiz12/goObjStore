@@ -297,6 +297,7 @@ type MarshalledAcc struct {
 }
 
 func SNPutAcc(w http.ResponseWriter, r *http.Request){
+	fmt.Println("SNPutAcc")
 		var accInfo AccInfo
 		var peerID int = int(r.Host[len(r.Host) - 1] - '0')
 		body, err := ioutil.ReadAll(r.Body)

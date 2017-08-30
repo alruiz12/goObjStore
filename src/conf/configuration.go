@@ -35,6 +35,7 @@ var Peer3List = []string{Peer3a, Peer3b, Peer3c}
 	var Peer4b = IP+":8011"
 	var Peer4c = IP+":8011"
 	var Peer4List = []string{Peer4a, Peer4b, Peer4c}
+
 	var Peer5a = IP+":8011"
 	var Peer5b = IP+":8011"
 	var Peer5c = IP+":8011"
@@ -52,3 +53,4 @@ var Proxy5 = IP+":8074"
 */
 
 var ProxyAddr=[]string{Proxy1,Proxy2,Proxy3/*,Proxy4,Proxy5*/}
+
