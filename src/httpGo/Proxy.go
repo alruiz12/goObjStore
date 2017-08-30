@@ -706,7 +706,7 @@ func PutAccountProxy(name string, createOK chan bool){
 	currentPeer:= rand.Intn(len(nodeList))
 	currentPeerAddr := rand.Intn(len(nodeList))
 	acc := AccInfo{NodeList:nodeList, Num:len(nodeList), CurrentNode:currentPeer, AccName:name }
-
+	fmt.Print("JUST BEFORE SNPutAcc")
 	r, w := io.Pipe()
 	go func() {
 		// save buffer to object
