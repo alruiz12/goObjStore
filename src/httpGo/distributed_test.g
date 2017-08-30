@@ -9,7 +9,7 @@ import (
 	"strings"
 	"github.com/alruiz12/simpleBT/src/conf"
 )
-func TestCreateAccountAPI(t *testing.T) {
+func TestDistributed(t *testing.T) {
 	router :=MyNewRouter()
 
 	//---------------------------------------------------------------------
