@@ -119,7 +119,7 @@ func chooseNodes(num int)[][]string{
 func chooseBusyNodes(num int, busies [][]string, response [][]string) [][]string{
 	var random int // iterates through bussies
 	var busiesAssigned = make(map[int]bool) // registers random indexes used
-	for len(response)<num {
+	for len(response)<num && len(busiesAssigned)<len(busies){
 		random=rand.Intn(len(busies))
 		if len(busiesAssigned)!=0{
 			// check if index used
@@ -192,3 +192,7 @@ func GetNodesForKey(w http.ResponseWriter, r *http.Request){
 		fmt.Println("GetNodesForKey: error encoding response: ",err.Error())
 	}
 }
+
+
+
+

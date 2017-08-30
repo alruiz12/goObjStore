@@ -9,7 +9,7 @@ var TrackerMutex = &sync.Mutex{}
 var PeerMutex = &sync.Mutex{}
 var DirMutex = &sync.Mutex{}
 var GetMutex = &sync.Mutex{}
-var TotalNumMutex = &sync.Mutex{}
+var TotalNumMutex = &sync.Mutex{} //unnecessary now
 var AccFileMutex = &sync.Mutex{}
 var AccFileMutexP2P = &sync.Mutex{}
 
