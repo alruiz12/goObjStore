@@ -6,7 +6,7 @@ Simple Object Store in Golang started in late February 2017
 
 This project includes Peer to Peer and chunking algorithms to increase effiency.
 
-![alt text]https://user-images.githubusercontent.com/22266492/30480919-82ab6554-9a1c-11e7-8942-f8994431c8fb.PNG
+[alt text]https://user-images.githubusercontent.com/22266492/30480919-82ab6554-9a1c-11e7-8942-f8994431c8fb.PNG
 
 ## Documentation
 
