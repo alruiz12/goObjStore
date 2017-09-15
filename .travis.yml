@@ -6,7 +6,6 @@ install:
   - go get github.com/gorilla/mux
   - go get github.com/gorilla/context
   - go get github.com/tinylib/msgp/msgp
-  //- go get github.com/alruiz12/goObjStore
 
 script:
   - src/test.sh

@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="8e47a50e-bf29-44c1-8c05-f500e1510716" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/GOPATH__simpleBT_.xml" afterPath="$PROJECT_DIR$/.idea/libraries/GOPATH__simpleBT_.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.travis.yml" afterPath="$PROJECT_DIR$/.travis.yml" />
     </list>
     <ignored path="$PROJECT_DIR$/out/" />
@@ -49,7 +49,7 @@
         <entry file="file://$PROJECT_DIR$/.travis.yml">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="144">
-              <caret line="8" column="41" lean-forward="false" selection-start-line="8" selection-start-column="41" selection-end-line="8" selection-end-column="41" />
+              <caret line="8" column="0" lean-forward="true" selection-start-line="8" selection-start-column="0" selection-end-line="8" selection-end-column="0" />
               <folding />
             </state>
           </provider>
@@ -763,14 +763,7 @@
       <workItem from="1503736706689" duration="21685000" />
       <workItem from="1504100800317" duration="9644000" />
       <workItem from="1504118543594" duration="438000" />
-      <workItem from="1505472735060" duration="197000" />
-    </task>
-    <task id="LOCAL-00025" summary="trying to fix build">
-      <created>1501338286994</created>
-      <option name="number" value="00025" />
-      <option name="presentableId" value="LOCAL-00025" />
-      <option name="project" value="LOCAL" />
-      <updated>1501338286994</updated>
+      <workItem from="1505472735060" duration="511000" />
     </task>
     <task id="LOCAL-00026" summary="trying to fix build">
       <created>1501338655462</created>
@@ -1108,7 +1101,14 @@
       <option name="project" value="LOCAL" />
       <updated>1504119679751</updated>
     </task>
-    <option name="localTasksCounter" value="74" />
+    <task id="LOCAL-00074" summary="fixing rename&#10;">
+      <created>1505473154264</created>
+      <option name="number" value="00074" />
+      <option name="presentableId" value="LOCAL-00074" />
+      <option name="project" value="LOCAL" />
+      <updated>1505473154265</updated>
+    </task>
+    <option name="localTasksCounter" value="75" />
     <servers />
   </component>
   <component name="TestHistory">
@@ -1144,7 +1144,7 @@
     </history-entry>
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="264007000" />
+    <option name="totallyTimeSpent" value="264321000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="65" y="24" width="1855" height="1056" extended-state="6" />
@@ -1224,7 +1224,6 @@
     <option name="myLimit" value="2678400000" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Routes modified" />
     <MESSAGE value="Routes modified: Put Obj and Account" />
     <MESSAGE value="PutAcc OK, putCont OK, putObj first success" />
     <MESSAGE value="PutAcc OK, putCont OK, putObj OK, tested" />
@@ -1249,7 +1248,8 @@
     <MESSAGE value="before manual" />
     <MESSAGE value="mixing machines" />
     <MESSAGE value="mixing machines from rest + setup.sh&#10;" />
-    <option name="LAST_COMMIT_MESSAGE" value="mixing machines from rest + setup.sh&#10;" />
+    <MESSAGE value="fixing rename&#10;" />
+    <option name="LAST_COMMIT_MESSAGE" value="fixing rename&#10;" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager />
@@ -1545,7 +1545,7 @@
     <entry file="file://$PROJECT_DIR$/.travis.yml">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="144">
-          <caret line="8" column="41" lean-forward="false" selection-start-line="8" selection-start-column="41" selection-end-line="8" selection-end-column="41" />
+          <caret line="8" column="0" lean-forward="true" selection-start-line="8" selection-start-column="0" selection-end-line="8" selection-end-column="0" />
           <folding />
         </state>
       </provider>
