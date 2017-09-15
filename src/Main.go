@@ -2,7 +2,7 @@ package main
 
 import (
 	"time"
-	"github.com/alruiz12/goObjSotre/src/httpGo"
+	"github.com/alruiz12/goObjStore/src/httpGo"
 	"net/http"
 	"github.com/alruiz12/goObjStore/src/conf"
 
