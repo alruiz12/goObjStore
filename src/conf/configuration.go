@@ -9,11 +9,11 @@ var ChunkProxyName = "NEW"
 var PortsPerNode int = 3
 const IP = "127.0.0.1"
 
-var FilePath = os.Getenv("GOPATH")+"/src/github.com/alruiz12/simpleBT/src/bigFile"
-//var FilePath = os.Getenv("GOPATH")+"/src/github.com/alruiz12/simpleBT/dataset.xml"
+var FilePath = os.Getenv("GOPATH")+"/src/github.com/alruiz12/goObjStore/src/bigFile"
+//var FilePath = os.Getenv("GOPATH")+"/src/github.com/alruiz12/goObjStore/dataset.xml"
 // TRACKER
 var TrackerAddr = IP+":8000"
-var DownloadsDirectory=os.Getenv("GOPATH")+"/src/github.com/alruiz12/simpleBT/src/Downloads/"
+var DownloadsDirectory=os.Getenv("GOPATH")+"/src/github.com/alruiz12/goObjStore/src/Downloads/"
 // PEERS
 // IMPORTANT NOTE: last character of port is the peer's internal identifier
 var Peer1a = IP+":8011"

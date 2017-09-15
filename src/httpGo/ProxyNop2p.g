@@ -13,7 +13,7 @@ import (
 	"mime/multipart"
 	"time"
 	"encoding/json"
-	"github.com/alruiz12/simpleBT/src/httpVar"
+	"github.com/alruiz12/goObjStore/src/httpVar"
 	"strings"
 	"math/rand"
 	*/
@@ -199,8 +199,8 @@ func GetNoP2P(Key string, proxyAddr []string, trackerAddr string){/*
 		fmt.Println("Get: error reciving response: ",err.Error())
 	}
 	// Create folder for receiving
-	os.Mkdir(os.Getenv("GOPATH")+"/src/github.com/alruiz12/simpleBT/src/local",+0777)
-	os.Mkdir(os.Getenv("GOPATH")+"/src/github.com/alruiz12/simpleBT/src/local/"+Key,0777)
+	os.Mkdir(os.Getenv("GOPATH")+"/src/github.com/alruiz12/goObjStore/src/local",+0777)
+	os.Mkdir(os.Getenv("GOPATH")+"/src/github.com/alruiz12/goObjStore/src/local/"+Key,0777)
 
 	node:=nodeList[rand.Intn(3)]
 	// For each node ask for all their Proxy-pieces

@@ -3,7 +3,7 @@ package main
 import (
 	"os"
 	"time"
-	"github.com/alruiz12/simpleBT/src/httpGo"
+	"github.com/alruiz12/goObjStore/src/httpGo"
 	"net/http"
 
 )
@@ -12,8 +12,8 @@ func main2() {
 
 	const IP = "127.0.0.1"
 
-	//var filePath2 = os.Getenv("GOPATH")+"/src/github.com/alruiz12/simpleBT/src/bigFile"
-	var filePath = os.Getenv("GOPATH")+"/src/github.com/alruiz12/simpleBT/dataset.xml"
+	//var filePath2 = os.Getenv("GOPATH")+"/src/github.com/alruiz12/goObjStore/src/bigFile"
+	var filePath = os.Getenv("GOPATH")+"/src/github.com/alruiz12/goObjStore/dataset.xml"
 
 
 	var proxyAddr = "127.0.0.1:8080"

@@ -3,7 +3,19 @@
   <component name="ChangeListManager">
     <list default="true" id="8e47a50e-bf29-44c1-8c05-f500e1510716" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/Main.go" afterPath="$PROJECT_DIR$/src/Main.go" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/MainNoP2P.g" afterPath="$PROJECT_DIR$/src/MainNoP2P.g" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/conf/AllButPeer2.g" afterPath="$PROJECT_DIR$/src/conf/AllButPeer2.g" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/conf/ExternalPeer2.g" afterPath="$PROJECT_DIR$/src/conf/ExternalPeer2.g" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/conf/configuration.go" afterPath="$PROJECT_DIR$/src/conf/configuration.go" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/coverage.txt" afterPath="$PROJECT_DIR$/src/coverage.txt" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/httpGo/API.go" afterPath="$PROJECT_DIR$/src/httpGo/API.go" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/httpGo/Proxy.go" afterPath="$PROJECT_DIR$/src/httpGo/Proxy.go" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/httpGo/ProxyNop2p.g" afterPath="$PROJECT_DIR$/src/httpGo/ProxyNop2p.g" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/httpGo/SNodeNoP2p.g" afterPath="$PROJECT_DIR$/src/httpGo/SNodeNoP2p.g" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/httpGo/StorageNode.go" afterPath="$PROJECT_DIR$/src/httpGo/StorageNode.go" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/httpGo/Tracker.go" afterPath="$PROJECT_DIR$/src/httpGo/Tracker.go" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/httpGo/createAcc_test.go" afterPath="$PROJECT_DIR$/src/httpGo/createAcc_test.go" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/httpGo/distributed_test.g" afterPath="$PROJECT_DIR$/src/httpGo/distributed_test.g" />
     </list>
     <ignored path="$PROJECT_DIR$/out/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -23,13 +35,28 @@
   <component name="ExecutionTargetManager" SELECTED_TARGET="default_target" />
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="Main.go" pinned="false" current-in-tab="true">
+      <file leaf-file-name="Main.go" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/Main.go">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="234">
-              <caret line="13" column="61" lean-forward="true" selection-start-line="13" selection-start-column="61" selection-end-line="13" selection-end-column="61" />
+              <caret line="13" column="61" lean-forward="false" selection-start-line="13" selection-start-column="61" selection-end-line="13" selection-end-column="61" />
               <folding>
                 <element signature="e#14#133#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="API.go" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/httpGo/API.go">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="468">
+              <caret line="26" column="44" lean-forward="false" selection-start-line="26" selection-start-column="44" selection-end-line="26" selection-end-column="44" />
+              <folding>
+                <element signature="e#15#172#0" expanded="true" />
+                <element signature="n#!!block;n#md5String#0" expanded="false" />
+                <element signature="n#!!block;n#GetContAPI#0" expanded="false" />
+                <element signature="e#4597#5332#0" expanded="false" />
               </folding>
             </state>
           </provider>
@@ -49,7 +76,7 @@
         <entry file="file://$PROJECT_DIR$/.travis.yml">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="144">
-              <caret line="8" column="0" lean-forward="true" selection-start-line="8" selection-start-column="0" selection-end-line="8" selection-end-column="0" />
+              <caret line="8" column="0" lean-forward="false" selection-start-line="8" selection-start-column="0" selection-end-line="8" selection-end-column="0" />
               <folding />
             </state>
           </provider>
@@ -68,13 +95,9 @@
       <file leaf-file-name="Proxy.go" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/httpGo/Proxy.go">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="11736">
+            <state relative-caret-position="12312">
               <caret line="698" column="33" lean-forward="false" selection-start-line="698" selection-start-column="33" selection-end-line="698" selection-end-column="33" />
-              <folding>
-                <element signature="e#374#489#0" expanded="false" />
-                <element signature="e#505#526#0" expanded="false" />
-                <element signature="n#!!block;n#md5sum#0" expanded="false" />
-              </folding>
+              <folding />
             </state>
           </provider>
         </entry>
@@ -118,14 +141,17 @@
       <find>rand</find>
       <find>make</find>
       <find>creating/wr</find>
+      <find>simpleBT</find>
     </findStrings>
     <replaceStrings>
       <replace>Proxy</replace>
       <replace>putOK -&lt; false</replace>
       <replace>putOK &lt;- false</replace>
+      <replace>goObjStore</replace>
     </replaceStrings>
     <dirStrings>
       <dir>$PROJECT_DIR$/src/conf</dir>
+      <dir>$PROJECT_DIR$/../simpleBT</dir>
     </dirStrings>
   </component>
   <component name="Git.Settings">
@@ -177,7 +203,6 @@
         <option value="$PROJECT_DIR$/src/shellScriptsTests/curlGetContFailure2.sh" />
         <option value="$PROJECT_DIR$/src/shellScriptsTests/curlGetContFailure3.sh" />
         <option value="$PROJECT_DIR$/src/httpGo/Container.go" />
-        <option value="$PROJECT_DIR$/src/httpGo/API.go" />
         <option value="$PROJECT_DIR$/src/httpGo/StorageNode.go" />
         <option value="$PROJECT_DIR$/src/httpGo/Tracker.go" />
         <option value="$PROJECT_DIR$/src/httpGo/Routes.go" />
@@ -190,6 +215,7 @@
         <option value="$PROJECT_DIR$/src/httpGo/distributed_test.go" />
         <option value="$PROJECT_DIR$/.travis.yml" />
         <option value="$PROJECT_DIR$/src/Main.go" />
+        <option value="$PROJECT_DIR$/src/httpGo/API.go" />
       </list>
     </option>
   </component>
@@ -248,6 +274,24 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="goObjStore" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="goObjStore" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="httpGo" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
         </subPane>
       </pane>
       <pane id="PackagesPane" />
@@ -264,6 +308,10 @@
     <property name="GenerateAntBuildDialog.forceTargetJdk" value="true" />
     <property name="GenerateAntBuildDialog.backupFiles" value="true" />
     <property name="GenerateAntBuildDialog.outputFileNameProperty" value="simplebt" />
+    <property name="project.structure.last.edited" value="Project" />
+    <property name="project.structure.proportion" value="0.0" />
+    <property name="project.structure.side.proportion" value="0.0" />
+    <property name="settings.editor.selected.configurable" value="editor.preferences.appearance" />
   </component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
@@ -274,7 +322,7 @@
       <recent name="$PROJECT_DIR$/src" />
     </key>
   </component>
-  <component name="RunManager" selected="Go Test.distributed_test.go">
+  <component name="RunManager" selected="Go Test.createAcc_test.go (1)">
     <configuration default="false" name="Build Main.go and run" type="GoApplicationRunConfiguration" factoryName="Go Application" temporary="true">
       <module name="simpleBT" />
       <working_directory value="$PROJECT_DIR$" />
@@ -288,14 +336,6 @@
       <framework value="gotest" />
       <kind value="FILE" />
       <filePath value="$PROJECT_DIR$/src/httpGo/createAcc_test.go" />
-      <method />
-    </configuration>
-    <configuration default="false" name="putObj_test.go" type="GoTestRunConfiguration" factoryName="Go Test" temporary="true">
-      <module name="simpleBT" />
-      <working_directory value="$PROJECT_DIR$" />
-      <framework value="gotest" />
-      <kind value="FILE" />
-      <filePath value="$PROJECT_DIR$/src/httpGo/putObj_test.go" />
       <method />
     </configuration>
     <configuration default="false" name="TestCreateAccountAPI in createAcc_test.go" type="GoTestRunConfiguration" factoryName="Go Test" temporary="true">
@@ -313,6 +353,14 @@
       <framework value="gotest" />
       <kind value="FILE" />
       <filePath value="$PROJECT_DIR$/src/httpGo/distributed_test.go" />
+      <method />
+    </configuration>
+    <configuration default="false" name="createAcc_test.go (1)" type="GoTestRunConfiguration" factoryName="Go Test" temporary="true">
+      <module name="goObjStore" />
+      <working_directory value="$PROJECT_DIR$" />
+      <framework value="gotest" />
+      <kind value="FILE" />
+      <filePath value="$PROJECT_DIR$/src/httpGo/createAcc_test.go" />
       <method />
     </configuration>
     <configuration default="true" type="#org.jetbrains.idea.devkit.run.PluginConfigurationType" factoryName="Plugin">
@@ -718,22 +766,25 @@
     <list size="5">
       <item index="0" class="java.lang.String" itemvalue="Go Application.Build Main.go and run" />
       <item index="1" class="java.lang.String" itemvalue="Go Test.createAcc_test.go" />
-      <item index="2" class="java.lang.String" itemvalue="Go Test.putObj_test.go" />
-      <item index="3" class="java.lang.String" itemvalue="Go Test.TestCreateAccountAPI in createAcc_test.go" />
-      <item index="4" class="java.lang.String" itemvalue="Go Test.distributed_test.go" />
+      <item index="2" class="java.lang.String" itemvalue="Go Test.TestCreateAccountAPI in createAcc_test.go" />
+      <item index="3" class="java.lang.String" itemvalue="Go Test.distributed_test.go" />
+      <item index="4" class="java.lang.String" itemvalue="Go Test.createAcc_test.go (1)" />
     </list>
     <recent_temporary>
       <list size="5">
-        <item index="0" class="java.lang.String" itemvalue="Go Test.distributed_test.go" />
-        <item index="1" class="java.lang.String" itemvalue="Go Test.TestCreateAccountAPI in createAcc_test.go" />
-        <item index="2" class="java.lang.String" itemvalue="Go Test.createAcc_test.go" />
-        <item index="3" class="java.lang.String" itemvalue="Go Application.Build Main.go and run" />
-        <item index="4" class="java.lang.String" itemvalue="Go Test.putObj_test.go" />
+        <item index="0" class="java.lang.String" itemvalue="Go Test.createAcc_test.go (1)" />
+        <item index="1" class="java.lang.String" itemvalue="Go Test.distributed_test.go" />
+        <item index="2" class="java.lang.String" itemvalue="Go Test.TestCreateAccountAPI in createAcc_test.go" />
+        <item index="3" class="java.lang.String" itemvalue="Go Test.createAcc_test.go" />
+        <item index="4" class="java.lang.String" itemvalue="Go Application.Build Main.go and run" />
       </list>
     </recent_temporary>
   </component>
   <component name="ShelveChangesManager" show_recycled="false">
     <option name="remove_strategy" value="false" />
+  </component>
+  <component name="SvnConfiguration">
+    <configuration />
   </component>
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
@@ -763,14 +814,7 @@
       <workItem from="1503736706689" duration="21685000" />
       <workItem from="1504100800317" duration="9644000" />
       <workItem from="1504118543594" duration="438000" />
-      <workItem from="1505472735060" duration="806000" />
-    </task>
-    <task id="LOCAL-00027" summary="trying to fix build">
-      <created>1501339612013</created>
-      <option name="number" value="00027" />
-      <option name="presentableId" value="LOCAL-00027" />
-      <option name="project" value="LOCAL" />
-      <updated>1501339612013</updated>
+      <workItem from="1505472735060" duration="1201000" />
     </task>
     <task id="LOCAL-00028" summary="fixing test">
       <created>1501340050237</created>
@@ -1108,13 +1152,17 @@
       <option name="project" value="LOCAL" />
       <updated>1505473255188</updated>
     </task>
-    <option name="localTasksCounter" value="76" />
+    <task id="LOCAL-00076" summary="fixing rename&#10;">
+      <created>1505473549286</created>
+      <option name="number" value="00076" />
+      <option name="presentableId" value="LOCAL-00076" />
+      <option name="project" value="LOCAL" />
+      <updated>1505473549286</updated>
+    </task>
+    <option name="localTasksCounter" value="77" />
     <servers />
   </component>
   <component name="TestHistory">
-    <history-entry file="TestCreateAccountAPI_in_createAcc_test_go - 2017.08.30 at 12h 21m 00s.xml">
-      <configuration name="TestCreateAccountAPI in createAcc_test.go" configurationId="GoTestRunConfiguration" />
-    </history-entry>
     <history-entry file="TestCreateAccountAPI_in_createAcc_test_go - 2017.08.30 at 12h 23m 54s.xml">
       <configuration name="TestCreateAccountAPI in createAcc_test.go" configurationId="GoTestRunConfiguration" />
     </history-entry>
@@ -1130,6 +1178,9 @@
     <history-entry file="TestCreateAccountAPI_in_createAcc_test_go - 2017.08.30 at 20h 02m 22s.xml">
       <configuration name="TestCreateAccountAPI in createAcc_test.go" configurationId="GoTestRunConfiguration" />
     </history-entry>
+    <history-entry file="createAcc_test_go_(1) - 2017.09.15 at 13h 12m 18s.xml">
+      <configuration name="createAcc_test.go (1)" configurationId="GoTestRunConfiguration" />
+    </history-entry>
     <history-entry file="distributed_test_go - 2017.08.30 at 20h 04m 42s.xml">
       <configuration name="distributed_test.go" configurationId="GoTestRunConfiguration" />
     </history-entry>
@@ -1144,7 +1195,7 @@
     </history-entry>
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="264616000" />
+    <option name="totallyTimeSpent" value="265011000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="65" y="24" width="1855" height="1056" extended-state="6" />
@@ -1158,7 +1209,7 @@
       <window_info id="Capture Analysis" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3939394" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.39303482" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Properties" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
@@ -1166,6 +1217,7 @@
       <window_info id="Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.2690027" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.18555556" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="UI Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
@@ -1179,7 +1231,6 @@
       <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Coverage" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32985973" sideWeight="0.5" order="4" side_tool="true" content_ui="tabs" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.18555556" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
     </layout>
     <layout-to-restore>
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
@@ -1426,19 +1477,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="69">
           <caret line="80" column="24" lean-forward="false" selection-start-line="80" selection-start-column="24" selection-end-line="80" selection-end-column="24" />
-          <folding>
-            <element signature="e#15#158#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/httpGo/API.go">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="198">
-          <caret line="102" column="35" lean-forward="false" selection-start-line="102" selection-start-column="35" selection-end-line="102" selection-end-column="35" />
-          <folding>
-            <element signature="n#!!block;n#md5String#0" expanded="false" />
-          </folding>
+          <folding />
         </state>
       </provider>
     </entry>
@@ -1478,7 +1517,7 @@
         <state relative-caret-position="1311">
           <caret line="253" column="53" lean-forward="false" selection-start-line="253" selection-start-column="53" selection-end-line="253" selection-end-column="53" />
           <folding>
-            <element signature="e#15#238#0" expanded="false" />
+            <element signature="e#15#242#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -1493,13 +1532,9 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/httpGo/Proxy.go">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="11736">
+        <state relative-caret-position="12312">
           <caret line="698" column="33" lean-forward="false" selection-start-line="698" selection-start-column="33" selection-end-line="698" selection-end-column="33" />
-          <folding>
-            <element signature="e#374#489#0" expanded="false" />
-            <element signature="e#505#526#0" expanded="false" />
-            <element signature="n#!!block;n#md5sum#0" expanded="false" />
-          </folding>
+          <folding />
         </state>
       </provider>
     </entry>
@@ -1535,7 +1570,7 @@
     <entry file="file://$PROJECT_DIR$/.travis.yml">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="144">
-          <caret line="8" column="0" lean-forward="true" selection-start-line="8" selection-start-column="0" selection-end-line="8" selection-end-column="0" />
+          <caret line="8" column="0" lean-forward="false" selection-start-line="8" selection-start-column="0" selection-end-line="8" selection-end-column="0" />
           <folding />
         </state>
       </provider>
@@ -1543,12 +1578,101 @@
     <entry file="file://$PROJECT_DIR$/src/Main.go">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="234">
-          <caret line="13" column="61" lean-forward="true" selection-start-line="13" selection-start-column="61" selection-end-line="13" selection-end-column="61" />
+          <caret line="13" column="61" lean-forward="false" selection-start-line="13" selection-start-column="61" selection-end-line="13" selection-end-column="61" />
           <folding>
             <element signature="e#14#133#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/src/httpGo/API.go">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="468">
+          <caret line="26" column="44" lean-forward="false" selection-start-line="26" selection-start-column="44" selection-end-line="26" selection-end-column="44" />
+          <folding>
+            <element signature="e#15#172#0" expanded="true" />
+            <element signature="n#!!block;n#md5String#0" expanded="false" />
+            <element signature="n#!!block;n#GetContAPI#0" expanded="false" />
+            <element signature="e#4597#5332#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+  </component>
+  <component name="masterDetails">
+    <states>
+      <state key="ArtifactsStructureConfigurable.UI">
+        <settings>
+          <artifact-editor />
+          <splitter-proportions>
+            <option name="proportions">
+              <list>
+                <option value="0.2" />
+              </list>
+            </option>
+          </splitter-proportions>
+        </settings>
+      </state>
+      <state key="FacetStructureConfigurable.UI">
+        <settings>
+          <last-edited>No facets are configured</last-edited>
+          <splitter-proportions>
+            <option name="proportions">
+              <list>
+                <option value="0.2" />
+              </list>
+            </option>
+          </splitter-proportions>
+        </settings>
+      </state>
+      <state key="GlobalLibrariesConfigurable.UI">
+        <settings>
+          <splitter-proportions>
+            <option name="proportions">
+              <list>
+                <option value="0.2" />
+              </list>
+            </option>
+          </splitter-proportions>
+        </settings>
+      </state>
+      <state key="JdkListConfigurable.UI">
+        <settings>
+          <last-edited>1.8</last-edited>
+          <splitter-proportions>
+            <option name="proportions">
+              <list>
+                <option value="0.2" />
+              </list>
+            </option>
+          </splitter-proportions>
+        </settings>
+      </state>
+      <state key="ModuleStructureConfigurable.UI">
+        <settings>
+          <last-edited>goObjStore</last-edited>
+          <splitter-proportions>
+            <option name="proportions">
+              <list>
+                <option value="0.2" />
+                <option value="0.6" />
+              </list>
+            </option>
+          </splitter-proportions>
+        </settings>
+      </state>
+      <state key="ProjectLibrariesConfigurable.UI">
+        <settings>
+          <last-edited>GOPATH &lt;simpleBT&gt;</last-edited>
+          <splitter-proportions>
+            <option name="proportions">
+              <list>
+                <option value="0.2" />
+              </list>
+            </option>
+          </splitter-proportions>
+        </settings>
+      </state>
+    </states>
   </component>
 </project>

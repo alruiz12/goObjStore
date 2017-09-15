@@ -1,7 +1,7 @@
 package httpGo
 import(
 	"fmt"
-	"github.com/alruiz12/simpleBT/src/httpVar"
+	"github.com/alruiz12/goObjStore/src/httpVar"
 	"net/http"
 	"encoding/json"
 	"io/ioutil"

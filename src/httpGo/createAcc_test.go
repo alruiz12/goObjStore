@@ -7,14 +7,14 @@ import (
 	"os"
 	"os/exec"
 	"strings"
-	"github.com/alruiz12/simpleBT/src/conf"
+	"github.com/alruiz12/goObjStore/src/conf"
 )
 func TestCreateAccountAPI(t *testing.T) {
 	router :=MyNewRouter()
 	const IP = "127.0.0.1"
-	var path = os.Getenv("GOPATH")+"/src/github.com/alruiz12/simpleBT/src"
+	var path = os.Getenv("GOPATH")+"/src/github.com/alruiz12/goObjStore/src"
 
-	//var filePath = os.Getenv("GOPATH")+"/src/github.com/alruiz12/simpleBT/dataset.xml"
+	//var filePath = os.Getenv("GOPATH")+"/src/github.com/alruiz12/goObjStore/dataset.xml"
 
 	// TRACKER
 	var trackerAddr = IP+":8000"

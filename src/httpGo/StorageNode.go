@@ -7,16 +7,16 @@ import(
 	"log"
 	"os"
 	"encoding/json"
-	"github.com/alruiz12/simpleBT/src/httpVar"
+	"github.com/alruiz12/goObjStore/src/httpVar"
 	"strconv"
 	"path/filepath"
 	"strings"
 	"sync"
 	"math/rand"
 
-	"github.com/alruiz12/simpleBT/src/conf"
+	"github.com/alruiz12/goObjStore/src/conf"
 )
-var path = (os.Getenv("GOPATH")+"/src/github.com/alruiz12/simpleBT")
+var path = (os.Getenv("GOPATH")+"/src/github.com/alruiz12/goObjStore")
 
 func prepSN(w http.ResponseWriter, r *http.Request){
 	var hashRecived putObjMSg
@@ -39,27 +39,27 @@ func prepSN(w http.ResponseWriter, r *http.Request){
 
 	httpVar.DirMutex.Lock()
 	// if data directory doesn't exist, create it
-	_, err = os.Stat(os.Getenv("GOPATH")+"/src/github.com/alruiz12/simpleBT/src/data")
+	_, err = os.Stat(os.Getenv("GOPATH")+"/src/github.com/alruiz12/goObjStore/src/data")
 	if err != nil {
-		os.Mkdir(os.Getenv("GOPATH")+"/src/github.com/alruiz12/simpleBT/src/data",0777)
+		os.Mkdir(os.Getenv("GOPATH")+"/src/github.com/alruiz12/goObjStore/src/data",0777)
 	}
 
 	// if data/chunk.Hash directory doesn't exist, create it
-	_, err = os.Stat(os.Getenv("GOPATH")+"/src/github.com/alruiz12/simpleBT/src/data/"+hashRecived.ID)
+	_, err = os.Stat(os.Getenv("GOPATH")+"/src/github.com/alruiz12/goObjStore/src/data/"+hashRecived.ID)
 	if err != nil {
-		os.Mkdir(os.Getenv("GOPATH")+"/src/github.com/alruiz12/simpleBT/src/data/"+hashRecived.ID,0777)
+		os.Mkdir(os.Getenv("GOPATH")+"/src/github.com/alruiz12/goObjStore/src/data/"+hashRecived.ID,0777)
 	}
 
 	// if data/chunk.Hash/nodeID directory doesn't exist, create it
-	_, err = os.Stat(os.Getenv("GOPATH")+"/src/github.com/alruiz12/simpleBT/src/data/"+hashRecived.ID +"/"+strconv.Itoa( nodeID))
+	_, err = os.Stat(os.Getenv("GOPATH")+"/src/github.com/alruiz12/goObjStore/src/data/"+hashRecived.ID +"/"+strconv.Itoa( nodeID))
 	if err != nil {
-		err2:=os.Mkdir(os.Getenv("GOPATH")+"/src/github.com/alruiz12/simpleBT/src/data/"+hashRecived.ID +"/"+strconv.Itoa( nodeID),0777)
+		err2:=os.Mkdir(os.Getenv("GOPATH")+"/src/github.com/alruiz12/goObjStore/src/data/"+hashRecived.ID +"/"+strconv.Itoa( nodeID),0777)
 		if err2!=nil{
 			fmt.Println("StorageNode error making dir", err.Error())
 		}
 	} else{
-		os.RemoveAll(os.Getenv("GOPATH")+"/src/github.com/alruiz12/simpleBT/src/data/"+hashRecived.ID +"/"+strconv.Itoa( nodeID))
-		err2:=os.Mkdir(os.Getenv("GOPATH")+"/src/github.com/alruiz12/simpleBT/src/data/"+hashRecived.ID +"/"+strconv.Itoa( nodeID),0777)
+		os.RemoveAll(os.Getenv("GOPATH")+"/src/github.com/alruiz12/goObjStore/src/data/"+hashRecived.ID +"/"+strconv.Itoa( nodeID))
+		err2:=os.Mkdir(os.Getenv("GOPATH")+"/src/github.com/alruiz12/goObjStore/src/data/"+hashRecived.ID +"/"+strconv.Itoa( nodeID),0777)
 		if err2!=nil{
 			fmt.Println("StorageNode error making dir", err.Error())
 		}
@@ -431,7 +431,7 @@ func SNGetAcc(w http.ResponseWriter, r *http.Request){
 
 
 
-	var accPath string = (os.Getenv("GOPATH")+"/src/github.com/alruiz12/simpleBT")
+	var accPath string = (os.Getenv("GOPATH")+"/src/github.com/alruiz12/goObjStore")
 
 	// read account from file
 	httpVar.AccFileMutex.Lock()

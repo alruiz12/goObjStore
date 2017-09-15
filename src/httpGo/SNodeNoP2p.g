@@ -7,7 +7,7 @@ import(
 	"log"
 	"os"
 	"encoding/json"
-	"github.com/alruiz12/simpleBT/src/httpVar"
+	"github.com/alruiz12/goObjStore/src/httpVar"
 	"strconv"
 	"time"
 */
@@ -39,21 +39,21 @@ func SNodeListenNoP2P(w http.ResponseWriter, r *http.Request){
 
 		httpVar.DirMutex.Lock()
 		// if data directory doesn't exist, create it
-		_, err = os.Stat(os.Getenv("GOPATH")+"/src/github.com/alruiz12/simpleBT/src/data")
+		_, err = os.Stat(os.Getenv("GOPATH")+"/src/github.com/alruiz12/goObjStore/src/data")
 		if err != nil {
-			os.Mkdir(os.Getenv("GOPATH")+"/src/github.com/alruiz12/simpleBT/src/data",0777)
+			os.Mkdir(os.Getenv("GOPATH")+"/src/github.com/alruiz12/goObjStore/src/data",0777)
 		}
 
 		// if data/chunk.Hash directory doesn't exist, create it
-		_, err = os.Stat(os.Getenv("GOPATH")+"/src/github.com/alruiz12/simpleBT/src/data/"+chunk.Hash)
+		_, err = os.Stat(os.Getenv("GOPATH")+"/src/github.com/alruiz12/goObjStore/src/data/"+chunk.Hash)
 		if err != nil {
-			os.Mkdir(os.Getenv("GOPATH")+"/src/github.com/alruiz12/simpleBT/src/data/"+chunk.Hash,0777)
+			os.Mkdir(os.Getenv("GOPATH")+"/src/github.com/alruiz12/goObjStore/src/data/"+chunk.Hash,0777)
 		}
 
 		// if data/chunk.Hash/nodeID directory doesn't exist, create it
-		_, err = os.Stat(os.Getenv("GOPATH")+"/src/github.com/alruiz12/simpleBT/src/data/"+chunk.Hash+"/"+strconv.Itoa( nodeID))
+		_, err = os.Stat(os.Getenv("GOPATH")+"/src/github.com/alruiz12/goObjStore/src/data/"+chunk.Hash+"/"+strconv.Itoa( nodeID))
 		if err != nil {
-			err2:=os.Mkdir(os.Getenv("GOPATH")+"/src/github.com/alruiz12/simpleBT/src/data/"+chunk.Hash+"/"+strconv.Itoa( nodeID),0777)
+			err2:=os.Mkdir(os.Getenv("GOPATH")+"/src/github.com/alruiz12/goObjStore/src/data/"+chunk.Hash+"/"+strconv.Itoa( nodeID),0777)
 			if err2!=nil{
 				fmt.Println("StorageNode error making dir", err.Error())
 			}
