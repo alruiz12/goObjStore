@@ -2,9 +2,9 @@ package main
 
 import (
 	"time"
-	"github.com/alruiz12/simpleBT/src/httpGo"
+	"github.com/alruiz12/goObjSotre/src/httpGo"
 	"net/http"
-	"github.com/alruiz12/simpleBT/src/conf"
+	"github.com/alruiz12/goObjStore/src/conf"
 
 )
 func main() {
