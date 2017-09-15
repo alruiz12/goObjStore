@@ -7,7 +7,9 @@ Simple Object Store in Golang started in late February 2017
 This project includes Peer to Peer and chunking algorithms to increase effiency.
 
 
-## Flow
+## Flow 
+
+The project architecture is inspired by Openstack Swift as it has the elements Proxy and Storage Node, responsible for processing and storing data respectively. Unlike Swift, this project has a Tracker (inspired by the Bittorrent Protocol), instead of a ring, which links entities to their physical location.
 
 ![alt text](https://user-images.githubusercontent.com/22266492/30481223-c3cc18b6-9a1d-11e7-8d03-08fabbca81fb.PNG)
 
